@@ -84,8 +84,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     Эта функция проверяет текст сообщения от пользователя и выполняет соответствующие действия:
     - Если текст равен 'Заказать', вызывает функцию handle_order для обработки заказа.
-    - Если текст равен 'Назад к главному меню', вызывает функцию menu для отображения главного меню.
-    - В противном случае, отправляет сообщение 'Неизвестная команда.'.
+    - Если текст равен 'В главное меню', вызывает функцию menu для отображения главного меню.
+    - В противном случае, отправляет сообщение 'Я вас не понимаю'.
 
     Args:
         update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
@@ -98,7 +98,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     text = update.message.text
     if text == 'Заказать':
         await handle_order(update, context)
-    elif text == 'Назад к главному меню':
+    elif text == 'В главное меню':
         await menu(update, context)
     else:
         await context.bot.send_message(chat_id=chat.id, text='Я вас не понимаю')
