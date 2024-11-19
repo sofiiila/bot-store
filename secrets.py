@@ -7,3 +7,5 @@ load_dotenv()
 # доступна в пространстве переменных окружения
 
 token = os.getenv('TOKEN')
+db_user = os.getenv('DB_USER')
+db_password = os.getenv('DB_PASSWORD')

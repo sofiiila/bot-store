@@ -1,0 +1,16 @@
+version: '3.1'
+services:
+  mongo:
+    container_name: bot_store_mongo_db
+    image: mongo
+    volumes:
+      - /var/lib/mongodb/bot_store:/data/db
+    expose:
+      - ${DB_PORT}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${EXTERNAL_DB_PORT}:${DB_PORT}"
+    env_file:
+      - ".env"

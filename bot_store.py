@@ -3,8 +3,11 @@ import os
 import sqlite3
 
 from dotenv import load_dotenv
+from pymongo import MongoClient
 from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+
+from secrets import db_user, db_password
 
 load_dotenv()
 
@@ -15,21 +18,6 @@ logging.basicConfig(
     level=logging.INFO)
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
-
-conn = sqlite3.connect('orders.db')
-cursor = conn.cursor()
-
-# Создание таблицы для хранения заказов
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS orders (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
-    tz TEXT,
-    files TEXT,
-    deadline TEXT
-)
-''')
-conn.commit()
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -127,11 +115,22 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     elif context.user_data.get('step') == 'deadline':
         context.user_data['deadline'] = text
         # Сохранение данных в базу данных
-        cursor.execute('''
-            INSERT INTO orders (user_id, tz, files, deadline)
-            VALUES (?, ?, ?, ?)
-            ''', (chat.id, context.user_data['tz'], context.user_data.get('files', ''), context.user_data['deadline']))
-        conn.commit()
+        client = MongoClient(f'mongodb://{db_user}:{db_password}@localhost:27017/')
+
+        # Выбор базы данных
+        db = client['mydatabase']
+
+        # Выбор коллекции
+        collection = db['mycollection']
+
+        document = {
+            "user_id": chat.id,
+            "tz": text,
+            "files": "john.doe@example.com",
+            "deadline": text
+        }
+
+        result = collection.insert_one(document)
         await context.bot.send_message(chat_id=chat.id, text='Ваше ТЗ принято в обработку!')
         await menu(update, context)
     else:
