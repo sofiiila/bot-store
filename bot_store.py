@@ -20,7 +20,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 
-WRITE, ORDER, TZ, FILES, DEADLINE, CONTACTS, QUESTION = range(7)
+WRITE, QUESTION, ORDER, TZ, FILES, DEADLINE, CONTACTS = range(7)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -33,21 +33,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
         context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
     Returns:
-        None
+        int: Следующее состояние.
     """
     reply_keyboard = [["Написать нам", "Заказать"]]
     await update.message.reply_text(
         "Привет, это bot_sore, здесь ты можешь оформить заказ или задать интересующий вопрос."
         "Отправь /cancel, если хочешь закончить разговор.\n\n",
         reply_markup=ReplyKeyboardMarkup(
-            reply_keyboard, one_time_keyboard=True
+            reply_keyboard, one_time_keyboard=True, resize_keyboard=True,
         ),
     )
 
     return WRITE
 
 
-async def handle_choice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик для выбора пользователя.
 
@@ -65,6 +65,7 @@ async def handle_choice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
     if choice == "Написать нам":
         logger.info("User %s chose to write a message.", user.first_name)
+        context.user_data['source'] = 'write'
         await update.message.reply_text(
             "Здесь вы можете задать любой вопрос",
             reply_markup=ReplyKeyboardRemove(),
@@ -72,6 +73,7 @@ async def handle_choice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
         return QUESTION
     elif choice == "Заказать":
         logger.info("User %s chose to place an order.", user.first_name)
+        context.user_data['source'] = 'order'
         await update.message.reply_text(
             "Пожалуйста, укажите техническое задание (ТЗ).",
             reply_markup=ReplyKeyboardRemove(),
@@ -98,37 +100,13 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
 
     Returns:
-        None
+        int: Следующее состояние.
     """
     user = update.message.from_user
     context.user_data['question'] = update.message.text
     logger.info("User %s asked a question: %s", user.first_name, update.message.text)
     await update.message.reply_text(
         "Пожалуйста, оставьте свои контактные данные.",
-        reply_markup=ReplyKeyboardRemove(),
-    )
-
-    return CONTACTS
-
-
-async def write(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """
-    Обработчик для отображения меню с кнопками.
-
-    Эта функция отправляет сообщение с клавиатурой ответа, содержащей кнопки "Написать нам" и "Заказать",
-    и приветственное сообщение пользователю, который обратился к боту.
-
-    Args:
-        update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
-        context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
-
-    Returns:
-        None
-    """
-    user = update.message.from_user
-    logger.info("User %s chose to write a message.", user.first_name)
-    await update.message.reply_text(
-        "Здесь вы можете задать любой вопрос",
         reply_markup=ReplyKeyboardRemove(),
     )
 
@@ -147,7 +125,7 @@ async def order(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
 
     Returns:
-        None
+        int: Следующее состояние.
     """
     user = update.message.from_user
     logger.info("User %s chose to place an order.", user.first_name)
@@ -175,7 +153,7 @@ async def tz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
 
     Returns:
-        None
+        int: Следующее состояние.
     """
     user = update.message.from_user
     context.user_data['tz'] = update.message.text
@@ -200,7 +178,7 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
 
     Returns:
-        None
+        int: Следующее состояние.
     """
     user = update.message.from_user
     file = await update.message.document.get_file()
@@ -228,7 +206,7 @@ async def skip_files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
 
     Returns:
-        None
+        int: Следующее состояние.
     """
     user = update.message.from_user
     logger.info("User %s skipped the file upload step.", user.first_name)
@@ -251,7 +229,7 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
 
     Returns:
-        None
+        int: Следующее состояние.
     """
     user = update.message.from_user
     context.user_data['deadline'] = update.message.text
@@ -276,7 +254,7 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
 
     Returns:
-        None
+        int: Следующее состояние.
     """
     user = update.message.from_user
     context.user_data['contacts'] = update.message.text
@@ -297,10 +275,17 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     }
 
     result = collection.insert_one(document)
-    await update.message.reply_text(
-        "Спасибо, что оставили ваши контакты!",
-        reply_markup=ReplyKeyboardRemove(),
-    )
+
+    if context.user_data['source'] == 'write':
+        await update.message.reply_text(
+            "Спасибо, что оставили ваши контакты!",
+            reply_markup=ReplyKeyboardRemove(),
+        )
+    else:
+        await update.message.reply_text(
+            "Спасибо, что оставили ваши контакты! ТЗ принято в обработку.",
+            reply_markup=ReplyKeyboardRemove(),
+        )
 
     return ConversationHandler.END
 
@@ -316,7 +301,7 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
 
     Returns:
-        None
+        int: Следующее состояние.
     """
     user = update.message.from_user
     logger.info("User %s canceled the conversation.", user.first_name)
@@ -341,7 +326,7 @@ def main() -> None:
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
         states={
-            WRITE: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_choice)],
+            WRITE: [MessageHandler(filters.TEXT & ~filters.COMMAND, menu)],
             ORDER: [MessageHandler(filters.TEXT & ~filters.COMMAND, order)],
             TZ: [MessageHandler(filters.TEXT & ~filters.COMMAND, tz)],
             FILES: [MessageHandler(filters.Document.ALL, files), CommandHandler("skip", skip_files)],
