@@ -5,8 +5,8 @@ class Settings(BaseSettings):
     token: str
     db_user: str
     db_password: str
-    external_db_port: str = '27017'
-    db_port: str = '27017'
+    external_db_port: str
+    db_port: str
 
     class Config:
         env_file = '.env'
