@@ -5,11 +5,20 @@ from src.logger import logger
 
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """
+    Обработчик для выбора пользователя.
+        Эта функция обрабатывает выбор пользователя и переходит к соответствующему состоянию.
+    Args:
+        update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
+        context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
+    Returns:
+        int: Следующее состояние.
+    """
     user = update.message.from_user
     choice = update.message.text
 
     if choice == "Написать нам":
-        logger.info("User %s chose to write a message.", user.first_name)
+        logger.info("Пользователь %s выбрал написать нам.", user.first_name)
         context.user_data['source'] = 'write'
         await update.message.reply_text(
             "Здесь вы можете задать любой вопрос",
@@ -17,7 +26,7 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         )
         return QUESTION
     elif choice == "Заказать":
-        logger.info("User %s chose to place an order.", user.first_name)
+        logger.info("Пользователь %s выбрал заказать.", user.first_name)
         context.user_data['source'] = 'order'
         await update.message.reply_text(
             "Пожалуйста, укажите техническое задание (ТЗ).",

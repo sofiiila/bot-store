@@ -6,9 +6,18 @@ from src.services.db_client import get_db_client
 
 
 async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """
+    Обработчик для получения контактных данных пользователя.
+    Эта функция сохраняет контактные данные пользователя и записывает данные в базу данных.
+    Args:
+        update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
+        context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
+    Returns:
+        int: Следующее состояние.
+    """
     user = update.message.from_user
     context.user_data['contacts'] = update.message.text
-    logger.info("User %s provided contacts: %s", user.first_name, update.message.text)
+    logger.info("Пользователь %s добавил контакты: %s", user.first_name, update.message.text)
 
     client = get_db_client()
     db = client['mydatabase']
