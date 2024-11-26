@@ -2,7 +2,7 @@ import logging
 import threading
 import time
 
-from invoices.sdsd import Invoice
+from .sdsd import Invoice
 
 
 LastInvoiceLookUpType = Invoice | None
