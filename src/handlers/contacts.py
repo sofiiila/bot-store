@@ -1,6 +1,6 @@
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes, ConversationHandler
-from src.handlers.handler_types import CONTACTS
+
 from src.logger import logger
 from src.services.db_client import get_db_client
 
@@ -33,6 +33,7 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     }
 
     collection.insert_one(document)
+    logger.info("Состояние source: %s", context.user_data.get('source', 'Unknown'))
     if context.user_data['source'] == 'write':
         await update.message.reply_text(
             "Спасибо, что оставили ваши контакты! Будем на связи!",
@@ -45,3 +46,5 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         )
 
     return ConversationHandler.END
+
+
