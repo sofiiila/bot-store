@@ -2,7 +2,7 @@ from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes, ConversationHandler
 
 from src.logger import logger
-from src.services.db_client import get_db_client
+from src.services.db_client import update_user_data
 
 
 async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -19,21 +19,8 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['contacts'] = update.message.text
     logger.info("Пользователь %s добавил контакты: %s", user.first_name, update.message.text)
 
-    client = get_db_client()
-    db = client['mydatabase']
-    collection = db['mycollection']
+    update_user_data(user.id, "contacts", update.message.text)
 
-    document = {
-        "user_id": user.id,
-        "question": context.user_data.get('question', "No question"),
-        "tz": context.user_data.get('tz', "No TZ"),
-        "files": context.user_data.get('files', "No files"),
-        "deadline": context.user_data.get('deadline', "No deadline"),
-        "contacts": context.user_data['contacts']
-    }
-
-    collection.insert_one(document)
-    logger.info("Состояние source: %s", context.user_data.get('source', 'Unknown'))
     if context.user_data['source'] == 'write':
         await update.message.reply_text(
             "Спасибо, что оставили ваши контакты! Будем на связи!",
