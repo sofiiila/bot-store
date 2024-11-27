@@ -35,7 +35,7 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     collection.insert_one(document)
     if context.user_data['source'] == 'write':
         await update.message.reply_text(
-            "Спасибо, что оставили ваши контакты!",
+            "Спасибо, что оставили ваши контакты! Будем на связи!",
             reply_markup=ReplyKeyboardRemove(),
         )
     else:

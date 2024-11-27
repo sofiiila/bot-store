@@ -3,7 +3,7 @@ import threading
 
 from flask import Flask, request, jsonify
 
-from wwehile import InvoiceLookUp, LastInvoiceLookUpType, eternity_cycle
+from invoice_look_up import InvoiceLookUp, LastInvoiceLookUpType, eternity_cycle
 
 app = Flask(__name__)
 

@@ -3,7 +3,7 @@ import threading
 import time
 
 from src.bot_types import InvoiceDataType
-from src.invoices.sdsd import Invoice
+from src.invoices.invoice import Invoice
 
 LastInvoiceLookUpType = InvoiceDataType | None
 

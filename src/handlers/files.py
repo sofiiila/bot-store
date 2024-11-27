@@ -27,7 +27,7 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['files'] = file_path
     logger.info("Пользователь %s загрузил файл: %s", user.first_name, file_path)
     await update.message.reply_text(
-        "Укажите срок выполнения.",
+        "Укажите срок выполнения или отправьте /skip, чтобы пропустить этот шаг.",
         reply_markup=ReplyKeyboardRemove(),
     )
     return DEADLINE

@@ -21,7 +21,7 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         logger.info("Пользователь %s выбрал написать нам.", user.first_name)
         context.user_data['source'] = 'write'
         await update.message.reply_text(
-            "Здесь вы можете задать любой вопрос",
+            "Здесь вы можете задать любой вопрос или отправьте /skip, чтобы пропустить этот шаг.",
             reply_markup=ReplyKeyboardRemove(),
         )
         return QUESTION
@@ -29,7 +29,7 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         logger.info("Пользователь %s выбрал заказать.", user.first_name)
         context.user_data['source'] = 'order'
         await update.message.reply_text(
-            "Пожалуйста, укажите техническое задание (ТЗ).",
+            "Пожалуйста, укажите техническое задание (ТЗ) или отправьте /skip, чтобы пропустить этот шаг.",
             reply_markup=ReplyKeyboardRemove(),
         )
         return TZ

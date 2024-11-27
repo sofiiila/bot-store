@@ -1,10 +1,10 @@
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes
-from src.handlers.handler_types import DEADLINE
+from src.handlers.handler_types import FILES
 from src.logger import logger
 
 
-async def skip_files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def skip_tz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик для пропуска шага приложения файлов.
     Эта функция позволяет пользователю пропустить шаг приложения файлов и перейти к указанию срока выполнения.
@@ -15,9 +15,9 @@ async def skip_files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         int: Следующее состояние.
     """
     user = update.message.from_user
-    logger.info("Пользовптель %s пропустил добавление файлов.", user.first_name)
+    logger.info("Пользовптель %s пропустил добавление ТЗ.", user.first_name)
     await update.message.reply_text(
-        "Укажите срок выполнения или отправьте /skip, чтобы пропустить этот шаг.",
+        "Приложите файлы, если необходимо, или отправьте /skip, чтобы пропустить этот шаг.",
         reply_markup=ReplyKeyboardRemove(),
     )
-    return DEADLINE
+    return FILES

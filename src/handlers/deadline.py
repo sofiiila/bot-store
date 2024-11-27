@@ -18,7 +18,7 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['deadline'] = update.message.text
     logger.info("Пользователь %s добавил deadline: %s", user.first_name, update.message.text)
     await update.message.reply_text(
-        "Пожалуйста, оставьте свои контактные данные.",
+        "Пожалуйста, оставьте свои контактные данные или отправьте /skip, чтобы пропустить этот шаг.",
         reply_markup=ReplyKeyboardRemove(),
     )
     return CONTACTS
