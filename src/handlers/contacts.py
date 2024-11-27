@@ -1,6 +1,7 @@
-from telegram import Update, ReplyKeyboardRemove
-from telegram.ext import ContextTypes, ConversationHandler
+from telegram import Update, ReplyKeyboardMarkup
+from telegram.ext import ContextTypes
 
+from src.handlers.handler_types import ASK_MORE
 from src.logger import logger
 from src.services.db_client import update_user_data
 
@@ -24,14 +25,18 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     if context.user_data['source'] == 'write':
         await update.message.reply_text(
             "Спасибо, что оставили ваши контакты! Будем на связи!",
-            reply_markup=ReplyKeyboardRemove(),
+            reply_markup=ReplyKeyboardMarkup(
+                [["Написать еще", "Заказать еще"]], one_time_keyboard=True, resize_keyboard=True
+            ),
         )
     else:
         await update.message.reply_text(
             "Спасибо, что оставили ваши контакты! ТЗ принято в обработку.",
-            reply_markup=ReplyKeyboardRemove(),
+            reply_markup=ReplyKeyboardMarkup(
+                [["Написать еще", "Заказать еще"]], one_time_keyboard=True, resize_keyboard=True
+            ),
         )
 
-    return ConversationHandler.END
+    return ASK_MORE
 
 

@@ -7,8 +7,8 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.handlers import start, menu, question, order, tz, files, skip_files, deadline, contacts, cancel, skip_tz, \
-    skip_contacts, skip_question, skip_deadline
-from src.handlers.handler_types import WRITE, QUESTION, ORDER, TZ, FILES, DEADLINE, CONTACTS
+    skip_contacts, skip_question, skip_deadline, ask_more
+from src.handlers.handler_types import WRITE, QUESTION, ORDER, TZ, FILES, DEADLINE, CONTACTS, ASK_MORE
 from src.settings import settings
 from src.logger import init_logger
 
@@ -29,6 +29,7 @@ def main() -> None:
             DEADLINE: [MessageHandler(filters.TEXT & ~filters.COMMAND, deadline), CommandHandler("skip", skip_deadline)],
             QUESTION: [MessageHandler(filters.TEXT & ~filters.COMMAND, question), CommandHandler("skip", skip_question)],
             CONTACTS: [MessageHandler(filters.TEXT & ~filters.COMMAND, contacts), CommandHandler("skip", skip_contacts)],
+            ASK_MORE: [MessageHandler(filters.TEXT & ~filters.COMMAND, ask_more)],
         },
         fallbacks=[CommandHandler("cancel", cancel)],
     )
