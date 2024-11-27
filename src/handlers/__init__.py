@@ -13,3 +13,4 @@ from .skip_tz import skip_tz
 from .skip_question import skip_question
 from .skip_contacts import skip_contacts
 from .ask_more import ask_more
+from .continue_or_new import continue_or_new
