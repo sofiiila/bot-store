@@ -30,4 +30,5 @@ if __name__ == '__main__':
     thread = threading.Thread(target=eternity_cycle)
     thread.start()
     server_thread = threading.Thread(target=app.run(port=8000))
+    server_thread.start()
 
