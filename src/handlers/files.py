@@ -2,6 +2,7 @@ import os
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes
 from src.handlers.handler_types import DEADLINE
+from src.init_app import db_client
 from src.logger import logger
 from src.services.db_client import update_user_data
 
@@ -28,7 +29,7 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['files'] = file_path
     logger.info("Пользователь %s загрузил файл: %s", user.first_name, file_path)
 
-    update_user_data(user.id, "files", file_path)
+    db_client.update_user_data(user.id, "files", file_path)
 
     await update.message.reply_text(
         "Укажите срок выполнения или отправьте /skip, чтобы пропустить этот шаг.",

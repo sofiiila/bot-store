@@ -16,7 +16,6 @@ from .skip_tz import skip_tz
 from .skip_question import skip_question
 from .skip_contacts import skip_contacts
 from .ask_more import ask_more
-from .continue_or_new import continue_or_new
 
 conv_handler = ConversationHandler(
     entry_points=[CommandHandler("start", start)],
@@ -29,7 +28,6 @@ conv_handler = ConversationHandler(
         QUESTION: [MessageHandler(filters.TEXT & ~filters.COMMAND, question), CommandHandler("skip", skip_question)],
         CONTACTS: [MessageHandler(filters.TEXT & ~filters.COMMAND, contacts), CommandHandler("skip", skip_contacts)],
         ASK_MORE: [MessageHandler(filters.TEXT & ~filters.COMMAND, ask_more)],
-        CONTINUE_OR_NEW: [MessageHandler(filters.TEXT & ~filters.COMMAND, continue_or_new)],
     },
     fallbacks=[CommandHandler("cancel", cancel)],
 )

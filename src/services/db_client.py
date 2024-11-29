@@ -1,36 +1,38 @@
 from pymongo import MongoClient
-from src.settings import settings
 
 
-def get_db_client():
-    client = MongoClient(f'mongodb://{settings.db_user}:{settings.db_password}@localhost:27017/')
-    return client
+class DbClient:
+    def __init__(self, db_user, db_password, host='localhost', port=27017):
+        connection_string = f'mongodb://{db_user}:{db_password}@{host}:{port}/'
+        client = MongoClient(connection_string)
+        db = client["your_database"]
+        self.__collection = db["mycollection"]
 
+    def update_user_data(self, user_id, field, value):
+        self.__collection.update_one(
+            {"user_id": user_id},
+            {"$set": {field: value}}
+        )
 
-def update_user_data(user_id, field, value):
-    client = get_db_client()
-    db = client['mydatabase']
-    collection = db['mycollection']
-    collection.update_one(
-        {"user_id": user_id},
-        {"$set": {field: value}}
-    )
+    def get_user_state(self, user_id):
+        user_data = self.__collection.find_one({"user_id": user_id})
+        return user_data.get('state', None) if user_data else None
 
+    def set_user_state(self, user_id, state):
+        self.__collection.update_one(
+            {"user_id": user_id},
+            {"$set": {"state": state}},
+            upsert=True
+        )
 
-def get_user_state(user_id):
-    client = get_db_client()
-    db = client['mydatabase']
-    collection = db['mycollection']
-    user_data = collection.find_one({"user_id": user_id})
-    return user_data.get('state', None) if user_data else None
+    def create(self, user_id):
+        document = {
+            "user_id": user_id,
+            "question": "No question",
+            "tz": "No TZ",
+            "files": "No files",
+            "deadline": "No deadline",
+            "contacts": "No contacts",
+        }
+        self.__collection.insert_one(document)
 
-
-def set_user_state(user_id, state):
-    client = get_db_client()
-    db = client['mydatabase']
-    collection = db['mycollection']
-    collection.update_one(
-        {"user_id": user_id},
-        {"$set": {"state": state}},
-        upsert=True
-    )

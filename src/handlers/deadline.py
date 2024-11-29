@@ -1,8 +1,8 @@
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes
 from src.handlers.handler_types import CONTACTS
+from src.init_app import db_client
 from src.logger import logger
-from src.services.db_client import update_user_data
 
 
 async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -19,7 +19,7 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['deadline'] = update.message.text
     logger.info("Пользователь %s добавил deadline: %s", user.first_name, update.message.text)
 
-    update_user_data(user.id, "deadline", update.message.text)
+    db_client.update_user_data(user.id, "deadline", update.message.text)
 
     await update.message.reply_text(
         "Пожалуйста, оставьте свои контактные данные или отправьте /skip, чтобы пропустить этот шаг.",
