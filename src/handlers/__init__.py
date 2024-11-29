@@ -1,6 +1,6 @@
 from telegram.ext import ConversationHandler, CommandHandler, MessageHandler, filters
 
-from .handler_types import WRITE, ORDER, TZ, FILES, DEADLINE, QUESTION, CONTACTS, ASK_MORE, CONTINUE_OR_NEW
+from .handler_types import WRITE, ORDER, TZ, FILES, DEADLINE, QUESTION, CONTACTS, ASK_MORE
 from .start import start
 from .menu import menu
 from .question import question

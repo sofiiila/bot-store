@@ -4,7 +4,6 @@ from telegram.ext import ContextTypes
 from src.handlers.handler_types import DEADLINE
 from src.init_app import db_client
 from src.logger import logger
-from src.services.db_client import update_user_data
 
 
 async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

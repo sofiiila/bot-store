@@ -4,8 +4,8 @@ from pymongo import MongoClient
 class DbClient:
     def __init__(self, db_user, db_password, host='localhost', port=27017):
         connection_string = f'mongodb://{db_user}:{db_password}@{host}:{port}/'
-        client = MongoClient(connection_string)
-        db = client["your_database"]
+        db_client = MongoClient(connection_string)
+        db = db_client["your_database"]
         self.__collection = db["mycollection"]
 
     def update_user_data(self, user_id, field, value):
