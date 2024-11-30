@@ -4,6 +4,7 @@ from telegram.ext import ContextTypes
 from src.handlers.handler_types import ASK_MORE
 from src.init_app import db_client
 from src.logger import logger
+from src.services.db_client_types import CategoriesEnum
 
 
 async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -20,7 +21,10 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['contacts'] = update.message.text
     logger.info("Пользователь %s добавил контакты: %s", user.first_name, update.message.text)
 
-    db_client.update_user_data(user.id, "contacts", update.message.text)
+    db_client.update(filter_query={"user_id": user.id,
+                                   "id": context.user_data['id'],
+                                   "category": CategoriesEnum.new},
+                     value={"contacts": update.message.text})
 
     if context.user_data['source'] == 'write':
         await update.message.reply_text(

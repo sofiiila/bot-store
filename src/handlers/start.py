@@ -2,6 +2,7 @@ from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 from src.handlers.handler_types import WRITE
 from src.init_app import db_client
+from src.services.db_client_types import UserDocument
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -14,8 +15,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         int: Следующее состояние.
     """
     user = update.message.from_user
-    db_client.create(user_id=user.id)
-
+    document: UserDocument = db_client.create(user_id=user.id)
+    context.user_data['id'] = document.id
     reply_keyboard = [["Написать нам", "Заказать"]]
     await update.message.reply_text(
         "Привет, это bot_sore, здесь ты можешь оформить заказ или задать интересующий вопрос."
@@ -25,3 +26,4 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         ),
     )
     return WRITE
+

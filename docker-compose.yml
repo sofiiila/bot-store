@@ -1,10 +1,11 @@
 version: '3.1'
 services:
   mongo:
-    container_name: bot_store_mongo_db
+    container_name: ${DB_CONTAINER_NAME}
     image: mongo
     volumes:
       - /var/lib/mongodb/bot_store:/data/db
+      - ./mongod.conf:/etc/mongo/mongod.conf
     expose:
       - ${DB_PORT}
     environment:
@@ -14,7 +15,7 @@ services:
       - "${EXTERNAL_DB_PORT}:${DB_PORT}"
     env_file:
       - ".env"
-
+    command: mongod --config /etc/mongo/mongod.conf
   bot:
     image: python:3.10-slim
     container_name: bot_store_bot
