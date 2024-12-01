@@ -1,6 +1,9 @@
+import logging
+
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes, ConversationHandler
-from src.logger import logger
+
+logger = logging.getLogger(__name__)
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

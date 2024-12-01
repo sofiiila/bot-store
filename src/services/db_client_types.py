@@ -1,4 +1,6 @@
+from datetime import datetime
 from enum import Enum
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -19,6 +21,7 @@ class UserDocument(BaseModel):
     deadline: str = "No deadline"
     contacts: str = "No contacts"
     category: CategoriesEnum = CategoriesEnum.new
+    start_date: datetime = datetime.now()
 
     @classmethod
     def create_model(cls, user_id):

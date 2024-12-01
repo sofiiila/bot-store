@@ -1,10 +1,15 @@
+import logging
+
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes
 
 from src.handlers.handler_types import ASK_MORE
 from src.init_app import db_client
-from src.logger import logger
+
 from src.services.db_client_types import CategoriesEnum
+
+
+logger = logging.getLogger(__name__)
 
 
 async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

@@ -1,11 +1,14 @@
-from typing import Optional
+import logging
+from datetime import datetime
 
+import pymongo
 from bson import ObjectId
 from pymongo import MongoClient
 from pymongo.results import UpdateResult, InsertOneResult
 
-from src.logger import logger
 from src.services.db_client_types import UserDocument
+
+logger = logging.getLogger(__name__)
 
 
 class DbClient:
@@ -50,7 +53,6 @@ class DbClient:
                 clean_filter_query["_id"] = ObjectId(dict_value)
             else:
                 clean_filter_query[key] = dict_value
-        logger.info(clean_filter_query)
         result: UpdateResult = self.__collection.update_one(
             filter=clean_filter_query,
             update={"$set": value}
@@ -58,28 +60,31 @@ class DbClient:
         if result.modified_count == 0:
             raise AttributeError("Ничего не обновилось")
 
-    def list(self, filter_query: dict, sort_querty: dict) -> list[UserDocument]:
+    def list(self, filter_query: dict, sort_query: dict | None = None) -> list[UserDocument]:
         """
         фильтрация  в очереди
         :return:
         """
-        try:
-            cleaned_filter_query = {}
-            for key, value in filter_query.items():
-                if key == "_id":
-                    cleaned_filter_query["_id"] = ObjectId(value)
-                else:
-                    cleaned_filter_query[key] = value
+        cleaned_sort_query = {}
+        for key, value in sort_query.items():
+            if value == 1:
+                cleaned_sort_query[key] = pymongo.ASCENDING
+            elif value == -1:
+                cleaned_sort_query[key] = pymongo.DESCENDING
+            else:
+                raise ValueError("Не может быть другим значением ")
+        cleaned_filter_query = {}
+        for key, value in filter_query.items():
+            if key == "_id":
+                cleaned_filter_query["_id"] = ObjectId(value)
+            else:
+                cleaned_filter_query[key] = value
 
-            documents = self.__collection.find(cleaned_filter_query).sort(sort_querty)
-
-            results = []
-            for doc in documents:
-                results.append(doc)
-            return results
-        except Exception as e:
-            print(f"Произошла ошибка при выполнении запроса: {e}")
-            return []
+        documents = self.__collection.find(cleaned_filter_query).sort(cleaned_sort_query or {})
+        results = []
+        for doc in documents:
+            results.append(UserDocument(**doc, id=str(doc["_id"])))
+        return results #TODO парсинг модели в тип UserDocument
 
     def delete(self, user_id, status=None):
         """

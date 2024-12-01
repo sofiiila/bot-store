@@ -1,8 +1,12 @@
 import logging
 
-from src.bot_types import InvoiceDataType
+from src.services.db_client_types import UserDocument
 
 logger = logging.getLogger(__name__)
+
+#TODO после подключения сюда db_cmlient :
+# добавить методы create() fill() _finish(delay: int,float | None)
+
 
 
 class CrmApiClient:
@@ -17,9 +21,7 @@ class Invoice:
     """
     Класс для работы с заявками, определяет их статус и id
     """
-    def __init__(self, id: str, status: str, data: InvoiceDataType):
-        self.__id = id
-        self.__status = status
+    def __init__(self, data: UserDocument):
         self.__api_client = CrmApiClient()
         self.__data = data
 

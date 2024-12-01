@@ -1,10 +1,14 @@
+import logging
 import os
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes
 from src.handlers.handler_types import DEADLINE
 from src.init_app import db_client
-from src.logger import logger
+
 from src.services.db_client_types import CategoriesEnum
+
+
+logger = logging.getLogger(__name__)
 
 
 async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

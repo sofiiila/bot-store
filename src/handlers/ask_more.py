@@ -1,8 +1,12 @@
+import logging
+
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import ContextTypes
 
 from src.handlers.handler_types import ASK_MORE, TZ, QUESTION
-from src.logger import logger
+
+
+logger = logging.getLogger(__name__)
 
 
 async def ask_more(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

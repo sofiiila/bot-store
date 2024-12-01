@@ -1,7 +1,11 @@
+import logging
+
 from telegram import Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes
 from src.handlers.handler_types import CONTACTS
-from src.logger import logger
+
+
+logger = logging.getLogger(__name__)
 
 
 async def skip_question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

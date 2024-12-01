@@ -2,13 +2,12 @@ import logging
 import threading
 import time
 
-from src.bot_types import InvoiceDataType
 from src.init_app import db_client
+from src.invoices import invoice
 from src.invoices.invoice import Invoice
-from src.services.core import DbClient
-from src.services.db_client_types import CategoriesEnum
+from src.services.db_client_types import CategoriesEnum, UserDocument
 
-LastInvoiceLookUpType = InvoiceDataType | None
+LastInvoiceLookUpType = Invoice | None
 
 logger = logging.getLogger(__name__)
 
@@ -22,25 +21,31 @@ class InvoiceLookUp:
         возвращает самую старую заявку из очереди или None
         :return: obj Invoice
         """
-        logger.debug("Функуия определяющая последнюю заявку")
         result = db_client.list(
             filter_query={"category": CategoriesEnum.queue},
-            sort_querty={"create_time": -1})
+            sort_query={"start_date": 1})
         if result:
-            return result[0]
+            logger.debug("Получена заявка с ID: %s",  result[0].id)
+            return Invoice(data=result[0])
         return None
 
-    def get_invoice_by_id(self, id) -> LastInvoiceLookUpType:
+    def get_invoice_by_id(self, id) -> LastInvoiceLookUpType | None:
         """
         Возвращает заявку которую пора удалять
         :param id:
         :return: obj Invoice
         """
         logger.debug("получение заявки по id")
-        return Invoice(id='2344', status='delete', data=InvoiceDataType(user_id=3203))
+        result = db_client.list(
+            filter_query={"_id": id},
+        )
+        if result:
+            return Invoice(data=result[0])
+        return None
+    #TODO неправильно тип что возвращается и он должен вернуть объект Ivoice
 
 
-def eternity_cycle(db_client: DbClient):
+def eternity_cycle():
     """
     Цикл обрабатывающий заявки из очереди
     :return:
