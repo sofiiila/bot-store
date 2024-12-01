@@ -22,9 +22,9 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     logger.info("Пользователь %s добавил контакты: %s", user.first_name, update.message.text)
 
     db_client.update(filter_query={"user_id": user.id,
-                                   "id": context.user_data['id'],
-                                   "category": CategoriesEnum.new},
-                     value={"contacts": update.message.text})
+                                   "id": context.user_data['id']},
+                     value={"contacts": update.message.text,
+                            "category": CategoriesEnum.queue})
 
     if context.user_data['source'] == 'write':
         await update.message.reply_text(

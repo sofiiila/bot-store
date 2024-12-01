@@ -3,7 +3,10 @@ import threading
 import time
 
 from src.bot_types import InvoiceDataType
+from src.init_app import db_client
 from src.invoices.invoice import Invoice
+from src.services.core import DbClient
+from src.services.db_client_types import CategoriesEnum
 
 LastInvoiceLookUpType = InvoiceDataType | None
 
@@ -13,7 +16,6 @@ logger = logging.getLogger(__name__)
 class InvoiceLookUp:
     """
     Распорядитель заявок для верхнеуровневых ф-й
-
     """
     def get_oldest_invoice(self) -> LastInvoiceLookUpType:
         """
@@ -21,7 +23,12 @@ class InvoiceLookUp:
         :return: obj Invoice
         """
         logger.debug("Функуия определяющая последнюю заявку")
-        return Invoice(id='3203', status='in-progress', data=InvoiceDataType(user_id=3203))
+        result = db_client.list(
+            filter_query={"category": CategoriesEnum.queue},
+            sort_querty={"create_time": -1})
+        if result:
+            return result[0]
+        return None
 
     def get_invoice_by_id(self, id) -> LastInvoiceLookUpType:
         """
@@ -33,7 +40,7 @@ class InvoiceLookUp:
         return Invoice(id='2344', status='delete', data=InvoiceDataType(user_id=3203))
 
 
-def eternity_cycle():
+def eternity_cycle(db_client: DbClient):
     """
     Цикл обрабатывающий заявки из очереди
     :return:

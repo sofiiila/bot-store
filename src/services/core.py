@@ -27,9 +27,6 @@ class DbClient:
         result: InsertOneResult = self.__collection.insert_one(document)
         return UserDocument(user_id=int(user_id), id=str(result.inserted_id))
 
-
-
-
     def get_category(self, user_id):
         """
         метод для получения категории документа
@@ -61,25 +58,28 @@ class DbClient:
         if result.modified_count == 0:
             raise AttributeError("Ничего не обновилось")
 
-
-    def list(self, status=None):
+    def list(self, filter_query: dict, sort_querty: dict) -> list[UserDocument]:
         """
         фильтрация  в очереди
         :return:
         """
-        filter_query = {}
-        if status == "invalid":
-            filter_query["response_code"] = 422
-        elif status == "process":
-            filter_query["response_code"] = 500
-        elif status == "completed":
-            filter_query["response_code"] = 200
+        try:
+            cleaned_filter_query = {}
+            for key, value in filter_query.items():
+                if key == "_id":
+                    cleaned_filter_query["_id"] = ObjectId(value)
+                else:
+                    cleaned_filter_query[key] = value
 
-        documents = self.queue_collection.find(filter_query)
-        result = []
-        for doc in documents:
-            result.append(doc)
-        return result
+            documents = self.__collection.find(cleaned_filter_query).sort(sort_querty)
+
+            results = []
+            for doc in documents:
+                results.append(doc)
+            return results
+        except Exception as e:
+            print(f"Произошла ошибка при выполнении запроса: {e}")
+            return []
 
     def delete(self, user_id, status=None):
         """

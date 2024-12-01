@@ -3,7 +3,7 @@ import threading
 
 from flask import Flask, request, jsonify
 
-from invoice_look_up import InvoiceLookUp, LastInvoiceLookUpType, eternity_cycle
+from src.invoices.core import InvoiceLookUp, LastInvoiceLookUpType, eternity_cycle
 
 app = Flask(__name__)
 
@@ -23,6 +23,10 @@ def execute_my_function():
     else:
         logger.error('такого id не существует')
         return jsonify({"error": "Инвойс не найден"}), 404
+
+
+def run_finish_invoice_server(port: int):
+    app.run(port=port)
 
 
 if __name__ == '__main__':

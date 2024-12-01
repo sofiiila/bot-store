@@ -1,8 +1,6 @@
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel
-from pymongo.results import InsertOneResult
 
 
 class CategoriesEnum(str, Enum):

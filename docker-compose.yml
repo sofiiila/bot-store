@@ -25,6 +25,8 @@ services:
       - mongo
     volumes:
       - .:/app
+    ports:
+      - "${EXTERNAL_BOT_PORT}:${BOT_PORT}"
     working_dir: /app
     command: >
       sh -c "pip install --no-cache-dir -r requirements.txt && python main.py"
