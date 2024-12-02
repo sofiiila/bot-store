@@ -26,3 +26,12 @@ class UserDocument(BaseModel):
     @classmethod
     def create_model(cls, user_id):
         return UserDocument(user_id=int(user_id))
+
+    def to_api(self):
+        api_data = {}
+        for key, value in self.dict().items():
+            if isinstance(value, datetime):
+                api_data[key] = value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            else:
+                api_data[key] = value
+        return api_data

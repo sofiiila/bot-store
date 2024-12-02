@@ -3,9 +3,8 @@ import threading
 import time
 
 from src.init_app import db_client
-from src.invoices import invoice
 from src.invoices.invoice import Invoice
-from src.services.db_client_types import CategoriesEnum, UserDocument
+from src.services.db_client_types import CategoriesEnum
 
 LastInvoiceLookUpType = Invoice | None
 
