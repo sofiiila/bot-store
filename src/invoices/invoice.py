@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 from datetime import datetime, timedelta
 
 import requests
@@ -42,6 +43,25 @@ class CrmApiClient:
             logger.error("Не удачное подключение по причине: %s", str(e))
             raise ServerProblem
 
+    def get_crm_status(self):
+        """
+        Метод, который запрашивает статус заявки у CRM
+        """
+        # url = f"{self.base_url}/api/notifications"
+        # headers = {"Content-Type": "application/json"}
+        # try:
+        #     response = requests.get(url, headers=headers)
+        #     if response.status_code == 200:
+        #         notification = response.json()
+        #         if notification.get("status") == 'ready':
+        #             return 'ready'
+        #     logger.warning("Уведомление от CRM не содержит ожидаемый статус 'ready'. Код ответа: %d", response.status_code)
+        #     return ''
+        # except (ConnectionError, Timeout) as e:
+        #     logger.error("Не удачное подключение по причине: %s", str(e))
+        #     raise ServerProblem
+        return 'ready'
+
 
 class Invoice:
     """
@@ -70,6 +90,7 @@ class Invoice:
             filter_query={"id": self.__data.id},
             value={"category": "in_progress"}
         )
+        self.get_ready_from_crm()
 
     def is_overdue(self):
         current_time = datetime.now()
@@ -82,9 +103,6 @@ class Invoice:
                                        "id": self.__data.id},
                          value={"category": CategoriesEnum.queue})
 
-
-
-
     @classmethod
     def create(cls):
         """
@@ -93,13 +111,21 @@ class Invoice:
         """
         logger.debug("метод create")
 
+    def get_ready_from_crm(self):
+        while True:
+            status = self.__api_client.get_crm_status()
+            if status == 'ready':
+                self.delete()
+                break
+            time.sleep(10)
+
     def delete(self):
         """
         метод удаляющий заявку из очереди, когда она уже попала в CRM
         :return:
         """
         logger.debug("Я удаляю ")
-        pass
+        db_client.delete(self.__data.id)
 
     def prepare(self):
         """

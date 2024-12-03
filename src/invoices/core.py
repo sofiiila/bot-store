@@ -29,7 +29,7 @@ class InvoiceLookUp:
             return Invoice(data=result[0])
         return None
 
-    def get_invoice_by_id(self, id) -> LastInvoiceLookUpType | None:
+    def get_invoice_by_id(self, id) -> Invoice | None:
         """
         Возвращает заявку которую пора удалять
         :param id:
@@ -42,7 +42,6 @@ class InvoiceLookUp:
         if result:
             return Invoice(data=result[0])
         return None
-    #TODO неправильно тип что возвращается и он должен вернуть объект Ivoice
 
     def get_all_new_invoices(self):
         results = db_client.list(
@@ -61,7 +60,7 @@ def eternity_cycle():
     Цикл обрабатывающий заявки из очереди
     :return:
     """
-    logger.debug("Запущена очередь.")
+    logger.debug("Запущена очередь.(беск цикл)")
     while True:
         invoice: LastInvoiceLookUpType = InvoiceLookUp().get_oldest_invoice()
         if invoice is not None:
@@ -77,6 +76,7 @@ def check_timeout():
             if invoice.is_overdue() is True:
                 invoice.in_queue()
         time.sleep(1)
+
 
 def main():
     logging.basicConfig(level=logging.DEBUG)

@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 
 import pymongo
 from bson import ObjectId
@@ -90,10 +89,12 @@ class DbClient:
             results.append(UserDocument(**doc, id=str(doc["_id"])))
         return results
 
-    def delete(self, user_id, status=None):
+    def delete(self, id):
         """
         отработано
         :return:
         """
-        if status == "completed":
-            self.queue_collection.delete_one({"user_id": user_id})
+        result = self.__collection.delete_one({'_id': ObjectId(id)})
+        if result.deleted_count == 0:
+            raise ValueError(f"Документ с id не найден для удаления. {id}")
+        logger.debug("Документ с id успешно удален. %s", id)

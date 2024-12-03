@@ -12,8 +12,8 @@ def start_app():
     timer_thread.start()
     thread = threading.Thread(target=eternity_cycle)
     thread.start()
-    # server_thread = threading.Thread(target=run_finish_invoice_server, args=(settings.bot_port,))
-    # server_thread.start()
+    server_thread = threading.Thread(target=run_finish_invoice_server, args=(settings.bot_port,))
+    server_thread.start()
     application.add_handler(conv_handler)
     application.run_polling()
 
