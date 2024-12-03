@@ -59,7 +59,7 @@ class CrmApiClient:
         # except (ConnectionError, Timeout) as e:
         #     logger.error("Не удачное подключение по причине: %s", str(e))
         #     raise ServerProblem
-        # return 'ready'
+        return 'ready'
 
 
 class Invoice:
