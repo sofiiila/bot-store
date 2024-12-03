@@ -75,6 +75,7 @@ def check_timeout():
         for invoice in invoices:
             if invoice.is_overdue() is True:
                 invoice.in_queue()
+        # TODO время на заполнение заявки тоже должно пробрасываться из env
         time.sleep(1)
 
 

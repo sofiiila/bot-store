@@ -26,6 +26,7 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['question'] = update.message.text
     logger.info("Пользователь %s пишет нам: %s", user.first_name, update.message.text)
 
+    # TODO Здесь нужно получить по id и обновить через метод fill в Invoice
     db_client.update(
         filter_query={"user_id": user.id,
                       "id": context.user_data['id'],

@@ -9,13 +9,12 @@ app = Flask(__name__)
 
 logger = logging.getLogger(__name__)
 
-
 @app.route('/execute_function', methods=['POST'])
 def execute_my_function():
     # Получаем данные из запроса
     data = request.json
     id = data['id']
-
+    # TODO я бы переназвал тогда тип, меня смущает что какой-то last
     invoice: LastInvoiceLookUpType = InvoiceLookUp().get_invoice_by_id(id)
     if invoice:
         invoice.delete()

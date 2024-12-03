@@ -33,6 +33,7 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['files'] = file_path
     logger.info("Пользователь %s загрузил файл: %s", user.first_name, file_path)
 
+    # TODO Здесь нужно получить по id и обновить через метод fill в Invoice
     db_client.update(filter_query={"user_id": user.id,
                                    "id": context.user_data['id'],
                                    "category": CategoriesEnum.new},

@@ -26,6 +26,7 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['contacts'] = update.message.text
     logger.info("Пользователь %s добавил контакты: %s", user.first_name, update.message.text)
 
+    # TODO Здесь нужно получить по id и обновить через метод fill в Invoice + метод in_queue
     db_client.update(filter_query={"user_id": user.id,
                                    "id": context.user_data['id']},
                      value={"contacts": update.message.text,

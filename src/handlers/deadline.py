@@ -24,6 +24,7 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['deadline'] = update.message.text
     logger.info("Пользователь %s добавил deadline: %s", user.first_name, update.message.text)
 
+    # TODO Здесь нужно получить по id и обновить через метод fill в Invoice
     db_client.update(filter_query={"user_id": user.id,
                                    "id": context.user_data['id'],
                                    "category": CategoriesEnum.new},

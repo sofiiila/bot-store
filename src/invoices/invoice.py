@@ -13,8 +13,6 @@ from src.services.db_client_types import UserDocument, CategoriesEnum
 logger = logging.getLogger(__name__)
 
 
-#TODO после подключения сюда db_cmlient :
-# добавить методы create() fill() _finish(delay: int,float | None)
 class CrmApiClient:
     """
     Клиент для отправки запросов к CRM
@@ -43,6 +41,7 @@ class CrmApiClient:
             logger.error("Не удачное подключение по причине: %s", str(e))
             raise ServerProblem
 
+    # TODO зачем?
     def get_crm_status(self):
         """
         Метод, который запрашивает статус заявки у CRM
@@ -60,7 +59,7 @@ class CrmApiClient:
         # except (ConnectionError, Timeout) as e:
         #     logger.error("Не удачное подключение по причине: %s", str(e))
         #     raise ServerProblem
-        return 'ready'
+        # return 'ready'
 
 
 class Invoice:
@@ -69,9 +68,11 @@ class Invoice:
     """
 
     def __init__(self, data: UserDocument):
+        # TODO Base Url должен пробрасывватся черех env
         self.__api_client = CrmApiClient(base_url="http://192.168.0.107:8001")
         self.__data = data
 
+    # TODO реализовать метод
     def __is_invalid(self):
         """
         метод для заявок котрые получили 422 код ответа
@@ -88,6 +89,7 @@ class Invoice:
         logger.debug("Вызван ин прогрес")
         db_client.update(
             filter_query={"id": self.__data.id},
+            # TODO Изпользуй enum
             value={"category": "in_progress"}
         )
         self.get_ready_from_crm()
@@ -103,7 +105,9 @@ class Invoice:
                                        "id": self.__data.id},
                          value={"category": CategoriesEnum.queue})
 
+    # TODO Реализовать create
     @classmethod
+
     def create(cls):
         """
         будет вызываться в момеент когда заполнено в боте
@@ -111,6 +115,7 @@ class Invoice:
         """
         logger.debug("метод create")
 
+    # TODO Убрать
     def get_ready_from_crm(self):
         while True:
             status = self.__api_client.get_crm_status()
