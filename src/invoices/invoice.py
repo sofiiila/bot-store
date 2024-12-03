@@ -1,10 +1,13 @@
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import requests
+from requests.exceptions import Timeout, ConnectionError
 
-from src.services.db_client_types import UserDocument
+from src.init_app import db_client
+from src.invoices.exc import InvalidInvoice, ServerProblem
+from src.services.db_client_types import UserDocument, CategoriesEnum
 
 logger = logging.getLogger(__name__)
 
@@ -25,10 +28,19 @@ class CrmApiClient:
         invoice_data = json.loads(json_str)
         headers = {"Content-Type": "application/json"}
         logger.debug('%s %s %s', url, invoice_data, headers)
-        response = requests.post(url, json=invoice_data, headers=headers)
-
-        return response.status_code
-
+        try:
+            response = requests.post(url, json=invoice_data, headers=headers)
+            if str(response.status_code).startswith('4'):
+                logger.error("400 код.")
+                raise InvalidInvoice
+            elif str(response.status_code).startswith('5'):
+                logger.error("500 код.")
+                raise ServerProblem
+            else:
+                return response.status_code
+        except (ConnectionError, Timeout) as e:
+            logger.error("Не удачное подключение по причине: %s", str(e))
+            raise ServerProblem
 
 
 class Invoice:
@@ -37,7 +49,7 @@ class Invoice:
     """
 
     def __init__(self, data: UserDocument):
-        self.__api_client = CrmApiClient(base_url="http://localhost:8000")
+        self.__api_client = CrmApiClient(base_url="http://192.168.0.107:8001")
         self.__data = data
 
     def __is_invalid(self):
@@ -54,7 +66,24 @@ class Invoice:
         :return:
         """
         logger.debug("Вызван ин прогрес")
-        pass
+        db_client.update(
+            filter_query={"id": self.__data.id},
+            value={"category": "in_progress"}
+        )
+
+    def is_overdue(self):
+        current_time = datetime.now()
+        start_date = self.__data.start_date
+        delta_time = current_time - start_date
+        return delta_time > timedelta(minutes=1)
+
+    def in_queue(self):
+        db_client.update(filter_query={"user_id": self.__data.user_id,
+                                       "id": self.__data.id},
+                         value={"category": CategoriesEnum.queue})
+
+
+
 
     @classmethod
     def create(cls):
@@ -78,10 +107,10 @@ class Invoice:
         :return:
         """
         logger.debug("обрабатывается статус ответа")
-        result = self.__api_client.try_send_invoice(invoice_data=self.__data.to_api())
-        logger.debug(f"Код ответа: {result}")
-        match result:
-            case 200:
-                self.__in_progress()
-            case 422:
-                self.__is_invalid()
+        try:
+            self.__api_client.try_send_invoice(invoice_data=self.__data.to_api())
+        except ServerProblem:
+            return
+        except InvalidInvoice:
+            self.__is_invalid()
+        self.__in_progress()

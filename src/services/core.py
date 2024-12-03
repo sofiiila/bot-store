@@ -57,6 +57,7 @@ class DbClient:
             filter=clean_filter_query,
             update={"$set": value}
         )
+        logger.info('ФИЛЬТРЫ %s', clean_filter_query)
         if result.modified_count == 0:
             raise AttributeError("Ничего не обновилось")
 
@@ -66,25 +67,28 @@ class DbClient:
         :return:
         """
         cleaned_sort_query = {}
-        for key, value in sort_query.items():
-            if value == 1:
-                cleaned_sort_query[key] = pymongo.ASCENDING
-            elif value == -1:
-                cleaned_sort_query[key] = pymongo.DESCENDING
-            else:
-                raise ValueError("Не может быть другим значением ")
+        if sort_query:
+            for key, value in sort_query.items():
+                if value == 1:
+                    cleaned_sort_query[key] = pymongo.ASCENDING
+                elif value == -1:
+                    cleaned_sort_query[key] = pymongo.DESCENDING
+                else:
+                    raise ValueError("Не может быть другим значением ")
         cleaned_filter_query = {}
         for key, value in filter_query.items():
             if key == "_id":
                 cleaned_filter_query["_id"] = ObjectId(value)
             else:
                 cleaned_filter_query[key] = value
-
-        documents = self.__collection.find(cleaned_filter_query).sort(cleaned_sort_query or {})
+        if cleaned_sort_query:
+            documents = self.__collection.find(cleaned_filter_query).sort(cleaned_sort_query)
+        else:
+            documents = self.__collection.find(cleaned_filter_query)
         results = []
         for doc in documents:
             results.append(UserDocument(**doc, id=str(doc["_id"])))
-        return results #TODO парсинг модели в тип UserDocument
+        return results
 
     def delete(self, user_id, status=None):
         """
