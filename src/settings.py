@@ -11,5 +11,4 @@ class Settings(BaseSettings):
     bot_port: int
 
 
-
 settings = Settings()

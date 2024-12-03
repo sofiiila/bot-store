@@ -15,6 +15,9 @@ def init_logger():
     logging.getLogger("apscheduler.scheduler").setLevel(logging.WARNING)
     logging.getLogger("telegram.ext._application").setLevel(logging.WARNING)
     logging.getLogger("pymongo.command").setLevel(logging.WARNING)
+    logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
+    logging.getLogger("werkzeug").setLevel(logging.WARNING)
+
 
 
 

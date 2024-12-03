@@ -1,6 +1,7 @@
 import logging
 import threading
 import time
+from datetime import datetime
 
 from src.init_app import db_client
 from src.invoices.invoice import Invoice
@@ -43,19 +44,39 @@ class InvoiceLookUp:
         return None
     #TODO неправильно тип что возвращается и он должен вернуть объект Ivoice
 
+    def get_all_new_invoices(self):
+        results = db_client.list(
+            filter_query={"category": CategoriesEnum.new})
+        new_invoices=[]
+
+        if results:
+            for result in results:
+                new_invoices.append(Invoice(data=result))
+
+        return new_invoices
+
 
 def eternity_cycle():
     """
     Цикл обрабатывающий заявки из очереди
     :return:
     """
-    logger.debug("запуск бесконечного цикла")
+    logger.debug("Запущена очередь.")
     while True:
         invoice: LastInvoiceLookUpType = InvoiceLookUp().get_oldest_invoice()
         if invoice is not None:
             invoice.prepare()
         time.sleep(1)
 
+
+def check_timeout():
+    logger.debug("Запущен таймаут.")
+    while True:
+        invoices: list[Invoice] = InvoiceLookUp().get_all_new_invoices()
+        for invoice in invoices:
+            if invoice.is_overdue() is True:
+                invoice.in_queue()
+        time.sleep(1)
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
