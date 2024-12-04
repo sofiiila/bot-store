@@ -63,7 +63,10 @@ class Invoice:
         :return:
         """
         logger.debug("инвалид здесб")
-        pass
+        db_client.update(
+            filter_query={"id": self.__data.id},
+            value={"category": CategoriesEnum.invalid}
+        )
 
     def __in_progress(self):
         """
