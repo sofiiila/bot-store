@@ -1,11 +1,11 @@
 import logging
 import threading
 import time
-from datetime import datetime
 
 from src.init_app import db_client
 from src.invoices.invoice import Invoice
 from src.services.db_client_types import CategoriesEnum
+from src.settings import settings
 
 InvoiceType = Invoice | None
 
@@ -26,7 +26,7 @@ class InvoiceLookUp:
             sort_query={"start_date": 1})
         if result:
             logger.debug("Получена заявка с ID: %s",  result[0].id)
-            return Invoice(data=result[0])
+            return Invoice(data=result[0], settings=settings)
         return None
 
     def get_invoice_by_id(self, id) -> Invoice | None:
@@ -40,7 +40,7 @@ class InvoiceLookUp:
             filter_query={"_id": id},
         )
         if result:
-            return Invoice(data=result[0])
+            return Invoice(data=result[0], settings=settings)
         return None
 
     def get_all_new_invoices(self):
@@ -50,7 +50,7 @@ class InvoiceLookUp:
 
         if results:
             for result in results:
-                new_invoices.append(Invoice(data=result))
+                new_invoices.append(Invoice(data=result, settings=settings))
 
         return new_invoices
 

@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 logger = logging.getLogger(__name__)
 
+
 @app.route('/execute_function', methods=['POST'])
 def execute_my_function():
     # Получаем данные из запроса

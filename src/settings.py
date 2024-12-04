@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     db_port: str
     db_container_name: str
     bot_port: int
+    base_url: str
 
 
 settings = Settings()

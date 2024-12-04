@@ -9,6 +9,7 @@ from requests.exceptions import Timeout, ConnectionError
 from src.init_app import db_client
 from src.invoices.exc import InvalidInvoice, ServerProblem
 from src.services.db_client_types import UserDocument, CategoriesEnum
+from src.settings import Settings
 
 logger = logging.getLogger(__name__)
 
@@ -49,9 +50,9 @@ class Invoice:
     Класс для работы с заявками, определяет их статус и id
     """
 
-    def __init__(self, data: UserDocument):
+    def __init__(self, data: UserDocument, settings: Settings):
         # TODO Base Url должен пробрасывватся черех env
-        self.__api_client = CrmApiClient(base_url="http://192.168.0.107:8001")
+        self.__api_client = CrmApiClient(base_url=settings.base_url)
         self.__data = data
 
     # TODO реализовать метод
