@@ -115,13 +115,6 @@ class Invoice:
         logger.debug("метод create")
 
     # TODO Убрать
-    def get_ready_from_crm(self):
-        while True:
-            status = self.__api_client.get_crm_status()
-            if status == 'ready':
-                self.delete()
-                break
-            time.sleep(10)
 
     def delete(self):
         """
