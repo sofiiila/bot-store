@@ -54,6 +54,7 @@ class Invoice:
         # TODO Base Url должен пробрасывватся черех env
         self.__api_client = CrmApiClient(base_url=settings.base_url)
         self.__data = data
+        self.__settings = settings
 
     # TODO реализовать метод
     def __is_invalid(self):
@@ -80,7 +81,8 @@ class Invoice:
         current_time = datetime.now()
         start_date = self.__data.start_date
         delta_time = current_time - start_date
-        return delta_time > timedelta(minutes=30)
+        timeout_delta = timedelta(minutes=self.__settings.timeout)
+        return delta_time > timeout_delta
 
     def in_queue(self):
         db_client.update(filter_query={"user_id": self.__data.user_id,

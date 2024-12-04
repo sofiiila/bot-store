@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     db_container_name: str
     bot_port: int
     base_url: str
+    timeout: int
 
 
 settings = Settings()
