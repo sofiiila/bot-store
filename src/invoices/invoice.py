@@ -94,13 +94,15 @@ class Invoice:
 
     # TODO Реализовать create
     @classmethod
-    def create(cls):
+    def create(cls, data: UserDocument, settings: Settings):
         """
         будет вызываться в момеент когда заполнено в боте
         :return:
         """
         logger.debug("метод create")
-
+        invoice = cls(data, settings)
+        invoice.in_queue()
+        return invoice
 
     def delete(self):
         """
