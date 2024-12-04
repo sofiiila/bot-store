@@ -7,7 +7,7 @@ from src.init_app import db_client
 from src.invoices.invoice import Invoice
 from src.services.db_client_types import CategoriesEnum
 
-LastInvoiceLookUpType = Invoice | None
+InvoiceType = Invoice | None
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ class InvoiceLookUp:
     """
     Распорядитель заявок для верхнеуровневых ф-й
     """
-    def get_oldest_invoice(self) -> LastInvoiceLookUpType:
+    def get_oldest_invoice(self) -> InvoiceType:
         """
         возвращает самую старую заявку из очереди или None
         :return: obj Invoice
@@ -62,7 +62,7 @@ def eternity_cycle():
     """
     logger.debug("Запущена очередь.(беск цикл)")
     while True:
-        invoice: LastInvoiceLookUpType = InvoiceLookUp().get_oldest_invoice()
+        invoice: InvoiceType = InvoiceLookUp().get_oldest_invoice()
         if invoice is not None:
             invoice.prepare()
         time.sleep(1)

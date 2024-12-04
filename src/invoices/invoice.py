@@ -1,6 +1,6 @@
 import json
 import logging
-import time
+
 from datetime import datetime, timedelta
 
 import requests
@@ -42,24 +42,6 @@ class CrmApiClient:
             raise ServerProblem
 
     # TODO зачем?
-    def get_crm_status(self):
-        """
-        Метод, который запрашивает статус заявки у CRM
-        """
-        # url = f"{self.base_url}/api/notifications"
-        # headers = {"Content-Type": "application/json"}
-        # try:
-        #     response = requests.get(url, headers=headers)
-        #     if response.status_code == 200:
-        #         notification = response.json()
-        #         if notification.get("status") == 'ready':
-        #             return 'ready'
-        #     logger.warning("Уведомление от CRM не содержит ожидаемый статус 'ready'. Код ответа: %d", response.status_code)
-        #     return ''
-        # except (ConnectionError, Timeout) as e:
-        #     logger.error("Не удачное подключение по причине: %s", str(e))
-        #     raise ServerProblem
-        return 'ready'
 
 
 class Invoice:
@@ -90,15 +72,14 @@ class Invoice:
         db_client.update(
             filter_query={"id": self.__data.id},
             # TODO Изпользуй enum
-            value={"category": "in_progress"}
+            value={"category": CategoriesEnum.in_progress}
         )
-        self.get_ready_from_crm()
 
     def is_overdue(self):
         current_time = datetime.now()
         start_date = self.__data.start_date
         delta_time = current_time - start_date
-        return delta_time > timedelta(minutes=1)
+        return delta_time > timedelta(minutes=30)
 
     def in_queue(self):
         db_client.update(filter_query={"user_id": self.__data.user_id,
