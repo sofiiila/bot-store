@@ -107,7 +107,6 @@ class Invoice:
 
     # TODO Реализовать create
     @classmethod
-
     def create(cls):
         """
         будет вызываться в момеент когда заполнено в боте
