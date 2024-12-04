@@ -124,6 +124,8 @@ class Invoice:
                 break
             time.sleep(10)
 
+
+
     def delete(self):
         """
         метод удаляющий заявку из очереди, когда она уже попала в CRM
