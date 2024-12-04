@@ -114,7 +114,6 @@ class Invoice:
         """
         logger.debug("метод create")
 
-    # TODO Убрать
 
     def delete(self):
         """
