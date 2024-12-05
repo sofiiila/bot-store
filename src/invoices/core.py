@@ -5,7 +5,7 @@ import time
 from src.init_app import db_client
 from src.invoices.invoice import Invoice
 from src.services.db_client_types import CategoriesEnum
-from src.settings import settings
+
 
 InvoiceType = Invoice | None
 
@@ -16,6 +16,12 @@ class InvoiceLookUp:
     """
     Распорядитель заявок для верхнеуровневых ф-й
     """
+    def __init__(self, base_url):
+        self.__base_url = base_url
+
+    def _create_invoice(self, data):
+        return Invoice(data, base_url=self.__base_url)
+
     def get_oldest_invoice(self) -> InvoiceType:
         """
         возвращает самую старую заявку из очереди или None
@@ -26,7 +32,7 @@ class InvoiceLookUp:
             sort_query={"start_date": 1})
         if result:
             logger.debug("Получена заявка с ID: %s",  result[0].id)
-            return Invoice(data=result[0], settings=settings)
+            return self._create_invoice(result[0])
         return None
 
     def get_invoice_by_id(self, id) -> Invoice | None:
@@ -40,7 +46,7 @@ class InvoiceLookUp:
             filter_query={"_id": id},
         )
         if result:
-            return Invoice(data=result[0], settings=settings)
+            return self._create_invoice(result)
         return None
 
     def get_all_new_invoices(self):
@@ -50,7 +56,7 @@ class InvoiceLookUp:
 
         if results:
             for result in results:
-                new_invoices.append(Invoice(data=result, settings=settings))
+                new_invoices.append(self._create_invoice(result))
 
         return new_invoices
 

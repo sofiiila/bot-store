@@ -50,11 +50,10 @@ class Invoice:
     Класс для работы с заявками, определяет их статус и id
     """
 
-    def __init__(self, data: UserDocument, settings: Settings):
+    def __init__(self, data: UserDocument, base_url):
         # TODO Base Url должен пробрасывватся черех env
-        self.__api_client = CrmApiClient(base_url=settings.base_url)
+        self.__api_client = CrmApiClient(base_url)
         self.__data = data
-        self.__settings = settings
 
     # TODO реализовать метод
     def __is_invalid(self):
