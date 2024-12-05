@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 import requests
 from requests.exceptions import Timeout, ConnectionError
 
-from src.init_app import db_client
 from src.invoices.exc import InvalidInvoice, ServerProblem
 from src.services.db_client_types import UserDocument, CategoriesEnum
 from src.settings import Settings
@@ -50,10 +49,11 @@ class Invoice:
     Класс для работы с заявками, определяет их статус и id
     """
 
-    def __init__(self, data: UserDocument, base_url):
+    def __init__(self, data: UserDocument, base_url, db_client):
         # TODO Base Url должен пробрасывватся черех env
         self.__api_client = CrmApiClient(base_url)
         self.__data = data
+        self.db_client = db_client
 
     # TODO реализовать метод
     def __is_invalid(self):
@@ -62,7 +62,7 @@ class Invoice:
         :return:
         """
         logger.debug("инвалид здесб")
-        db_client.update(
+        self.db_client.update(
             filter_query={"id": self.__data.id},
             value={"category": CategoriesEnum.invalid}
         )
@@ -73,7 +73,7 @@ class Invoice:
         :return:
         """
         logger.debug("Вызван ин прогрес")
-        db_client.update(
+        self.db_client.update(
             filter_query={"id": self.__data.id},
             # TODO Изпользуй enum
             value={"category": CategoriesEnum.in_progress}
@@ -83,11 +83,10 @@ class Invoice:
         current_time = datetime.now()
         start_date = self.__data.start_date
         delta_time = current_time - start_date
-        timeout_delta = timedelta(minutes=self.__settings.timeout)
-        return delta_time > timeout_delta
+        return delta_time > timedelta(minutes=30)
 
     def in_queue(self):
-        db_client.update(filter_query={"user_id": self.__data.user_id,
+        self.db_client.update(filter_query={"user_id": self.__data.user_id,
                                        "id": self.__data.id},
                          value={"category": CategoriesEnum.queue})
 
@@ -109,7 +108,7 @@ class Invoice:
         :return:
         """
         logger.debug("Я удаляю ")
-        db_client.delete(self.__data.id)
+        self.db_client.delete(self.__data.id)
 
     def prepare(self):
         """

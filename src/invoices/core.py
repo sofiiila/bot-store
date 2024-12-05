@@ -2,63 +2,11 @@ import logging
 import threading
 import time
 
-from src.init_app import db_client
+from src.init_app import invoice_look_up
 from src.invoices.invoice import Invoice
-from src.services.db_client_types import CategoriesEnum
-
-
-InvoiceType = Invoice | None
+from src.invoices.invoice_look_up import InvoiceType
 
 logger = logging.getLogger(__name__)
-
-
-class InvoiceLookUp:
-    """
-    Распорядитель заявок для верхнеуровневых ф-й
-    """
-    def __init__(self, base_url):
-        self.__base_url = base_url
-
-    def _create_invoice(self, data):
-        return Invoice(data, base_url=self.__base_url)
-
-    def get_oldest_invoice(self) -> InvoiceType:
-        """
-        возвращает самую старую заявку из очереди или None
-        :return: obj Invoice
-        """
-        result = db_client.list(
-            filter_query={"category": CategoriesEnum.queue},
-            sort_query={"start_date": 1})
-        if result:
-            logger.debug("Получена заявка с ID: %s",  result[0].id)
-            return self._create_invoice(result[0])
-        return None
-
-    def get_invoice_by_id(self, id) -> Invoice | None:
-        """
-        Возвращает заявку которую пора удалять
-        :param id:
-        :return: obj Invoice
-        """
-        logger.debug("получение заявки по id")
-        result = db_client.list(
-            filter_query={"_id": id},
-        )
-        if result:
-            return self._create_invoice(result)
-        return None
-
-    def get_all_new_invoices(self):
-        results = db_client.list(
-            filter_query={"category": CategoriesEnum.new})
-        new_invoices=[]
-
-        if results:
-            for result in results:
-                new_invoices.append(self._create_invoice(result))
-
-        return new_invoices
 
 
 def eternity_cycle():
@@ -68,7 +16,7 @@ def eternity_cycle():
     """
     logger.debug("Запущена очередь.(беск цикл)")
     while True:
-        invoice: InvoiceType = InvoiceLookUp().get_oldest_invoice()
+        invoice: InvoiceType = invoice_look_up.get_oldest_invoice()
         if invoice is not None:
             invoice.prepare()
         time.sleep(1)
@@ -77,7 +25,7 @@ def eternity_cycle():
 def check_timeout():
     logger.debug("Запущен таймаут.")
     while True:
-        invoices: list[Invoice] = InvoiceLookUp().get_all_new_invoices()
+        invoices: list[Invoice] = invoice_look_up.get_all_new_invoices()
         for invoice in invoices:
             if invoice.is_overdue() is True:
                 invoice.in_queue()
