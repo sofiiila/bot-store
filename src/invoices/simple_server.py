@@ -3,11 +3,13 @@ import threading
 
 from flask import Flask, request, jsonify
 
-from src.invoices.core import InvoiceLookUp, LastInvoiceLookUpType, eternity_cycle
+from src.invoices.core import eternity_cycle
+from src.invoices.invoice_look_up import InvoiceLookUp, InvoiceType
 
 app = Flask(__name__)
 
 logger = logging.getLogger(__name__)
+
 
 @app.route('/execute_function', methods=['POST'])
 def execute_my_function():
@@ -15,7 +17,7 @@ def execute_my_function():
     data = request.json
     id = data['id']
     # TODO я бы переназвал тогда тип, меня смущает что какой-то last
-    invoice: LastInvoiceLookUpType = InvoiceLookUp().get_invoice_by_id(id)
+    invoice: InvoiceType = InvoiceLookUp().get_invoice_by_id(id)
     if invoice:
         invoice.delete()
         return jsonify({"message": "Инвойс удален"})
