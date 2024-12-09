@@ -1,3 +1,6 @@
+"""
+модуль контакты
+"""
 import logging
 
 from telegram import Update, ReplyKeyboardMarkup
@@ -18,7 +21,8 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Эта функция сохраняет контактные данные пользователя и записывает данные в базу данных.
     Args:
         update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
-        context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
+        context (ContextTypes.DEFAULT_TYPE): Объект контекста,
+        предоставляющий доступ к боту и другим полезным данным.
     Returns:
         int: Следующее состояние.
     """
@@ -30,7 +34,7 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     db_client.update(filter_query={"user_id": user.id,
                                    "id": context.user_data['id']},
                      value={"contacts": update.message.text,
-                            "category": CategoriesEnum.queue})
+                            "category": CategoriesEnum.QUEUE})
 
     if context.user_data['source'] == 'write':
         await update.message.reply_text(
@@ -48,5 +52,3 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         )
 
     return ASK_MORE
-
-

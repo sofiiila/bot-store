@@ -1,3 +1,6 @@
+"""
+module invoice
+"""
 import json
 import logging
 
@@ -22,13 +25,19 @@ class CrmApiClient:
         self.base_url = base_url
 
     def try_send_invoice(self, invoice_data) -> int:
+        """
+        ф-я пытающаяся лотправить заявку в crm
+        :param invoice_data:
+        :return:
+        """
         url = f"{self.base_url}/api/invoices"
-        json_str = json.dumps(invoice_data, default=lambda o: o.isoformat() if isinstance(o, datetime) else o)
+        json_str = json.dumps(invoice_data, default=lambda o: o.isoformat()
+        if isinstance(o, datetime) else o)
         invoice_data = json.loads(json_str)
         headers = {"Content-Type": "application/json"}
         logger.debug('%s %s %s', url, invoice_data, headers)
         try:
-            response = requests.post(url, json=invoice_data, headers=headers)
+            response = requests.post(url, json=invoice_data, headers=headers, timeout=10)
             if str(response.status_code).startswith('4'):
                 logger.error("400 код.")
                 raise InvalidInvoice
@@ -64,7 +73,7 @@ class Invoice:
         logger.debug("инвалид здесб")
         self.db_client.update(
             filter_query={"id": self.__data.id},
-            value={"category": CategoriesEnum.invalid}
+            value={"category": CategoriesEnum.INVALID}
         )
 
     def __in_progress(self):
@@ -76,29 +85,37 @@ class Invoice:
         self.db_client.update(
             filter_query={"id": self.__data.id},
             # TODO Изпользуй enum
-            value={"category": CategoriesEnum.in_progress}
+            value={"category": CategoriesEnum.IN_PROGRESS}
         )
 
     def is_overdue(self):
+        """
+        timer для заполнения
+        :return:
+        """
         current_time = datetime.now()
         start_date = self.__data.start_date
         delta_time = current_time - start_date
         return delta_time > timedelta(minutes=30)
 
     def in_queue(self):
+        """
+        ставит в queue
+        :return:
+        """
         self.db_client.update(filter_query={"user_id": self.__data.user_id,
                                        "id": self.__data.id},
-                         value={"category": CategoriesEnum.queue})
+                              value={"category": CategoriesEnum.QUEUE})
 
     # TODO Реализовать create
     @classmethod
-    def create(cls, data: UserDocument, settings: Settings):
+    def create(cls, data: UserDocument, settings: Settings, db_client):
         """
         будет вызываться в момеент когда заполнено в боте
         :return:
         """
         logger.debug("метод create")
-        invoice = cls(data, settings)
+        invoice = cls(data, settings, db_client)
         invoice.in_queue()
         return invoice
 
