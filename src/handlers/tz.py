@@ -1,3 +1,6 @@
+"""
+MODULE TZ
+"""
 import logging
 
 from telegram import Update, ReplyKeyboardRemove
@@ -16,7 +19,8 @@ async def tz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Обработчик для ТЗ.
     Args:
         update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
-        context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
+        context (ContextTypes.DEFAULT_TYPE): Объект контекста,
+         предоставляющий доступ к боту и другим полезным данным.
     Returns:
         int: Следующее состояние.
     """
@@ -27,7 +31,7 @@ async def tz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     db_client.update(filter_query={
         "user_id": user.id,
         #"id": str(context.user_data['id'])
-        "category": CategoriesEnum.new
+        "category": CategoriesEnum.NEW
     },
                      value={"tz": update.message.text})
     await update.message.reply_text(

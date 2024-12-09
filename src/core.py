@@ -1,3 +1,6 @@
+"""
+module start app
+"""
 import threading
 
 from src.init_app import application
@@ -8,6 +11,10 @@ from src.invoices.core import eternity_cycle, check_timeout
 
 
 def start_app():
+    """
+    запуск тредов
+    :return:
+    """
     timer_thread = threading.Thread(target=check_timeout)
     timer_thread.start()
     thread = threading.Thread(target=eternity_cycle)
@@ -16,6 +23,3 @@ def start_app():
     server_thread.start()
     application.add_handler(conv_handler)
     application.run_polling()
-
-
-

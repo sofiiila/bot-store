@@ -1,3 +1,6 @@
+"""
+module core services
+"""
 import logging
 
 import pymongo
@@ -11,6 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 class DbClient:
+    """
+    db client
+    """
     def __init__(self, db_user, db_password, host='localhost', port=27017):
         connection_string = f'mongodb://{db_user}:{db_password}@{host}:{port}/'
         db_client = MongoClient(connection_string)
@@ -18,12 +24,24 @@ class DbClient:
         self.__collection = db["mycollection"]
 
     def update_user_data(self, user_id, field, value):
+        """
+        ф-я обновляет данные
+        :param user_id:
+        :param field:
+        :param value:
+        :return:
+        """
         self.__collection.update_one(
             {"user_id": user_id},
             {"$set": {field: value}}
         )
 
     def create(self, user_id) -> UserDocument:
+        """
+        метод открывающий заявку
+        :param user_id:
+        :return:
+        """
         document = UserDocument.create_model(user_id).dict()
         document.pop('id')
         result: InsertOneResult = self.__collection.insert_one(document)

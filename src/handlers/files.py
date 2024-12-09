@@ -1,3 +1,6 @@
+"""
+module files
+"""
 import logging
 import os
 from telegram import Update, ReplyKeyboardRemove
@@ -20,7 +23,8 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Переходит к шагу 'deadline' и запрашивает у пользователя срок выполнения.
     Args:
         update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
-        context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
+        context (ContextTypes.DEFAULT_TYPE): Объект контекста,
+        предоставляющий доступ к боту и другим полезным данным.
     Returns:
         int: Следующее состояние.
     """
@@ -36,7 +40,7 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     # TODO Здесь нужно получить по id и обновить через метод fill в Invoice
     db_client.update(filter_query={"user_id": user.id,
                                    "id": context.user_data['id'],
-                                   "category": CategoriesEnum.new},
+                                   "category": CategoriesEnum.NEW},
                      value={"files": update.message.text})
 
     await update.message.reply_text(

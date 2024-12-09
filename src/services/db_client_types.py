@@ -1,18 +1,26 @@
+"""
+models
+"""
 from datetime import datetime
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel
 
 
 class CategoriesEnum(str, Enum):
-    new = "new"
-    queue = "queue"
-    invalid = "invalid"
-    in_progress = "in_progress"
+    """
+    CAtegories
+    """
+    NEW = "new"
+    QUEUE = "queue"
+    INVALID = "invalid"
+    IN_PROGRESS = "in_progress"
 
 
 class UserDocument(BaseModel):
+    """
+    user data model
+    """
     id: str = " "
     user_id: int
     question: str = "No question"
@@ -20,14 +28,23 @@ class UserDocument(BaseModel):
     files: str = "No files"
     deadline: str = "No deadline"
     contacts: str = "No contacts"
-    category: CategoriesEnum = CategoriesEnum.new
+    category: CategoriesEnum = CategoriesEnum.NEW
     start_date: datetime = datetime.now()
 
     @classmethod
     def create_model(cls, user_id):
+        """
+        create
+        :param user_id:
+        :return:
+        """
         return UserDocument(user_id=int(user_id))
 
     def to_api(self):
+        """
+        method
+        :return:
+        """
         api_data = {}
         for key, value in self.dict().items():
             if isinstance(value, datetime):

@@ -1,3 +1,6 @@
+"""
+module deadline
+"""
 import logging
 
 from telegram import Update, ReplyKeyboardRemove
@@ -16,7 +19,8 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Эта функция сохраняет срок выполнения и запрашивает контактные данные пользователя.
     Args:
         update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
-        context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
+        context (ContextTypes.DEFAULT_TYPE): Объект контекста,
+        предоставляющий доступ к боту и другим полезным данным.
     Returns:
         int: Следующее состояние.
     """
@@ -27,11 +31,12 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     # TODO Здесь нужно получить по id и обновить через метод fill в Invoice
     db_client.update(filter_query={"user_id": user.id,
                                    "id": context.user_data['id'],
-                                   "category": CategoriesEnum.new},
+                                   "category": CategoriesEnum.NEW},
                      value={"deadline": update.message.text})
 
     await update.message.reply_text(
-        "Пожалуйста, оставьте свои контактные данные или отправьте /skip, чтобы пропустить этот шаг.",
+        "Пожалуйста, оставьте свои контактные данные или отправьте /skip,"
+        " чтобы пропустить этот шаг.",
         reply_markup=ReplyKeyboardRemove(),
     )
     return CONTACTS

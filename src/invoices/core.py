@@ -1,3 +1,6 @@
+"""
+eternity cycke & timer
+"""
 import logging
 import threading
 import time
@@ -23,6 +26,10 @@ def eternity_cycle():
 
 
 def check_timeout():
+    """
+    таймер
+    :return:
+    """
     logger.debug("Запущен таймаут.")
     while True:
         invoices: list[Invoice] = invoice_look_up.get_all_new_invoices()
@@ -34,6 +41,10 @@ def check_timeout():
 
 
 def main():
+    """
+    main
+    :return:
+    """
     logging.basicConfig(level=logging.DEBUG)
     thread = threading.Thread(target=eternity_cycle())
     thread.start()

@@ -1,7 +1,13 @@
+"""
+settings
+"""
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    """
+    model settings
+    """
     token: str
     db_user: str
     db_password: str

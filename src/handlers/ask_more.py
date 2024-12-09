@@ -1,3 +1,10 @@
+"""
+Модуль ask_more обрабатывает запросы пользователей на получение дополнительной информации.
+
+Этот модуль отвечает за обработку запросов типа 'ask more'
+и предоставляет дополнительную информацию.
+"""
+
 import logging
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
@@ -14,8 +21,10 @@ async def ask_more(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Обработчик для оформления еще одного заказа.
         Эта функция обрабатывает выбор пользователя и переходит к соответствующему состоянию.
     Args:
-        update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
-        context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
+        update (Update): Объект, содержащий информацию о событии,
+         которое вызвало эту функцию.
+        context (ContextTypes.DEFAULT_TYPE): Объект контекста,
+        предоставляющий доступ к боту и другим полезным данным.
     Returns:
         int: Следующее состояние.
     """
@@ -34,7 +43,8 @@ async def ask_more(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         logger.info("Пользователь %s выбрал заказать еще.", user.first_name)
         context.user_data['source'] = 'order'
         await update.message.reply_text(
-            "Пожалуйста, укажите техническое задание (ТЗ) или отправьте /skip, чтобы пропустить этот шаг.",
+            "Пожалуйста, укажите техническое задание (ТЗ) или"
+            " отправьте /skip, чтобы пропустить этот шаг.",
             reply_markup=ReplyKeyboardRemove(),
         )
         return TZ

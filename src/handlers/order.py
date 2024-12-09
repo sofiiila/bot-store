@@ -1,3 +1,6 @@
+"""
+module order
+"""
 import logging
 
 from telegram import Update, ReplyKeyboardRemove
@@ -12,7 +15,8 @@ async def order(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Обработчик для заказа.
     Args:
         update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
-        context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
+        context (ContextTypes.DEFAULT_TYPE): Объект контекста,
+        предоставляющий доступ к боту и другим полезным данным.
     Returns:
         int: Следующее состояние.
     """
@@ -20,7 +24,8 @@ async def order(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     logger.info("Пользователь %s выбрал заказать.", user.first_name)
     context.user_data['source'] = 'order'
     await update.message.reply_text(
-        "Пожалуйста, укажите техническое задание (ТЗ) или отправьте /skip, чтобы пропустить этот шаг.",
+        "Пожалуйста, укажите техническое задание (ТЗ) или отправьте /skip,"
+        " чтобы пропустить этот шаг.",
         reply_markup=ReplyKeyboardRemove(),
     )
     return TZ
