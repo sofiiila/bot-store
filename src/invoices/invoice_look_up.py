@@ -35,6 +35,7 @@ class InvoiceLookUp:
             return self._create_invoice(result[0])
         return None
 
+    # pylint: disable=redefined-builtin
     def get_invoice_by_id(self, id) -> Invoice | None:
         """
         Возвращает заявку которую пора удалять

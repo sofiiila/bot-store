@@ -36,7 +36,7 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                       "id": context.user_data['id'],
                       "category": CategoriesEnum.NEW},
         value={"question": update.message.text})
-
+    # pylint: disable=duplicate-code
     await update.message.reply_text(
         "Пожалуйста, оставьте свои контактные данные или отправьте /skip,"
         " чтобы пропустить этот шаг.",

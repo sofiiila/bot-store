@@ -25,6 +25,7 @@ async def skip_deadline(update: Update) -> int:
     user = update.message.from_user
     logger.info("Пользовптель %s пропустил добавление дедлайна.",
                 user.first_name)
+    # pylint: disable=duplicate-code
     await update.message.reply_text(
         "Пожалуйста, оставьте свои контактные данные или отправьте /skip,"
         " чтобы пропустить этот шаг.",

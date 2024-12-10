@@ -34,12 +34,13 @@ async def ask_more(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     if choice == "Написать еще":
         logger.info("Пользователь %s выбрал написать еще.", user.first_name)
         context.user_data['source'] = 'write'
+        # pylint: disable=duplicate-code
         await update.message.reply_text(
             "Здесь вы можете задать любой вопрос или отправьте /skip, чтобы пропустить этот шаг.",
             reply_markup=ReplyKeyboardRemove(),
         )
         return QUESTION
-    elif choice == "Заказать еще":
+    if choice == "Заказать еще":
         logger.info("Пользователь %s выбрал заказать еще.", user.first_name)
         context.user_data['source'] = 'order'
         await update.message.reply_text(
@@ -48,11 +49,11 @@ async def ask_more(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             reply_markup=ReplyKeyboardRemove(),
         )
         return TZ
-    else:
-        await update.message.reply_text(
-            "Пожалуйста, выберите один из предложенных вариантов.",
-            reply_markup=ReplyKeyboardMarkup(
-                [["Написать еще", "Заказать еще"]], one_time_keyboard=True
-            ),
-        )
-        return ASK_MORE
+    # pylint: disable=duplicate-code
+    await update.message.reply_text(
+        "Пожалуйста, выберите один из предложенных вариантов.",
+        reply_markup=ReplyKeyboardMarkup(
+            [["Написать еще", "Заказать еще"]], one_time_keyboard=True
+        ),
+    )
+    return ASK_MORE

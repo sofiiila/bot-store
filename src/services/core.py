@@ -54,10 +54,10 @@ class DbClient:
         :return: category
         """
         doc = self.__collection.find_one({"user_id": {user_id}})
-        if doc is not None:
-            return doc.get("category")
-        else:
+        if doc is None:
             raise ValueError(f"Документ не найден с таким {user_id}")
+
+        return doc.get("category")
 
     def update(self, filter_query: dict, value: dict):
         """
@@ -107,6 +107,7 @@ class DbClient:
             results.append(UserDocument(**doc, id=str(doc["_id"])))
         return results
 
+    # pylint: disable=redefined-builtin
     def delete(self, id):
         """
         отработано

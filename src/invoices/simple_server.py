@@ -14,6 +14,7 @@ app = Flask(__name__)
 logger = logging.getLogger(__name__)
 
 
+# pylint: disable=redefined-builtin
 @app.route('/execute_function', methods=['POST'])
 def execute_my_function():
     """
@@ -22,6 +23,7 @@ def execute_my_function():
     """
     # Получаем данные из запроса
     data = request.json
+    # pylint: disable=redefined-builtin
     id = data['id']
     # TODO я бы переназвал тогда тип, меня смущает что какой-то last
     invoice: InvoiceType = InvoiceLookUp(base_url="base_url",
@@ -29,9 +31,9 @@ def execute_my_function():
     if invoice:
         invoice.delete()
         return jsonify({"message": "Инвойс удален"})
-    else:
-        logger.error('такого id не существует')
-        return jsonify({"error": "Инвойс не найден"}), 404
+
+    logger.error('такого id не существует')
+    return jsonify({"error": "Инвойс не найден"}), 404
 
 
 def run_finish_invoice_server(port: int):

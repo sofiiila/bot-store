@@ -7,7 +7,7 @@ import logging
 from datetime import datetime, timedelta
 
 import requests
-from requests.exceptions import Timeout, ConnectionError
+from requests.exceptions import Timeout
 
 from src.invoices.exc import InvalidInvoice, ServerProblem
 from src.services.db_client_types import UserDocument, CategoriesEnum
@@ -16,7 +16,7 @@ from src.settings import Settings
 logger = logging.getLogger(__name__)
 
 
-class CrmApiClient:
+class CrmApiClient:  # pylint: disable=too-few-public-methods
     """
     Клиент для отправки запросов к CRM
     """
@@ -26,13 +26,13 @@ class CrmApiClient:
 
     def try_send_invoice(self, invoice_data) -> int:
         """
-        ф-я пытающаяся лотправить заявку в crm
+        Ф-я пытающаяся отправить заявку в CRM
         :param invoice_data:
         :return:
         """
         url = f"{self.base_url}/api/invoices"
-        json_str = json.dumps(invoice_data, default=lambda o: o.isoformat()
-        if isinstance(o, datetime) else o)
+        json_str = json.dumps(invoice_data,
+                              default=lambda o: o.isoformat() if isinstance(o, datetime) else o)
         invoice_data = json.loads(json_str)
         headers = {"Content-Type": "application/json"}
         logger.debug('%s %s %s', url, invoice_data, headers)
@@ -41,19 +41,19 @@ class CrmApiClient:
             if str(response.status_code).startswith('4'):
                 logger.error("400 код.")
                 raise InvalidInvoice
-            elif str(response.status_code).startswith('5'):
+            if str(response.status_code).startswith('5'):
                 logger.error("500 код.")
                 raise ServerProblem
-            else:
-                return response.status_code
+
+            return response.status_code
         except (ConnectionError, Timeout) as e:
-            logger.error("Не удачное подключение по причине: %s", str(e))
-            raise ServerProblem
+            logger.error("Неудачное подключение по причине: %s", str(e))
+            raise ServerProblem from e
 
     # TODO зачем?
 
 
-class Invoice:
+class Invoice:  # pylint: disable=too-few-public-methods
     """
     Класс для работы с заявками, определяет их статус и id
     """
