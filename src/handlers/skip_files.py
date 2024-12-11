@@ -4,12 +4,14 @@ module skip files
 import logging
 
 from telegram import Update, ReplyKeyboardRemove
+from telegram.ext import ContextTypes
+
 from src.handlers.handler_types import DEADLINE
 
 logger = logging.getLogger(__name__)
 
 
-async def skip_files(update: Update) -> int:
+async def skip_files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик для пропуска шага приложения файлов.
     Эта функция позволяет пользователю пропустить шаг

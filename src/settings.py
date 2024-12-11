@@ -19,4 +19,4 @@ class Settings(BaseSettings):
     timeout: int
 
 
-settings = Settings()
+settings = Settings() # type: ignore

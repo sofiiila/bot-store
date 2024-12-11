@@ -25,6 +25,8 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         int: Следующее состояние.
     """
     user = update.message.from_user
+    if context.user_data is None:
+        context.user_data = {}
     context.user_data['deadline'] = update.message.text
     logger.info("Пользователь %s добавил deadline: %s", user.first_name, update.message.text)
 

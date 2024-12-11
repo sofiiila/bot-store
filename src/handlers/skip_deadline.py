@@ -4,12 +4,14 @@ module skip deafline
 import logging
 
 from telegram import Update, ReplyKeyboardRemove
+from telegram.ext import ContextTypes
+
 from src.handlers.handler_types import CONTACTS
 
 logger = logging.getLogger(__name__)
 
 
-async def skip_deadline(update: Update) -> int:
+async def skip_deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик для пропуска шага дедлайн.
     Эта функция позволяет пользователю пропустить шаг приложения файлов
