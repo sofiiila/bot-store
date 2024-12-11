@@ -1,3 +1,6 @@
+"""
+module invoice look up
+"""
 import logging
 
 from src.invoices.invoice import Invoice
@@ -25,13 +28,14 @@ class InvoiceLookUp:
         :return: obj Invoice
         """
         result = self.db_client.list(
-            filter_query={"category": CategoriesEnum.queue},
+            filter_query={"category": CategoriesEnum.QUEUE},
             sort_query={"start_date": 1})
         if result:
             logger.debug("Получена заявка с ID: %s",  result[0].id)
             return self._create_invoice(result[0])
         return None
 
+    # pylint: disable=redefined-builtin
     def get_invoice_by_id(self, id) -> Invoice | None:
         """
         Возвращает заявку которую пора удалять
@@ -47,8 +51,12 @@ class InvoiceLookUp:
         return None
 
     def get_all_new_invoices(self):
+        """
+        возвращает все заявки со статусом new
+        :return:
+        """
         results = self.db_client.list(
-            filter_query={"category": CategoriesEnum.new})
+            filter_query={"category": CategoriesEnum.NEW})
         new_invoices=[]
 
         if results:

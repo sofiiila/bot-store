@@ -1,3 +1,6 @@
+"""
+инициализация обработчиков
+"""
 from telegram.ext import ConversationHandler, CommandHandler, MessageHandler, filters
 
 from .handler_types import WRITE, ORDER, TZ, FILES, DEADLINE, QUESTION, CONTACTS, ASK_MORE
@@ -24,9 +27,12 @@ conv_handler = ConversationHandler(
         ORDER: [MessageHandler(filters.TEXT & ~filters.COMMAND, order)],
         TZ: [MessageHandler(filters.TEXT & ~filters.COMMAND, tz), CommandHandler("skip", skip_tz)],
         FILES: [MessageHandler(filters.Document.ALL, files), CommandHandler("skip", skip_files)],
-        DEADLINE: [MessageHandler(filters.TEXT & ~filters.COMMAND, deadline), CommandHandler("skip", skip_deadline)],
-        QUESTION: [MessageHandler(filters.TEXT & ~filters.COMMAND, question), CommandHandler("skip", skip_question)],
-        CONTACTS: [MessageHandler(filters.TEXT & ~filters.COMMAND, contacts), CommandHandler("skip", skip_contacts)],
+        DEADLINE: [MessageHandler(filters.TEXT & ~filters.COMMAND, deadline),
+                   CommandHandler("skip", skip_deadline)],
+        QUESTION: [MessageHandler(filters.TEXT & ~filters.COMMAND, question),
+                   CommandHandler("skip", skip_question)],
+        CONTACTS: [MessageHandler(filters.TEXT & ~filters.COMMAND, contacts),
+                   CommandHandler("skip", skip_contacts)],
         ASK_MORE: [MessageHandler(filters.TEXT & ~filters.COMMAND, ask_more)],
     },
     fallbacks=[CommandHandler("cancel", cancel)],

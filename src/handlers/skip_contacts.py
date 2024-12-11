@@ -1,18 +1,23 @@
+"""
+module skip contacts
+"""
 import logging
 
 from telegram import Update, ReplyKeyboardRemove
-from telegram.ext import ContextTypes, ConversationHandler
+from telegram.ext import ConversationHandler
 
 logger = logging.getLogger(__name__)
 
 
-async def skip_contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def skip_contacts(update: Update) -> int:
     """
     Обработчик для пропуска шага контактов.
-    Эта функция позволяет пользователю пропустить шаг приложения файлов и перейти к указанию срока выполнения.
+    Эта функция позволяет пользователю пропустить шаг приложения файлов
+    и перейти к указанию срока выполнения.
     Args:
         update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
-        context (ContextTypes.DEFAULT_TYPE): Объект контекста, предоставляющий доступ к боту и другим полезным данным.
+        context (ContextTypes.DEFAULT_TYPE): Объект контекста,
+        предоставляющий доступ к боту и другим полезным данным.
     Returns:
         int: Следующее состояние.
     """
