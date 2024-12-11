@@ -1,7 +1,14 @@
+"""
+MODULE LOGGER
+"""
 import logging
 
 
 def init_logger():
+    """
+    INIT LOGGER
+    :return:
+    """
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.DEBUG)
@@ -17,7 +24,3 @@ def init_logger():
     logging.getLogger("pymongo.command").setLevel(logging.WARNING)
     logging.getLogger("urllib3.connectionpool").setLevel(logging.WARNING)
     logging.getLogger("werkzeug").setLevel(logging.WARNING)
-
-
-
-
