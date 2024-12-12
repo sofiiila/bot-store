@@ -1,4 +1,4 @@
-![.github/workflows/main.yml](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg)
+![Pylint Check Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?event=push&job=pylint-check)
 тут будет описание проекта 
 4 компонента 
 бот - отвечает за сбор данных с пользователя, назначает статус new в очереди
