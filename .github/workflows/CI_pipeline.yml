@@ -44,6 +44,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     needs: [mypy-check, pylint-check]
+    if: startsWith(github.ref_name, 'releases/')
     steps:
     - uses: actions/checkout@v4
     - name: Log in to Docker Hub
