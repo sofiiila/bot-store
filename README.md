@@ -2,7 +2,7 @@
 ![Mypy Check](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy&job=mypy-check)
 ![Pylint Check Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy&job=pylint-check)
 тут будет описание проекта 
-4 компонента 
+4 компонента
 бот - отвечает за сбор данных с пользователя, назначает статус new в очереди
 mongo_db - база, хранит собранные данные 
 queue - очередь, отвечает за перевод документов в статусы: queue - в очереди;
