@@ -1,5 +1,8 @@
-[![Mypy Check Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/main&job=mypy-check)](https://github.com/sofiiila/bot-store/actions?query=workflow%3ACI+Pipeline)
-[![Pylint Check Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/main&job=pylint-check)](https://github.com/sofiiila/bot-store/actions?query=workflow%3ACI+Pipeline)
+## Status Badges
+
+- **Mypy Check** [![Mypy Check Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy&job=mypy-check)](https://github.com/sofiiila/bot-store/actions?query=workflow%3ACI+Pipeline)
+
+- **Pylint Check** [![Pylint Check Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy&job=pylint-check)](https://github.com/sofiiila/bot-store/actions?query=workflow%3ACI+Pipeline)
 тут будет описание проекта 
 4 компонента 
 бот - отвечает за сбор данных с пользователя, назначает статус new в очереди
