@@ -1,4 +1,4 @@
-![Mypy Check](https://github.com/akchaau/bot-store/actions/workflows/CI-pipeline.yml/badge.svg?branch=main&event=push&job=mypy-check)
+![Mypy Check](https://github.com/akchaau/bot-store/.github/workflows/CI-pipeline.yml/badge.svg?branch=main&event=push&job=mypy-check)
 
 тут будет описание проекта 
 4 компонента 
