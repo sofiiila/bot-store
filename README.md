@@ -1,5 +1,6 @@
-![Mypy Check](https://github.com/akchaau/bot-store/.github/workflows/CI-pipeline.yml/badge.svg?job=mypy-check)
+![example workflow](https://github.com/github/docs/actions/workflows/CI_pipeline.yml/badge.svg)
 
+https://github.com/github/docs/actions/workflows
 тут будет описание проекта 
 4 компонента 
 бот - отвечает за сбор данных с пользователя, назначает статус new в очереди
