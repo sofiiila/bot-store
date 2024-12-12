@@ -11,7 +11,7 @@ from src.handlers.handler_types import FILES
 logger = logging.getLogger(__name__)
 
 
-async def skip_tz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def skip_tz(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик для пропуска шага ТЗ.
     Эта функция позволяет пользователю пропустить шаг приложения файлов

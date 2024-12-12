@@ -9,7 +9,7 @@ from telegram.ext import ConversationHandler, ContextTypes
 logger = logging.getLogger(__name__)
 
 
-async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def cancel(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик для отмены диалога.
     Эта функция завершает диалог и отправляет сообщение пользователю.

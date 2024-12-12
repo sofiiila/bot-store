@@ -12,7 +12,7 @@ from src.handlers.handler_types import CONTACTS
 logger = logging.getLogger(__name__)
 
 
-async def skip_question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def skip_question(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик для пропуска шага вопрос.
     Эта функция позволяет пользователю пропустить шаг

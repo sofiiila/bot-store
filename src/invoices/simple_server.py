@@ -4,7 +4,7 @@ module server
 import logging
 import threading
 
-from flask import Flask, request, jsonify
+from flask import Flask, request
 
 from src.invoices.core import eternity_cycle
 from src.invoices.invoice_look_up import InvoiceLookUp, InvoiceType
@@ -31,7 +31,7 @@ def execute_my_function() -> tuple[str, int]:
         id = data['id']
     except KeyError as e:
         logger.error('KeyError: %s', e)
-        return f'Missing required key "id"', 400
+        return 'Missing required key "id"', 400
 
     # TODO я бы переназвал тогда тип, меня смущает что какой-то last
     invoice: InvoiceType = InvoiceLookUp(base_url="base_url",
