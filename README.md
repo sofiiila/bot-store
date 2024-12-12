@@ -1,3 +1,6 @@
+![CI Pipeline](https://github.com/sofiiila/bot-store/actions/workflows/ci.yml/badge.svg)
+
+
 тут будет описание проекта 
 4 компонента 
 бот - отвечает за сбор данных с пользователя, назначает статус new в очереди
