@@ -1,5 +1,5 @@
 """
-MODULE LOGGER
+MODULE LOGGER sdmf
 """
 import logging
 
