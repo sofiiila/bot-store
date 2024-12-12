@@ -61,3 +61,23 @@ jobs:
       run: docker build -t akchaau/bot-store:${{ env.VERSION }} .
     - name: Push the Docker image
       run: docker push akchaau/bot-store:${{ env.VERSION }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref_name, 'releases/')
+    needs: [mypy-check, pylint-check]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.4
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Execute remote command
+      run: |
+        ssh ubuntu@91.219.227.32 << 'EOF'
+        cd /bot-store
+        git pull
+        docker-compose up -d
+        EOF
