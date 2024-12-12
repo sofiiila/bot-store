@@ -1,4 +1,4 @@
-![example workflow](https://github.com/github/docs/actions/workflows/CI_pipeline.yml/badge.svg)
+![.github/workflows/main.yml](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg)
 тут будет описание проекта 
 4 компонента 
 бот - отвечает за сбор данных с пользователя, назначает статус new в очереди
