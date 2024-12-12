@@ -52,6 +52,6 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build the Docker image
-      run: docker build -t your-dockerhub-username/your-image-name:tag .
+      run: docker build -t akchaau/bot-store:latest .
     - name: Push the Docker image
-      run: docker push your-dockerhub-username/your-image-name:tag
+      run: docker push akchaau/bot-store:latest:tag
