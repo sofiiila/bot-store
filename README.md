@@ -1,7 +1,7 @@
 ## Status Badges
 
-[Mypy Check](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy&job=mypy-check)
-[Pylint Check Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy&job=pylint-check)
+![Mypy Check](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy&job=mypy-check)
+[!Pylint Check Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy&job=pylint-check)
 тут будет описание проекта 
 4 компонента 
 бот - отвечает за сбор данных с пользователя, назначает статус new в очереди
