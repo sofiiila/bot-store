@@ -1,4 +1,5 @@
-[![CI Pipeline Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy)](https://github.com/sofiiila/bot-store/actions)
+[![CI Pipeline Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=$GITHUB_REF_NAME)](https://github.com/sofiiila/bot-store/actions)
+[![CI Pipeline Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg)](https://github.com/sofiiila/bot-store/actions)
 тут будет описание проекта 
 4 компонента 
 бот - отвечает за сбор данных с пользователя, назначает статус new в очереди
