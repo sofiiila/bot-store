@@ -1,4 +1,4 @@
-[![CI Pipeline Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/main)](https://github.com/sofiiila/bot-store/actions)
+[![Pylint Check Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/main&job=pylint-check)](https://github.com/sofiiila/bot-store/actions?query=workflow%3ACI+Pipeline)
 тут будет описание проекта 
 4 компонента 
 бот - отвечает за сбор данных с пользователя, назначает статус new в очереди
