@@ -21,6 +21,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     user = update.message.from_user
     # TODO через create Invoice
     document: UserDocument = db_client.create(user_id=user.id)
+    if context.user_data is None:
+        context.user_data = {}
     context.user_data['id'] = document.id
     reply_keyboard = [["Написать нам", "Заказать"]]
     await update.message.reply_text(

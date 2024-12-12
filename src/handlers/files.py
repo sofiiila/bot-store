@@ -34,6 +34,10 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     file_path = os.path.join('downloads', update.message.document.file_name)
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     await file.download_to_drive(file_path)
+
+    if context.user_data is None:
+        context.user_data = {}
+
     context.user_data['files'] = file_path
     logger.info("Пользователь %s загрузил файл: %s", user.first_name, file_path)
 

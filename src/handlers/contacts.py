@@ -27,6 +27,8 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         int: Следующее состояние.
     """
     user = update.message.from_user
+    if context.user_data is None:
+        context.user_data = {}
     context.user_data['contacts'] = update.message.text
     logger.info("Пользователь %s добавил контакты: %s", user.first_name, update.message.text)
 

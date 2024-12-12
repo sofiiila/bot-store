@@ -12,7 +12,7 @@ from src.invoices.invoice_look_up import InvoiceType
 logger = logging.getLogger(__name__)
 
 
-def eternity_cycle():
+def eternity_cycle() -> None:
     """
     Цикл обрабатывающий заявки из очереди
     :return:
@@ -25,7 +25,7 @@ def eternity_cycle():
         time.sleep(1)
 
 
-def check_timeout():
+def check_timeout() -> None:
     """
     таймер
     :return:
@@ -40,13 +40,13 @@ def check_timeout():
         time.sleep(1)
 
 
-def main():
+def main() -> None:
     """
-    main
+    Main function
     :return:
     """
     logging.basicConfig(level=logging.DEBUG)
-    thread = threading.Thread(target=eternity_cycle())
+    thread = threading.Thread(target=eternity_cycle)
     thread.start()
 
 

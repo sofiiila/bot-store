@@ -26,7 +26,9 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """
     user = update.message.from_user
     logger.info("контекст %s",
-                context.user_data['id'])
+                context.user_data['id']) # type: ignore
+    if context.user_data is None:
+        context.user_data = {}
     context.user_data['question'] = update.message.text
     logger.info("Пользователь %s пишет нам: %s", user.first_name, update.message.text)
 

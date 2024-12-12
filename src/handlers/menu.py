@@ -25,6 +25,9 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     user = update.message.from_user
     choice = update.message.text
 
+    if context.user_data is None:
+        context.user_data = {}
+
     if choice == "Написать нам":
         logger.info("Пользователь %s выбрал написать нам.", user.first_name)
         context.user_data['source'] = 'write'

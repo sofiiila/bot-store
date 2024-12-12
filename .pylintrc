@@ -1,2 +1,4 @@
 [MASTER]
 notes=XXX,RXX,FIXME
+[MESSAGES CONTROL]
+disable=missing-docstring,duplicate-code
