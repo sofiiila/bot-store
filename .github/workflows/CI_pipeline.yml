@@ -54,4 +54,4 @@ jobs:
     - name: Build the Docker image
       run: docker build -t akchaau/bot-store:latest .
     - name: Push the Docker image
-      run: docker push akchaau/bot-store:latest:latest
+      run: docker push akchaau/bot-store:latest
