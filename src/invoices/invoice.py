@@ -50,8 +50,6 @@ class CrmApiClient:  # pylint: disable=too-few-public-methods
             logger.error("Неудачное подключение по причине: %s", str(e))
             raise ServerProblem from e
 
-    # TODO зачем?
-
 
 class Invoice:  # pylint: disable=too-few-public-methods
     """

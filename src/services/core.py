@@ -53,7 +53,7 @@ class DbClient:
         :param user_id:
         :return: category
         """
-        doc = self.__collection.find_one({"user_id": {user_id}})
+        doc = self.__collection.find_one({"user_id": user_id})
         if doc is None:
             raise ValueError(f"Документ не найден с таким {user_id}")
 
@@ -91,7 +91,7 @@ class DbClient:
                 elif value == -1:
                     cleaned_sort_query[key] = pymongo.DESCENDING
                 else:
-                    raise ValueError("Не может быть другим значением ")
+                    raise ValueError("Не может быть другим значением")
         cleaned_filter_query = {}
         for key, value in filter_query.items():
             if key == "_id":
