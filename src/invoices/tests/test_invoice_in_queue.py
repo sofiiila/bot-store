@@ -13,7 +13,7 @@ class TestInvoice(unittest.TestCase):
         self.db_client = MagicMock()
 
     @patch('src.invoices.invoice.CrmApiClient')
-    def test_good_case_in_queue(self, MockCrmApiClient):
+    def test_good_case_in_queue(self, _):
         """
         Метод in_queue добавляет в очередь как ожидалось
         """

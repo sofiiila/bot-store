@@ -13,10 +13,12 @@ class TestInvoiceLookUp(unittest.TestCase):
         self.invoice_lookup = InvoiceLookUp(self.base_url, self.db_client)
 
     def test_good_case_get_all_new_invoices(self):
-        """Вызывает метод get_all_new_invoices и проверяет, что он возвращает список из двух объектов Invoice."""
+        """Вызывает метод get_all_new_invoices и проверяет,
+        что он возвращает список из двух объектов Invoice."""
         mock_invoice_data_1 = MagicMock()
         mock_invoice_data_2 = MagicMock()
-        self.db_client.list.return_value = [mock_invoice_data_1, mock_invoice_data_2]
+        self.db_client.list.return_value = [mock_invoice_data_1,
+                                            mock_invoice_data_2]
 
         result = self.invoice_lookup.get_all_new_invoices()
 
@@ -28,7 +30,8 @@ class TestInvoiceLookUp(unittest.TestCase):
         self.assertIsInstance(result[1], Invoice)
 
     def test_bad_case_get_all_new_invoices(self):
-        """Вызывает метод get_all_new_invoices и проверяет, что он возвращает пустой список."""
+        """Вызывает метод get_all_new_invoices и проверяет,
+        что он возвращает пустой список."""
         self.db_client.list.return_value = []
 
         result = self.invoice_lookup.get_all_new_invoices()

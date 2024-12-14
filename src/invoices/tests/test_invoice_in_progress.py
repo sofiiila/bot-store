@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from src.invoices.invoice import Invoice, CrmApiClient, Settings, UserDocument, CategoriesEnum
+from src.invoices.invoice import Invoice
+from src.services.db_client_types import CategoriesEnum, UserDocument
+from src.settings import Settings
 
 
 class TestInvoice(unittest.TestCase):
@@ -12,13 +14,13 @@ class TestInvoice(unittest.TestCase):
         self.db_client = MagicMock()
 
     @patch('src.invoices.invoice.CrmApiClient')
-    def test_good_case_in_progress(self, MockCrmApiClient):
+    def test_good_case_in_progress(self, _):
         """
         Метод __in_progress добавляет категорию in_progress в БД
         """
         invoice = Invoice(self.data, self.settings.base_url, self.db_client)
 
-        invoice._Invoice__in_progress()
+        invoice.in_progress = True
 
         self.db_client.update.assert_called_once_with(
             filter_query={"id": self.data.id},

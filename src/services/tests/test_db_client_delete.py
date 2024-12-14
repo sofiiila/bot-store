@@ -6,13 +6,14 @@ from src.services.core import DbClient
 
 
 class TestDbClient(unittest.TestCase):
-
-    @patch('src.services.core.MongoClient')
-    def setUp(self, MockMongoClient):
-        self.mock_client = MockMongoClient.return_value
-        self.mock_db = self.mock_client["your_database"]
-        self.mock_collection = self.mock_db["mycollection"]
-        self.db_client = DbClient(db_user='test_user', db_password='test_password')
+    def setUp(self):
+        with patch('src.services.core.MongoClient') as mock_mongo_client:
+            self.mock_client = mock_mongo_client.return_value
+            self.mock_db = self.mock_client["your_database"]
+            self.mock_collection = self.mock_db["mycollection"]
+            self.db_client = DbClient(
+                db_user='test_user',
+                db_password='test_password')
 
     def test_good_case_delete(self):
         """
@@ -37,13 +38,16 @@ class TestDbClient(unittest.TestCase):
         mock_delete_result = MagicMock()
         mock_delete_result.deleted_count = 0
 
-        with patch.object(self.db_client, '_DbClient__collection', self.mock_collection):
+        with patch.object(self.db_client,
+                          '_DbClient__collection',
+                          self.mock_collection):
             self.mock_collection.delete_one = MagicMock(return_value=mock_delete_result)
 
             with self.assertRaises(ValueError) as context:
                 self.db_client.delete(doc_id)
 
-            self.assertEqual(str(context.exception), f"Документ с id не найден для удаления. {doc_id}")
+            self.assertEqual(str(context.exception),
+                             f"Документ с id не найден для удаления. {doc_id}")
 
 
 if __name__ == '__main__':

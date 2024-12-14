@@ -12,13 +12,13 @@ class TestInvoice(unittest.TestCase):
         self.db_client = MagicMock()
 
     @patch('src.invoices.invoice.CrmApiClient')
-    def test_good_case_is_invalid(self, MockCrmApiClient):
+    def test_good_case_is_invalid(self, _):
         """
         Метод __is_invalid добавляет категорию is_invalid в БД
         """
         invoice = Invoice(self.data, self.settings.base_url, self.db_client)
 
-        invoice._Invoice__is_invalid()
+        invoice.is_invalid()
 
         self.db_client.update.assert_called_once_with(
             filter_query={"id": self.data.id},

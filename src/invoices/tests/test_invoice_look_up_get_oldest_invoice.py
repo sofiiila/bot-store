@@ -12,10 +12,11 @@ class TestInvoiceLookUp(unittest.TestCase):
         self.db_client = MagicMock()
         self.invoice_lookup = InvoiceLookUp(self.base_url, self.db_client)
 
-    @patch('src.invoices.invoice_look_up.logger')  
+    @patch('src.invoices.invoice_look_up.logger')
     def test_good_case_get_oldest_invoice(self, mock_logger):
         """
-        Вызывает метод get_oldest_invoice и проверяет, что он возвращает объект Invoice.
+        Вызывает метод get_oldest_invoice и проверяет,
+        что он возвращает объект Invoice.
         """
         mock_invoice_data = MagicMock()
         mock_invoice_data.id = "12345"

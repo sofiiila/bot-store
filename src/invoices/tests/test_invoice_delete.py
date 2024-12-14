@@ -12,7 +12,7 @@ class TestInvoice(unittest.TestCase):
         self.db_client = MagicMock()
 
     @patch('src.invoices.invoice.CrmApiClient')
-    def test_good_case_delete(self, MockCrmApiClient):
+    def test_good_case_delete(self, _):
         """
         Заявка удаляется из базы данных
         """

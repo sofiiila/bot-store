@@ -7,12 +7,14 @@ from src.services.core import DbClient, UserDocument
 
 class TestDbClient(unittest.TestCase):
 
-    @patch('src.services.core.MongoClient')
-    def setUp(self, MockMongoClient):
-        self.mock_client = MockMongoClient.return_value
-        self.mock_db = self.mock_client["your_database"]
-        self.mock_collection = self.mock_db["mycollection"]
-        self.db_client = DbClient(db_user='test_user', db_password='test_password')
+    def setUp(self):
+        with patch('src.services.core.MongoClient') as mock_mongo_client:
+            self.mock_client = mock_mongo_client.return_value
+            self.mock_db = self.mock_client["your_database"]
+            self.mock_collection = self.mock_db["mycollection"]
+            self.db_client = DbClient(
+                db_user='test_user',
+                db_password='test_password')
 
     def test_good_case_list(self):
         """

@@ -34,7 +34,9 @@ class TestUserDocument(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             UserDocument.create_model(user_id)
 
-        self.assertEqual(str(context.exception), "invalid literal for int() with base 10: 'invalid_user_id'")
+        self.assertEqual(
+            str(context.exception),
+            "invalid literal for int() with base 10: 'invalid_user_id'")
 
 
 if __name__ == '__main__':

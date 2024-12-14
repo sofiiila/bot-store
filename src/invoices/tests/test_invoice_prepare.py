@@ -15,48 +15,58 @@ class TestInvoice(unittest.TestCase):
     @patch('src.invoices.invoice.CrmApiClient')
     @patch('src.invoices.invoice.Invoice._Invoice__is_invalid')
     @patch('src.invoices.invoice.Invoice._Invoice__in_progress')
-    def test_good_case_prepare(self, mock_in_progress, mock_is_invalid, MockCrmApiClient):
+    def test_good_case_prepare(self, mock_in_progress, _, mock_crm_api_client):
         """
         Метод в случае когда отвечает успешно
         """
         invoice = Invoice(self.data, self.settings.base_url, self.db_client)
-        invoice._Invoice__api_client = MockCrmApiClient.return_value
+        invoice.api_client = mock_crm_api_client.return_value
 
         invoice.prepare()
 
-        invoice._Invoice__api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
+        invoice.api_client.try_send_invoice.assert_called_once_with(
+            invoice_data=self.data.to_api()
+            )
         mock_in_progress.assert_called_once()
 
     @patch('src.invoices.invoice.CrmApiClient')
     @patch('src.invoices.invoice.Invoice._Invoice__is_invalid')
     @patch('src.invoices.invoice.Invoice._Invoice__in_progress')
-    def test_bad_case_prepare_server_problem(self, mock_in_progress, mock_is_invalid, MockCrmApiClient):
+    def test_bad_case_prepare_server_problem(self,
+                                             mock_in_progress,
+                                             _,
+                                             mock_crm_api_client):
         """
         В случае ошибки ServerProblem
         """
         invoice = Invoice(self.data, self.settings.base_url, self.db_client)
-        invoice._Invoice__api_client = MockCrmApiClient.return_value
-        invoice._Invoice__api_client.try_send_invoice.side_effect = ServerProblem
+        invoice.api_client = mock_crm_api_client.return_value
+        invoice.api_client.try_send_invoice.side_effect = ServerProblem
 
-        result = invoice.prepare()
-
-        invoice._Invoice__api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
-        self.assertIsNone(result)
+        invoice.prepare()
+        invoice.api_client.try_send_invoice.assert_called_once_with(
+            invoice_data=self.data.to_api()
+        )
 
     @patch('src.invoices.invoice.CrmApiClient')
     @patch('src.invoices.invoice.Invoice._Invoice__is_invalid')
     @patch('src.invoices.invoice.Invoice._Invoice__in_progress')
-    def test_bad_case_prepare_invalid_invoice(self, mock_in_progress, mock_is_invalid, MockCrmApiClient):
+    def test_bad_case_prepare_invalid_invoice(self,
+                                              _,
+                                              mock_is_invalid,
+                                              mock_crm_api_client):
         """
         В случае ошибки InvalidInvoice
         """
         invoice = Invoice(self.data, self.settings.base_url, self.db_client)
-        invoice._Invoice__api_client = MockCrmApiClient.return_value
-        invoice._Invoice__api_client.try_send_invoice.side_effect = InvalidInvoice
+        invoice.api_client = mock_crm_api_client.return_value
+        invoice.api_client.try_send_invoice.side_effect = InvalidInvoice
 
         invoice.prepare()
 
-        invoice._Invoice__api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
+        invoice.api_client.try_send_invoice.assert_called_once_with(
+            invoice_data=self.data.to_api()
+            )
         mock_is_invalid.assert_called_once()
 
 

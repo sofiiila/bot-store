@@ -17,7 +17,9 @@
 
 #         result = self.invoice_look_up._InvoiceLookUp__create_invoice(data)
 
-#         MockInvoice.assert_called_once_with(data, base_url=self.base_url, db_client=self.db_client)
+#         MockInvoice.assert_called_once_with(data,
+#                                             base_url=self.base_url,
+#                                             db_client=self.db_client)
 
 #         self.assertEqual(result, mock_invoice_instance)
 
