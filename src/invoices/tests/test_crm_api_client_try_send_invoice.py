@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 from datetime import datetime
-from requests.exceptions import ConnectionError, Timeout
+from requests.exceptions import Timeout
 
 from src.invoices.exc import InvalidInvoice, ServerProblem
 from src.invoices.invoice import CrmApiClient

@@ -33,8 +33,8 @@ class TestInvoice(unittest.TestCase):
     @patch('src.invoices.invoice.Invoice._Invoice__is_invalid')
     @patch('src.invoices.invoice.Invoice._Invoice__in_progress')
     def test_bad_case_prepare_server_problem(self,
-                                             mock_in_progress,
                                              _,
+                                             __,
                                              mock_crm_api_client):
         """
         В случае ошибки ServerProblem
