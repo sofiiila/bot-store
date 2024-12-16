@@ -106,7 +106,7 @@ jobs:
   
       - name: Set Release Version
         id: set_version
-        run: echo "VERSION=${{ github.ref_name#releases/ }}" >> $GITHUB_ENV
+        run: echo "VERSION=${IMAGE_TAG#releases/}" >> $GITHUB_ENV
   
       - name: Execute remote command
         env:
