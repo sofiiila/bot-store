@@ -50,8 +50,6 @@ class CrmApiClient:  # pylint: disable=too-few-public-methods
             logger.error("Неудачное подключение по причине: %s", str(e))
             raise ServerProblem from e
 
-    # TODO зачем?
-
 
 class Invoice:  # pylint: disable=too-few-public-methods
     """
@@ -64,7 +62,6 @@ class Invoice:  # pylint: disable=too-few-public-methods
         self.__data = data
         self.db_client = db_client
 
-    # TODO реализовать метод
     def __is_invalid(self):
         """
         метод для заявок котрые получили 422 код ответа
@@ -75,6 +72,15 @@ class Invoice:  # pylint: disable=too-few-public-methods
             filter_query={"id": self.__data.id},
             value={"category": CategoriesEnum.INVALID}
         )
+
+    @property
+    def is_invalid(self):
+        return self.__is_invalid
+
+    @is_invalid.setter
+    def is_invalid(self, value):
+        if value:
+            self.db_client.update(CategoriesEnum.INVALID)
 
     def __in_progress(self):
         """
@@ -87,6 +93,16 @@ class Invoice:  # pylint: disable=too-few-public-methods
             # TODO Изпользуй enum
             value={"category": CategoriesEnum.IN_PROGRESS}
         )
+
+    @property
+    def in_progress(self):
+        """Свойство для проверки статуса заявки."""
+        return self.__data.category == CategoriesEnum.IN_PROGRESS
+
+    @in_progress.setter
+    def in_progress(self, value):
+        if value:
+            self.__in_progress()
 
     def is_overdue(self):
         """
@@ -104,7 +120,7 @@ class Invoice:  # pylint: disable=too-few-public-methods
         :return:
         """
         self.db_client.update(filter_query={"user_id": self.__data.user_id,
-                                       "id": self.__data.id},
+                              "id": self.__data.id},
                               value={"category": CategoriesEnum.QUEUE})
 
     # TODO Реализовать create
@@ -140,3 +156,11 @@ class Invoice:  # pylint: disable=too-few-public-methods
         except InvalidInvoice:
             self.__is_invalid()
         self.__in_progress()
+
+    @property
+    def api_client(self):
+        return self.__api_client
+
+    @api_client.setter
+    def api_client(self, value):
+        self.__api_client = value
