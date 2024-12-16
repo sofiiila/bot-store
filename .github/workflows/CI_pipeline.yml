@@ -113,7 +113,7 @@ jobs:
           chmod 400 ~/.ssh/id_rsa
           echo "[DEPLOY_IP]" >> ~/.ssh/known_hosts
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$DEPLOY_IP << 'EOF'
-          cd /bot-store
+          cd bot-store/
           git pull
           docker-compose up --build -d
           EOF
