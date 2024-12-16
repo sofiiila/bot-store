@@ -33,7 +33,6 @@ def execute_my_function() -> tuple[str, int]:
         logger.error('KeyError: %s', e)
         return 'Missing required key "id"', 400
 
-    # TODO я бы переназвал тогда тип, меня смущает что какой-то last
     invoice: InvoiceType = InvoiceLookUp(base_url="base_url",
                                          db_client='db_client').get_invoice_by_id(id)
     if invoice:
