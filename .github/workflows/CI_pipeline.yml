@@ -69,7 +69,7 @@ jobs:
         BOT_PORT: ${{ secrets.BOT_PORT }}
         BASE_URL: ${{ secrets.BASE_URL }}
         TIMEOUT: ${{ secrets.TIMEOUT }}
-      run: python -m unittest discover -s tests
+      run: python -m unittest discover -s src/
 
   build-and-push:
     runs-on: ubuntu-latest
