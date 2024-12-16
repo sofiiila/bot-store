@@ -19,8 +19,8 @@ services:
   bot:
     image: akchaau/bot-store:0.0.2
     environment:
-      DOCKER_USERNAME: ${DOCKER_USERNAME}
-      DOCKER_PASSWORD: ${DOCKER_PASSWORD}
+      USERNAME: ${DOCKER_USERNAME}
+      PASSWORD: ${DOCKER_PASSWORD}
     container_name: bot_store_bot
     env_file:
       - ".env"
