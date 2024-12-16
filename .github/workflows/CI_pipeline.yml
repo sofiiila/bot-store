@@ -96,6 +96,8 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref_name, 'releases/')
     needs: [build-and-push]
+    env:
+      IMAGE_TAG: ${{ github.ref_name }}
     steps:
       - uses: actions/checkout@v2
   
