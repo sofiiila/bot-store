@@ -98,16 +98,20 @@ jobs:
     needs: [build-and-push]
     steps:
       - uses: actions/checkout@v2
-
+  
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
+  
+      - name: Set Release Version
+        id: set_version
+        run: echo "VERSION=${IMAGE_TAG#releases/}" >> $GITHUB_ENV
+  
       - name: Execute remote command
         env:
           DEPLOY_IP: ${{ secrets.DEPLOY_IP }}
-          VERSION: ${{ env.IMAGE_TAG#releases/ }}
+          VERSION: ${{ env.VERSION }}
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
