@@ -107,18 +107,6 @@ jobs:
       - name: Execute remote command
         env:
           DEPLOY_IP: ${{ secrets.DEPLOY_IP }}
-          BASE_URL: ${{ secrets.BASE_URL }}
-          BOT_PORT: ${{ secrets.BOT_PORT }}
-          DB_CONTAINER_NAME: ${{ secrets.DB_CONTAINER_NAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_USER: ${{ secrets.DB_USE }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          EXTERNAL_BOT_PORT: ${{ secrets.EXTERNAL_BOT_PORT }}
-          EXTERNAL_DB_PORT: ${{ secrets.EXTERNAL_DB_PORT }}
-          TIMEOUT: ${{ secrets.TIMEOUT }}
-          TOKEN: ${{ secrets.TOKEN }}
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
@@ -126,18 +114,18 @@ jobs:
           echo "[DEPLOY_IP]" >> ~/.ssh/known_hosts
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$DEPLOY_IP << 'EOF'
           cd bot-store/
-          echo "BASE_URL=$BASE_URL" >> .env
-          echo "BOT_PORT=$BOT_PORT" >> .env
-          echo "DB_CONTAINER_NAME=$DB_CONTAINER_NAME" >> .env
-          echo "DB_PASSWORD=$DB_PASSWORD" >> .env
-          echo "DB_PORT=$DB_PORT" >> .env
-          echo "DB_USER=$DB_USER" >> .env
-          echo "DOCKER_PASSWORD=$DOCKER_PASSWORD" >> .env
-          echo "DOCKER_USERNAME=$DOCKER_USERNAME" >> .env
-          echo "EXTERNAL_BOT_PORT=$EXTERNAL_BOT_PORT" >> .env
-          echo "EXTERNAL_DB_PORT=$EXTERNAL_DB_PORT" >> .env
-          echo "TIMEOUT=$TIMEOUT" >> .env
-          echo "TOKEN=$TOKEN" >> .env
+          echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
+          echo "BOT_PORT=${{ secrets.BOT_PORT }}" >> .env
+          echo "DB_CONTAINER_NAME=${{ secrets.DB_CONTAINER_NAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> .env
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+          echo "EXTERNAL_BOT_PORT=${{ secrets.EXTERNAL_BOT_PORT }}" >> .env
+          echo "EXTERNAL_DB_PORT=${{ secrets.EXTERNAL_DB_PORT }}" >> .env
+          echo "TIMEOUT=${{ secrets.TIMEOUT }}" >> .env
+          echo "TOKEN=${{ secrets.TOKEN }}" >> .env
           git pull
           docker-compose up --build -d
           EOF
