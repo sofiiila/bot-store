@@ -1,3 +1,4 @@
+version: '3'
 services:
   mongo:
     container_name: ${DB_CONTAINER_NAME}
@@ -17,6 +18,9 @@ services:
     command: mongod --config /etc/mongo/mongod.conf
   bot:
     image: akchaau/bot-store:0.0.2
+    environment:
+      USERNAME: ${DOCKER_USERNAME}
+      PASSWORD: ${DOCKER_PASSWORD}
     container_name: bot_store_bot
     env_file:
       - ".env"
