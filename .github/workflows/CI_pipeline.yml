@@ -114,7 +114,7 @@ jobs:
           echo "[DEPLOY_IP]" >> ~/.ssh/known_hosts
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$DEPLOY_IP << 'EOF'
           cd bot-store/
-          echo "BASE_URL=${{ secrets.BASE_URL }}" >> .env
+          echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
           echo "BOT_PORT=${{ secrets.BOT_PORT }}" >> .env
           echo "DB_CONTAINER_NAME=${{ secrets.DB_CONTAINER_NAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
