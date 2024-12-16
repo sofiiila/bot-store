@@ -96,17 +96,24 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref_name, 'releases/')
     needs: [build-and-push]
+    env:
+      IMAGE_TAG: ${{ github.ref_name }}
     steps:
       - uses: actions/checkout@v2
-
+  
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
+  
+      - name: Set Release Version
+        id: set_version
+        run: echo "VERSION=${IMAGE_TAG#releases/}" >> $GITHUB_ENV
+  
       - name: Execute remote command
         env:
           DEPLOY_IP: ${{ secrets.DEPLOY_IP }}
+          VERSION: ${{ env.VERSION }}
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
@@ -126,6 +133,7 @@ jobs:
           echo "EXTERNAL_DB_PORT=${{ secrets.EXTERNAL_DB_PORT }}" >> .env
           echo "TIMEOUT=${{ secrets.TIMEOUT }}" >> .env
           echo "TOKEN=${{ secrets.TOKEN }}" >> .env
+          echo "VERSION=${{ env.VERSION }}" >> .env
           git pull
           docker-compose up --build -d
           EOF
