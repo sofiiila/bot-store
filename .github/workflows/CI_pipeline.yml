@@ -107,6 +107,7 @@ jobs:
       - name: Execute remote command
         env:
           DEPLOY_IP: ${{ secrets.DEPLOY_IP }}
+          VERSION: ${{ env.IMAGE_TAG#releases/ }}
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
@@ -126,6 +127,7 @@ jobs:
           echo "EXTERNAL_DB_PORT=${{ secrets.EXTERNAL_DB_PORT }}" >> .env
           echo "TIMEOUT=${{ secrets.TIMEOUT }}" >> .env
           echo "TOKEN=${{ secrets.TOKEN }}" >> .env
+          echo "VERSION=${VERSION}" >> .env
           git pull
           docker-compose up --build -d
           EOF
