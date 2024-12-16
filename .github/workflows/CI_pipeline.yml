@@ -131,7 +131,7 @@ jobs:
           echo "EXTERNAL_DB_PORT=${{ secrets.EXTERNAL_DB_PORT }}" >> .env
           echo "TIMEOUT=${{ secrets.TIMEOUT }}" >> .env
           echo "TOKEN=${{ secrets.TOKEN }}" >> .env
-          echo "VERSION=${{ VERSION }}" >> .env
+          echo "VERSION=${{ env.VERSION }}" >> .env
           git pull
           docker-compose up --build -d
           EOF
