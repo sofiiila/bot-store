@@ -119,7 +119,7 @@ jobs:
           echo "DB_CONTAINER_NAME=${{ secrets.DB_CONTAINER_NAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
-          echo "DB_USER=${{ secrets.DB_USE }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
           echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> .env
           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
           echo "EXTERNAL_BOT_PORT=${{ secrets.EXTERNAL_BOT_PORT }}" >> .env
