@@ -17,10 +17,7 @@ logger = logging.getLogger(__name__)
 async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик документов.
-    Обработчик для получения файлов.
-    Скачивает документ, отправленный пользователем, и сохраняет его путь в user_data.
-    Эта функция скачивает документ, отправленный пользователем, и сохраняет его путь в user_data.
-    Переходит к шагу 'deadline' и запрашивает у пользователя срок выполнения.
+    Обрабатывает загрузку файлов или пропуск этого шага.
     Args:
         update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
         context (ContextTypes.DEFAULT_TYPE): Объект контекста,
@@ -28,24 +25,29 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Returns:
         int: Следующее состояние.
     """
-
     user = update.message.from_user
-    file = await update.message.document.get_file()
-    file_path = os.path.join('downloads', update.message.document.file_name)
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    await file.download_to_drive(file_path)
 
-    if context.user_data is None:
-        context.user_data = {}
+    if update.message.document:
+        # Обработка загрузки файла
+        file = await update.message.document.get_file()
+        file_path = os.path.join('downloads', update.message.document.file_name)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        await file.download_to_drive(file_path)
 
-    context.user_data['files'] = file_path
-    logger.info("Пользователь %s загрузил файл: %s", user.first_name, file_path)
+        if context.user_data is None:
+            context.user_data = {}
 
-    # TODO Здесь нужно получить по id и обновить через метод fill в Invoice
-    db_client.update(filter_query={"user_id": user.id,
-                                   "id": context.user_data['id'],
-                                   "category": CategoriesEnum.NEW},
-                     value={"files": update.message.text})
+        context.user_data['files'] = file_path
+        logger.info("Пользователь %s загрузил файл: %s", user.first_name, file_path)
+
+        # Обновление базы данных
+        db_client.update(filter_query={"user_id": user.id,
+                                       "id": context.user_data['id'],
+                                       "category": CategoriesEnum.NEW},
+                         value={"files": update.message.text})
+    else:
+        # Обработка пропуска шага
+        logger.info("Пользователь %s пропустил добавление файлов.", user.first_name)
 
     await update.message.reply_text(
         "Укажите срок выполнения или отправьте /skip, чтобы пропустить этот шаг.",
