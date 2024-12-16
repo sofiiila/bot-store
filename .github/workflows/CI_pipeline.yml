@@ -110,15 +110,15 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           BOT_PORT: ${{ secrets.BOT_PORT }}
           DB_CONTAINER_NAME: ${{ secrets.DB_CONTAINER_NAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD}}
-          DB_PORT: ${{ secrets.DB_PORT}}
-          DB_USER: ${{ secrets.DB_USER}}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD}}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME}}
-          EXTERNAL_BOT_PORT: ${{ secrets.EXTERNAL_BOT_PORT}}
-          EXTERNAL_DB_PORT: ${{ secrets.EXTERNAL_DB_PORT}
-          TIMEOUT: ${{ secrets.TIMEOUT}
-          TOKEN: ${{ secrets.TOKEN}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USER: ${{ secrets.DB_USE }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          EXTERNAL_BOT_PORT: ${{ secrets.EXTERNAL_BOT_PORT }}
+          EXTERNAL_DB_PORT: ${{ secrets.EXTERNAL_DB_PORT }}
+          TIMEOUT: ${{ secrets.TIMEOUT }}
+          TOKEN: ${{ secrets.TOKEN }}
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
