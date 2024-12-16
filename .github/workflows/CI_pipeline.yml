@@ -92,20 +92,28 @@ jobs:
     - name: Push the Docker image
       run: docker push akchaau/bot-store:${{ env.VERSION }}
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   if: startsWith(github.ref_name, 'releases/')
-  #   needs: [build-and-push]
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Setup SSH
-  #     uses: webfactory/ssh-agent@v0.5.4
-  #     with:
-  #       ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #   - name: Execute remote command
-  #     run: |
-  #       ssh ubuntu@91.219.227.32 << 'EOF'
-  #       cd /bot-store
-  #       git pull
-  #       docker-compose up -d
-  #       EOF
+  deploy:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref_name, 'releases/')
+    needs: [build-and-push]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Execute remote command
+        env:
+          DEPLOY_IP: ${{ secrets.DEPLOY_IP }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+          echo "[DEPLOY_IP]" >> ~/.ssh/known_hosts
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$DEPLOY_IP << 'EOF'
+          cd /bot-store
+          git pull
+          docker-compose up --build -d
+          EOF
