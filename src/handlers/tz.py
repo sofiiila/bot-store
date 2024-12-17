@@ -31,7 +31,7 @@ async def tz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         logger.info("Пользователь %s пропустил добавление ТЗ.", user.first_name)
     elif update.message.text == "Назад":
         logger.info("54Пользователь %s отправил команду Назад.", user.first_name)
-        return await start(update, context)
+        return await start(update, context)         # type: ignore
     else:
         context.user_data['tz'] = update.message.text
         logger.info("Пользователь %s добавил тз: %s", user.first_name, update.message.text)

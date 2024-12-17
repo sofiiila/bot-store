@@ -29,7 +29,7 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     user = update.message.from_user
     if update.message.text == "Назад":
         logger.info("Пользователь %s отправил команду Назад.", user.first_name)
-        return await start(update, context)
+        return await start(update, context)         # type: ignore
 
     if update.message.document:
         # Обработка загрузки файла

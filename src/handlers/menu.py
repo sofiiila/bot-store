@@ -52,7 +52,7 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         return TZ
     if choice == "Назад":
         logger.info("ПППользователь %s выбрал назад.", user.first_name)
-        return await start(update, context)
+        return await start(update, context)        # type: ignore
 
     await update.message.reply_text(
         "Пожалуйста, выберите один из предложенных вариантов.",

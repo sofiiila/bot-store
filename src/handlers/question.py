@@ -3,7 +3,7 @@ module question
 """
 import logging
 
-from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
+from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 from src.handlers import start
 from src.handlers.handler_types import CONTACTS
@@ -33,8 +33,7 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     if update.message.text == "Назад":
         logger.info("Пользователь %s отправил команду Назад.", user.first_name)
-        return await start(update, context)
-    
+        return await start(update, context)         # type: ignore
     context.user_data['question'] = update.message.text
     logger.info("Пользователь %s пишет нам: %s", user.first_name, update.message.text)
 

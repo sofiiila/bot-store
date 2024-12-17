@@ -30,10 +30,9 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context.user_data = {}
     context.user_data['deadline'] = update.message.text
     logger.info("Пользователь %s добавил deadline: %s", user.first_name, update.message.text)
-    
     if update.message.text == "Назад":
         logger.info("54Пользователь %s отправил команду Назад.", user.first_name)
-        return await start(update, context)
+        return await start(update, context)         # type: ignore
 
     # TODO Здесь нужно получить по id и обновить через метод fill в Invoice
     db_client.update(filter_query={"user_id": user.id,

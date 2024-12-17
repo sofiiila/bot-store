@@ -34,7 +34,7 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     logger.info("Пользователь %s добавил контакты: %s", user.first_name, update.message.text)
     if update.message.text == "Назад":
         logger.info("54Пользователь %s отправил команду Назад.", user.first_name)
-        return await start(update, context)
+        return await start(update, context)        # type: ignore
 
     # TODO Здесь нужно получить по id и обновить через метод fill в Invoice + метод in_queue
     db_client.update(filter_query={"user_id": user.id,
@@ -46,14 +46,16 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         await update.message.reply_text(
             "Спасибо, что оставили ваши контакты! Будем на связи!",
             reply_markup=ReplyKeyboardMarkup(
-                [["Написать еще", "Заказать еще"], ["Назад"]], one_time_keyboard=True, resize_keyboard=True
+                [["Написать еще", "Заказать еще"], ["Назад"]],
+                one_time_keyboard=True, resize_keyboard=True
             ),
         )
     else:
         await update.message.reply_text(
             "Спасибо, что оставили ваши контакты! ТЗ принято в обработку.",
             reply_markup=ReplyKeyboardMarkup(
-                [["Написать еще", "Заказать еще"], ["Назад"]], one_time_keyboard=True, resize_keyboard=True
+                [["Написать еще", "Заказать еще"], ["Назад"]],
+                one_time_keyboard=True, resize_keyboard=True
             ),
         )
 
