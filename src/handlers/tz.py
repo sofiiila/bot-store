@@ -3,8 +3,9 @@ MODULE TZ
 """
 import logging
 
-from telegram import Update, ReplyKeyboardRemove
+from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes
+from src.handlers import start
 from src.handlers.handler_types import FILES
 from src.init_app import db_client
 from src.services.db_client_types import CategoriesEnum
@@ -28,6 +29,9 @@ async def tz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     if update.message.text == "/skip":
         logger.info("Пользователь %s пропустил добавление ТЗ.", user.first_name)
+    elif update.message.text == "Назад":
+        logger.info("54Пользователь %s отправил команду Назад.", user.first_name)
+        return await start(update, context)
     else:
         context.user_data['tz'] = update.message.text
         logger.info("Пользователь %s добавил тз: %s", user.first_name, update.message.text)
@@ -39,8 +43,11 @@ async def tz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         },
                          value={"tz": update.message.text})
 
+    reply_keyboard = [["Назад"]]
     await update.message.reply_text(
         "Приложите файлы, если необходимо, или отправьте /skip, чтобы пропустить этот шаг.",
-        reply_markup=ReplyKeyboardRemove(),
+        reply_markup=ReplyKeyboardMarkup(
+            reply_keyboard, one_time_keyboard=True, resize_keyboard=True
+        ),
     )
     return FILES

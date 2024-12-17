@@ -3,8 +3,9 @@ module question
 """
 import logging
 
-from telegram import Update, ReplyKeyboardRemove
+from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes
+from src.handlers import start
 from src.handlers.handler_types import CONTACTS
 from src.init_app import db_client
 
@@ -29,6 +30,11 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                 context.user_data['id']) # type: ignore
     if context.user_data is None:
         context.user_data = {}
+
+    if update.message.text == "Назад":
+        logger.info("Пользователь %s отправил команду Назад.", user.first_name)
+        return await start(update, context)
+    
     context.user_data['question'] = update.message.text
     logger.info("Пользователь %s пишет нам: %s", user.first_name, update.message.text)
 
@@ -39,9 +45,12 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                       "category": CategoriesEnum.NEW},
         value={"question": update.message.text})
     # pylint: disable=duplicate-code
+    reply_keyboard = [["Назад"]]
     await update.message.reply_text(
         "Пожалуйста, оставьте свои контактные данные или отправьте /skip,"
         " чтобы пропустить этот шаг.",
-        reply_markup=ReplyKeyboardRemove(),
+        reply_markup=ReplyKeyboardMarkup(
+            reply_keyboard, one_time_keyboard=True, resize_keyboard=True
+        ),
     )
     return CONTACTS

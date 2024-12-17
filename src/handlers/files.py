@@ -3,8 +3,9 @@ module files
 """
 import logging
 import os
-from telegram import Update, ReplyKeyboardRemove
+from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes
+from src.handlers import start
 from src.handlers.handler_types import DEADLINE
 from src.init_app import db_client
 
@@ -26,6 +27,9 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         int: Следующее состояние.
     """
     user = update.message.from_user
+    if update.message.text == "Назад":
+        logger.info("Пользователь %s отправил команду Назад.", user.first_name)
+        return await start(update, context)
 
     if update.message.document:
         # Обработка загрузки файла
@@ -45,12 +49,15 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                                        "id": context.user_data['id'],
                                        "category": CategoriesEnum.NEW},
                          value={"files": update.message.text})
+
     else:
         # Обработка пропуска шага
         logger.info("Пользователь %s пропустил добавление файлов.", user.first_name)
 
     await update.message.reply_text(
         "Укажите срок выполнения или отправьте /skip, чтобы пропустить этот шаг.",
-        reply_markup=ReplyKeyboardRemove(),
+        reply_markup=ReplyKeyboardMarkup(
+            [["Назад"]], one_time_keyboard=True, resize_keyboard=True
+        ),
     )
     return DEADLINE

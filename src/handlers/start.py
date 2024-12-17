@@ -3,7 +3,7 @@ module stsrt
 """
 from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes
-from src.handlers.handler_types import WRITE
+from src.handlers.handler_types import MENU
 from src.init_app import db_client
 from src.services.db_client_types import UserDocument
 
@@ -32,4 +32,4 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             reply_keyboard, one_time_keyboard=True, resize_keyboard=True,
         ),
     )
-    return WRITE
+    return MENU

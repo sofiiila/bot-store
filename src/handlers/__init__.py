@@ -3,7 +3,7 @@
 """
 from telegram.ext import ConversationHandler, CommandHandler, MessageHandler, filters
 
-from .handler_types import WRITE, ORDER, TZ, FILES, DEADLINE, QUESTION, CONTACTS, ASK_MORE
+from .handler_types import MENU, ORDER, TZ, FILES, DEADLINE, QUESTION, CONTACTS, ASK_MORE
 from .start import start
 from .menu import menu
 from .question import question
@@ -18,7 +18,7 @@ from .ask_more import ask_more
 conv_handler = ConversationHandler(
     entry_points=[CommandHandler("start", start)],
     states={
-        WRITE: [MessageHandler(filters.TEXT & ~filters.COMMAND, menu)],
+        MENU: [MessageHandler(filters.TEXT & ~filters.COMMAND, menu)],
         ORDER: [MessageHandler(filters.TEXT & ~filters.COMMAND, order)],
         TZ: [MessageHandler(filters.TEXT & ~filters.COMMAND, tz),
              CommandHandler("skip", tz)],

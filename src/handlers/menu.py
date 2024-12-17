@@ -3,9 +3,10 @@ module order
 """
 import logging
 
-from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
+from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes
-from src.handlers.handler_types import WRITE, QUESTION, TZ
+from src.handlers import start
+from src.handlers.handler_types import MENU, QUESTION, TZ
 
 
 logger = logging.getLogger(__name__)
@@ -31,27 +32,32 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     if choice == "Написать нам":
         logger.info("Пользователь %s выбрал написать нам.", user.first_name)
         context.user_data['source'] = 'write'
-        # pylint: disable=duplicate-code
         await update.message.reply_text(
             "Здесь вы можете задать любой вопрос или отправьте /skip, чтобы пропустить этот шаг.",
-            reply_markup=ReplyKeyboardRemove(),
+            reply_markup=ReplyKeyboardMarkup(
+                [["Назад"]], one_time_keyboard=True, resize_keyboard=True
+            ),
         )
         return QUESTION
     if choice == "Заказать":
-        logger.info("Пользователь %s выбрал заказать.", user.first_name)
+        logger.info("54Пользователь %s выбрал заказать.", user.first_name)
         context.user_data['source'] = 'order'
-
         await update.message.reply_text(
-            "Пожалуйста, укажите техническое задание (ТЗ) или отправьте /skip, "
+            "Пожалуйста, укажите техническое задание (ТЗ) или отправьте /skip,"
             "чтобы пропустить этот шаг.",
-            reply_markup=ReplyKeyboardRemove(),
+            reply_markup=ReplyKeyboardMarkup(
+                [["Назад"]], one_time_keyboard=True, resize_keyboard=True
+            ),
         )
         return TZ
+    if choice == "Назад":
+        logger.info("ПППользователь %s выбрал назад.", user.first_name)
+        return await start(update, context)
 
     await update.message.reply_text(
         "Пожалуйста, выберите один из предложенных вариантов.",
         reply_markup=ReplyKeyboardMarkup(
-            [["Написать нам", "Заказать"]], one_time_keyboard=True
+            [["Написать нам", "Заказать"], ["Назад"]], one_time_keyboard=True
         ),
     )
-    return WRITE
+    return MENU

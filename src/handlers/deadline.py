@@ -3,8 +3,9 @@ module deadline
 """
 import logging
 
-from telegram import Update, ReplyKeyboardRemove
+from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes
+from src.handlers import start
 from src.handlers.handler_types import CONTACTS
 from src.init_app import db_client
 
@@ -29,6 +30,10 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context.user_data = {}
     context.user_data['deadline'] = update.message.text
     logger.info("Пользователь %s добавил deadline: %s", user.first_name, update.message.text)
+    
+    if update.message.text == "Назад":
+        logger.info("54Пользователь %s отправил команду Назад.", user.first_name)
+        return await start(update, context)
 
     # TODO Здесь нужно получить по id и обновить через метод fill в Invoice
     db_client.update(filter_query={"user_id": user.id,
@@ -39,6 +44,8 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text(
         "Пожалуйста, оставьте свои контактные данные или отправьте /skip,"
         " чтобы пропустить этот шаг.",
-        reply_markup=ReplyKeyboardRemove(),
+        reply_markup=ReplyKeyboardMarkup(
+            [["Назад"]], one_time_keyboard=True, resize_keyboard=True
+        ),
     )
     return CONTACTS

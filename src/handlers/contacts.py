@@ -6,6 +6,7 @@ import logging
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes
 
+from src.handlers import start
 from src.handlers.handler_types import ASK_MORE
 from src.init_app import db_client
 
@@ -31,6 +32,9 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context.user_data = {}
     context.user_data['contacts'] = update.message.text
     logger.info("Пользователь %s добавил контакты: %s", user.first_name, update.message.text)
+    if update.message.text == "Назад":
+        logger.info("54Пользователь %s отправил команду Назад.", user.first_name)
+        return await start(update, context)
 
     # TODO Здесь нужно получить по id и обновить через метод fill в Invoice + метод in_queue
     db_client.update(filter_query={"user_id": user.id,
@@ -42,14 +46,14 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         await update.message.reply_text(
             "Спасибо, что оставили ваши контакты! Будем на связи!",
             reply_markup=ReplyKeyboardMarkup(
-                [["Написать еще", "Заказать еще"]], one_time_keyboard=True, resize_keyboard=True
+                [["Написать еще", "Заказать еще"], ["Назад"]], one_time_keyboard=True, resize_keyboard=True
             ),
         )
     else:
         await update.message.reply_text(
             "Спасибо, что оставили ваши контакты! ТЗ принято в обработку.",
             reply_markup=ReplyKeyboardMarkup(
-                [["Написать еще", "Заказать еще"]], one_time_keyboard=True, resize_keyboard=True
+                [["Написать еще", "Заказать еще"], ["Назад"]], one_time_keyboard=True, resize_keyboard=True
             ),
         )
 

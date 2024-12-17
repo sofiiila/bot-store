@@ -3,7 +3,7 @@ module order
 """
 import logging
 
-from telegram import Update, ReplyKeyboardRemove
+from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 from src.handlers.handler_types import TZ
 
@@ -27,7 +27,9 @@ async def order(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data['source'] = 'order'
     await update.message.reply_text(
         "Пожалуйста, укажите техническое задание (ТЗ) или отправьте /skip,"
-        " чтобы пропустить этот шаг.",
-        reply_markup=ReplyKeyboardRemove(),
+        " чтобы пропустить этот шаг. Отправьте /back, чтобы вернуться в главное меню.",
+        reply_markup=ReplyKeyboardMarkup(
+            [["Назад"]], one_time_keyboard=True, resize_keyboard=True
+        ),
     )
     return TZ
