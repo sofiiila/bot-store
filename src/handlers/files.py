@@ -27,7 +27,7 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         int: Следующее состояние.
     """
     user = update.message.from_user
-    if update.message.text == "Назад":
+    if update.message.text == "В главное меню":
         logger.info("Пользователь %s отправил команду Назад.", user.first_name)
         return await start(update, context)         # type: ignore
 
@@ -57,7 +57,7 @@ async def files(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.message.reply_text(
         "Укажите срок выполнения или отправьте /skip, чтобы пропустить этот шаг.",
         reply_markup=ReplyKeyboardMarkup(
-            [["Назад"]], one_time_keyboard=True, resize_keyboard=True
+            [["В главное меню"]], one_time_keyboard=True, resize_keyboard=True
         ),
     )
     return DEADLINE

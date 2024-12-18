@@ -31,7 +31,7 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     if context.user_data is None:
         context.user_data = {}
 
-    if update.message.text == "Назад":
+    if update.message.text == "В главное меню":
         logger.info("Пользователь %s отправил команду Назад.", user.first_name)
         return await start(update, context)         # type: ignore
     context.user_data['question'] = update.message.text
@@ -44,7 +44,7 @@ async def question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                       "category": CategoriesEnum.NEW},
         value={"question": update.message.text})
     # pylint: disable=duplicate-code
-    reply_keyboard = [["Назад"]]
+    reply_keyboard = [["В главное меню"]]
     await update.message.reply_text(
         "Пожалуйста, оставьте свои контактные данные или отправьте /skip,"
         " чтобы пропустить этот шаг.",

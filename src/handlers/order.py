@@ -22,14 +22,12 @@ async def order(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """
     user = update.message.from_user
     logger.info("Пользователь %s выбрал заказать.", user.first_name)
-    if context.user_data is None:
-        context.user_data = {}
     context.user_data['source'] = 'order'
     await update.message.reply_text(
         "Пожалуйста, укажите техническое задание (ТЗ) или отправьте /skip,"
-        " чтобы пропустить этот шаг. Отправьте /back, чтобы вернуться в главное меню.",
+        " чтобы пропустить этот шаг. Отправьте /cancel, чтобы вернуться в главное меню.",
         reply_markup=ReplyKeyboardMarkup(
-            [["Назад"]], one_time_keyboard=True, resize_keyboard=True
+            [["работает?"]], one_time_keyboard=True, resize_keyboard=True
         ),
     )
     return TZ

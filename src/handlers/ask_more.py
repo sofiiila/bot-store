@@ -53,7 +53,7 @@ async def ask_more(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         )
         return TZ
     # pylint: disable=duplicate-code
-    reply_keyboard = [["Написать еще", "Заказать еще", "Назад"]]
+    reply_keyboard = [["Написать еще", "Заказать еще", "В главное меню"]]
     await update.message.reply_text(
         "Пожалуйста, выберите один из предложенных вариантов.",
         reply_markup=ReplyKeyboardMarkup(

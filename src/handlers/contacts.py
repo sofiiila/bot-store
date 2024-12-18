@@ -46,7 +46,7 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         await update.message.reply_text(
             "Спасибо, что оставили ваши контакты! Будем на связи!",
             reply_markup=ReplyKeyboardMarkup(
-                [["Написать еще", "Заказать еще"], ["Назад"]],
+                [["Написать еще", "Заказать еще"], ["В главное меню"]],
                 one_time_keyboard=True, resize_keyboard=True
             ),
         )
@@ -54,7 +54,7 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         await update.message.reply_text(
             "Спасибо, что оставили ваши контакты! ТЗ принято в обработку.",
             reply_markup=ReplyKeyboardMarkup(
-                [["Написать еще", "Заказать еще"], ["Назад"]],
+                [["Написать еще", "Заказать еще"], ["В главное меню"]],
                 one_time_keyboard=True, resize_keyboard=True
             ),
         )

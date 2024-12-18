@@ -30,7 +30,7 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context.user_data = {}
     context.user_data['deadline'] = update.message.text
     logger.info("Пользователь %s добавил deadline: %s", user.first_name, update.message.text)
-    if update.message.text == "Назад":
+    if update.message.text == "В главное меню":
         logger.info("54Пользователь %s отправил команду Назад.", user.first_name)
         return await start(update, context)         # type: ignore
 
@@ -44,7 +44,7 @@ async def deadline(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         "Пожалуйста, оставьте свои контактные данные или отправьте /skip,"
         " чтобы пропустить этот шаг.",
         reply_markup=ReplyKeyboardMarkup(
-            [["Назад"]], one_time_keyboard=True, resize_keyboard=True
+            [["В главное меню"]], one_time_keyboard=True, resize_keyboard=True
         ),
     )
     return CONTACTS

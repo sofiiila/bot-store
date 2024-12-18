@@ -35,7 +35,7 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         await update.message.reply_text(
             "Здесь вы можете задать любой вопрос или отправьте /skip, чтобы пропустить этот шаг.",
             reply_markup=ReplyKeyboardMarkup(
-                [["Назад"]], one_time_keyboard=True, resize_keyboard=True
+                [["меню"]], one_time_keyboard=True, resize_keyboard=True
             ),
         )
         return QUESTION
@@ -46,18 +46,18 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             "Пожалуйста, укажите техническое задание (ТЗ) или отправьте /skip,"
             "чтобы пропустить этот шаг.",
             reply_markup=ReplyKeyboardMarkup(
-                [["Назад"]], one_time_keyboard=True, resize_keyboard=True
+                [["меню"]], one_time_keyboard=True, resize_keyboard=True
             ),
         )
         return TZ
-    if choice == "Назад":
+    if choice == "меню":
         logger.info("ПППользователь %s выбрал назад.", user.first_name)
         return await start(update, context)        # type: ignore
 
     await update.message.reply_text(
         "Пожалуйста, выберите один из предложенных вариантов.",
         reply_markup=ReplyKeyboardMarkup(
-            [["Написать нам", "Заказать"], ["Назад"]], one_time_keyboard=True
+            [["Написать нам", "Заказать"], ["меню"]], one_time_keyboard=True
         ),
     )
     return MENU

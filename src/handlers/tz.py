@@ -29,7 +29,7 @@ async def tz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     if update.message.text == "/skip":
         logger.info("Пользователь %s пропустил добавление ТЗ.", user.first_name)
-    elif update.message.text == "Назад":
+    elif update.message.text == "нет":
         logger.info("54Пользователь %s отправил команду Назад.", user.first_name)
         return await start(update, context)         # type: ignore
     else:
@@ -43,7 +43,7 @@ async def tz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         },
                          value={"tz": update.message.text})
 
-    reply_keyboard = [["Назад"]]
+    reply_keyboard = [["нет"]]
     await update.message.reply_text(
         "Приложите файлы, если необходимо, или отправьте /skip, чтобы пропустить этот шаг.",
         reply_markup=ReplyKeyboardMarkup(
