@@ -1,10 +1,12 @@
 from telegram.ext import ConversationHandler, CommandHandler, \
     CallbackQueryHandler
 
-from src.new_handlers.handler_types import START, ORDER
+from src.new_handlers.handler_types import START, ORDER, WRITE, CONTACTS
 from src.new_handlers.cancel import cancel
 from src.new_handlers.start import start
 from src.new_handlers.order import order
+from src.new_handlers.write import write
+from src.new_handlers.contacts import contacts
 
 
 conv_handler = ConversationHandler(
@@ -12,9 +14,16 @@ conv_handler = ConversationHandler(
     states={
         START: [
             CallbackQueryHandler(order,
-                                 pattern="^" + str(ORDER) + "$")
+                                 pattern="^" + str(ORDER) + "$"),
+            CallbackQueryHandler(write,
+                                 pattern="^" + str(WRITE) + "$")
         ],
-        ORDER: []
+        ORDER: [
+        ],
+        WRITE: [
+            CallbackQueryHandler(contacts,
+                                 pattern="^" + str(CONTACTS) + "$")
+        ],
     },
-    fallbacks=[CommandHandler("stop", cancel)]
+    fallbacks=[CommandHandler("cancel", cancel)]
 )
