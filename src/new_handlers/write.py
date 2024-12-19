@@ -26,24 +26,31 @@ async def write(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Returns:
         int: Следующее состояние.
     """
-    query = update.callback_query
-    await query.answer()
-
-    user = query.from_user
+    user = update.message.from_user if update.message else update.callback_query.from_user
     logger.info("Пользователь %s пишет нам.", user.first_name)
-    
-    context.user_data['write'] = query.data
-    logger.info("Пользователь %s пишет нам: %s", user.first_name, query.data)
 
-    # TODO Здесь нужно получить по id и обновить через метод fill в Invoice
-    db_client.update(
-        filter_query={"user_id": user.id,
-                      "id": context.user_data['id'],
-                      "category": CategoriesEnum.NEW},
-        value={"question": query.data})
-    # pylint: disable=duplicate-code
-    await query.edit_message_text(
-        text="Пожалуйста, напишите ваш вопрос или отправьте /skip, чтобы пропустить этот шаг."
-    )
+    if update.callback_query:
+        query = update.callback_query
+        await query.answer()
+        context.user_data['write'] = query.data
+        logger.info("Пользователь %s пишет нам: %s", user.first_name, query.data)
+
+        await query.edit_message_text(
+            text="Пожалуйста, напишите ваш вопрос или отправьте /skip, чтобы пропустить этот шаг."
+        )
+    elif update.message:
+        question = update.message.text
+        logger.info("Пользователь %s задал вопрос: %s", user.first_name, question)
+
+        # TODO Здесь нужно получить по id и обновить через метод fill в Invoice
+        db_client.update(
+            filter_query={"user_id": user.id,
+                          "id": context.user_data['id'],
+                          "category": CategoriesEnum.NEW},
+            value={"question": question})
+
+        await update.message.reply_text(
+            text="Пожалуйста, отправьте ваши контактные данные или отправьте /skip, чтобы пропустить этот шаг."
+        )
+
     return WRITE
-

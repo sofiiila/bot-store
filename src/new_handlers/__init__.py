@@ -1,5 +1,5 @@
 from telegram.ext import ConversationHandler, CommandHandler, \
-    CallbackQueryHandler
+    CallbackQueryHandler, MessageHandler, filters
 
 from src.new_handlers.handler_types import START, ORDER, WRITE, CONTACTS
 from src.new_handlers.cancel import cancel
@@ -22,7 +22,8 @@ conv_handler = ConversationHandler(
         ],
         WRITE: [
             CallbackQueryHandler(contacts,
-                                 pattern="^" + str(CONTACTS) + "$")
+                                 pattern="^" + str(CONTACTS) + "$"),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, write),                     
         ],
     },
     fallbacks=[CommandHandler("cancel", cancel)]
