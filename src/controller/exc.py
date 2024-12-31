@@ -2,8 +2,11 @@
 exeption
 """
 
+class BaseAppException(Exception):
+    pass
 
-class InvalidInvoice(Exception):
+
+class InvalidInvoice(BaseAppException):
     """
     exeption
     """
@@ -11,9 +14,13 @@ class InvalidInvoice(Exception):
         super().__init__(message)
 
 
-class ServerProblem(Exception):
+class ServerProblem(BaseAppException):
     """
     exeptions
     """
     def __init__(self, message='Ошибка сервера'):
         super().__init__(message)
+
+
+class InvoiceNotExist(BaseAppException):
+    pass

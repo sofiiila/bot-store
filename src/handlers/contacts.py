@@ -10,7 +10,7 @@ from src.handlers import start
 from src.handlers.handler_types import ASK_MORE
 from src.init_app import db_client
 
-from src.services.db_client_types import CategoriesEnum
+from src.db_client.db_client_types import CategoriesEnum
 
 
 logger = logging.getLogger(__name__)

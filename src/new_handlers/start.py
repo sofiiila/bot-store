@@ -1,32 +1,41 @@
 """
 module stsrt
 """
+import logging
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
+
+from src.init_app import controller
 from src.new_handlers.handler_types import ORDER, WRITE, START
-from src.init_app import db_client
-from src.services.db_client_types import UserDocument
+
+
+logger = logging.getLogger(__name__)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """
-    Обработчик команды /start для Telegram-бота.
-    Args:
-        update (Update): Объект, содержащий информацию о событии, которое вызвало эту функцию.
-        context (ContextTypes.DEFAULT_TYPE): Объект контекста,
-        предоставляющий доступ к боту и другим полезным данным.
-    Returns:
-        int: Следующее состояние.
+    Отображает главное меню, независимо от того, идет ли вызов из команды или из кнопки.
     """
-    user = update.message.from_user
-    # TODO через create Invoice
-    document: UserDocument = db_client.create(user_id=user.id)
-    context.user_data['id'] = document.id
     buttons = [
         [InlineKeyboardButton(text="Заказать", callback_data=str(ORDER))],
         [InlineKeyboardButton(text="Написать нам", callback_data=str(WRITE))],
     ]
     keyboard = InlineKeyboardMarkup(buttons)
-    await update.message.reply_text("Привет, это bot_sore, здесь ты можешь оформить заказ или задать интересующий вопрос."
-                                    "Отправь /cancel, если хочешь закончить разговор.\n\n", reply_markup=keyboard)
+
+    if update.message:
+        logger.critical(f"Вызвана команда /start. Вызвано сообщением с командой update.message={update.message}")
+        user = update.message.from_user
+        controller.update_document_for_user_id(user_id=user.id)
+        await update.message.reply_text(
+            "Главное меню.",
+            reply_markup=keyboard,
+        )
+    elif update.callback_query:
+        await update.callback_query.message.reply_text(
+            "Главное меню.",
+            reply_markup=keyboard
+        )
+        await update.callback_query.answer()
+
     return START

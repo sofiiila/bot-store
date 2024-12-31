@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime
-from src.services.db_client_types import UserDocument, CategoriesEnum
+from src.db_client.db_client_types import UserDocument, CategoriesEnum
 
 
 class TestUserDocument(unittest.TestCase):

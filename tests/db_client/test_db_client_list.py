@@ -2,13 +2,13 @@ import unittest
 from unittest.mock import MagicMock, patch
 from bson import ObjectId
 import pymongo
-from src.services.core import DbClient, UserDocument
+from src.db_client.core import DbClient, UserDocument
 
 
 class TestDbClient(unittest.TestCase):
 
     def setUp(self):
-        with patch('src.services.core.MongoClient') as mock_mongo_client:
+        with patch('src.db_client.core.MongoClient') as mock_mongo_client:
             self.mock_client = mock_mongo_client.return_value
             self.mock_db = self.mock_client["your_database"]
             self.mock_collection = self.mock_db["mycollection"]

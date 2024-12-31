@@ -1,5 +1,5 @@
 """
-module core services
+module core db_client
 """
 import logging
 
@@ -8,7 +8,7 @@ from bson import ObjectId
 from pymongo import MongoClient
 from pymongo.results import UpdateResult, InsertOneResult
 
-from src.services.db_client_types import UserDocument
+from src.db_client.db_client_types import UserDocument
 
 logger = logging.getLogger(__name__)
 

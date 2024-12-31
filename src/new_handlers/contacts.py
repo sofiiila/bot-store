@@ -3,16 +3,30 @@
 """
 import logging
 
-from telegram import Update, ReplyKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 
-from src.new_handlers.handler_types import CONTACTS
-from src.init_app import db_client
-
-from src.services.db_client_types import CategoriesEnum
+from src.init_app import controller
+from src.new_handlers.start import start
+from src.new_handlers.handler_types import CONTACTS, START
 
 
 logger = logging.getLogger(__name__)
+
+
+async def handle_user_contacts(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Обработчик сообщений, вводимых пользователем в состоянии WRITE,
+    и отправка их по электронной почте.
+    """
+    logger.critical(update.message.text)
+    invoice = controller.update_document_for_user_id(
+        user_id=update.message.from_user.id,
+        update_fields={"contacts": update.message.text}
+    )
+    invoice.push_in_queue()
+    await update.message.reply_text("Ваше сообщение было отправлено. Мы скоро с вами свяжемся.")
+    return await start(update, context)
 
 
 async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -26,21 +40,13 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     Returns:
         int: Следующее состояние.
     """
-    query = update.callback_query
-    await query.answer()
-
+    logger.critical(update)
+    query = update.message
     user = query.from_user
-    context.user_data['contacts'] = query.data
-    logger.info("Пользователь %s добавил контакты: %s", user.first_name, query.data)
-
-    # TODO Здесь нужно получить по id и обновить через метод fill в Invoice + метод in_queue
-    db_client.update(filter_query={"user_id": user.id,
-                                   "id": context.user_data['id'],
-                                   "category": CategoriesEnum.QUEUE},
-                     value={"contacts": query.data})
-
-    await query.edit_message_text(
-            text="Спасибо, что оставили ваши контакты! ТЗ принято в обработку."
-        )
-
+    logger.info("Пользователь %s добавил контакты: %s", user.first_name, query.text)
+    buttons = [
+        [InlineKeyboardButton(text="В главное меню", callback_data=str(START))],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.message.reply_text("Укажите контакты для связи:", reply_markup=keyboard)
     return CONTACTS

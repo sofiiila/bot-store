@@ -5,7 +5,7 @@ from telegram import ReplyKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 from src.handlers.handler_types import MENU
 from src.init_app import db_client
-from src.services.db_client_types import UserDocument
+from src.db_client.db_client_types import UserDocument
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
