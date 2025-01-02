@@ -1,6 +1,8 @@
 """
 settings
 """
+from typing import Union
+
 from pydantic_settings import BaseSettings
 
 
@@ -16,8 +18,8 @@ class Settings(BaseSettings):
     db_container_name: str
     bot_port: int
     base_url: str
-    overdue_time_sleep: int | float
-    queue_time_sleep: int | float
+    overdue_time_sleep: Union[int | float]
+    queue_time_sleep: Union[int | float]
     is_overdue_time: int
 
 
