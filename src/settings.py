@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     base_url: str
     overdue_time_sleep: int
     queue_time_sleep: int
-    is_overdue_time: int
+    is_overdue_time: int = 10
 
 
 settings = Settings()  # type: ignore
