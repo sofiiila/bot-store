@@ -69,6 +69,9 @@ jobs:
         BOT_PORT: ${{ secrets.BOT_PORT }}
         BASE_URL: ${{ secrets.BASE_URL }}
         TIMEOUT: ${{ secrets.TIMEOUT }}
+        OVERDUE_TIME_SLEEP: ${{ env.OVERDUE_TIME_SLEEP }}
+        QUEUE_TIME_SLEEP: ${{ env.QUEUE_TIME_SLEEP }}
+        IS_OVERDUE_TIME: ${{ env.IS_OVERDUE_TIME }}
       run: python -m unittest discover -s src/
 
   build-and-push:
