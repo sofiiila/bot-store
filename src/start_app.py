@@ -18,6 +18,7 @@ def start_app() -> None:
     4. Бот сбора заявок.
     """
     timer_thread = threading.Thread(target=controller.check_timeout_iteration)
+    timer_thread.name = "Тред завершения недозаполненных заявок"
     timer_thread.start()
     # thread = threading.Thread(target=controller.eternity_cycle_iteration)
     # thread.start()

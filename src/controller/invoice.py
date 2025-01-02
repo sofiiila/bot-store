@@ -18,10 +18,15 @@ class Invoice:  # pylint: disable=too-few-public-methods
     Класс для работы с заявками, определяет их статус и id
     """
 
-    def __init__(self, data: UserDocument, base_url: str, db_client: DbClient):
+    def __init__(self, data: UserDocument, base_url: str, db_client: DbClient, is_overdue_time):
         self.__api_client = CrmApiClient(base_url)
         self.__data = data
-        self.db_client = db_client
+        self.__db_client = db_client
+        self.__is_overdue_time = is_overdue_time
+
+    @property
+    def invoice_id(self):
+        return self.__data.id
 
     @property
     def is_overdue(self) -> bool:
@@ -29,10 +34,14 @@ class Invoice:  # pylint: disable=too-few-public-methods
         Просрочена ли заявка.
         :return: Заявка просрочена?
         """
-        return datetime.now() - self.__data.start_date > timedelta(minutes=30)
+        return datetime.now() - self.__data.start_date > timedelta(minutes=self.__is_overdue_time)
 
     @property
-    def filter_query(self):
+    def __filter_query(self) -> dict[str: str, str: str]:
+        """
+        Query фильтрации
+        Returns:
+        """
         return {"user_id": self.__data.user_id,
                 "id": self.__data.id}
 
@@ -41,20 +50,25 @@ class Invoice:  # pylint: disable=too-few-public-methods
         Cтавит в очередь.
         :return:
         """
-        self.db_client.update(filter_query=self.filter_query,
-                              value={"category": CategoriesEnum.QUEUE})
+        logger.debug(
+            "Заявка %s не была заполнена пользователем до конца. Отправляем в очередь",
+            self.__data.id
+        )
+        self.__db_client.update(filter_query=self.__filter_query,
+                                value={"category": CategoriesEnum.QUEUE})
 
     @classmethod
-    def create(cls, db_client, user_id):
+    def create(cls, db_client, user_id, base_url, is_overdue_time) -> 'Invoice':
         """
-        будет вызываться в момеент когда заполнено в боте
+        Будет вызываться в момеент когда заполнено в боте.
         :return:
         """
-        return db_client.create(user_id=user_id)
+        invoice_data = db_client.create(user_id=user_id)
+        return cls(data=invoice_data, base_url=base_url, db_client=db_client, is_overdue_time=is_overdue_time)
 
     def update_fields(self, fields):
-        self.db_client.update(
-            filter_query=self.filter_query,
+        self.__db_client.update(
+            filter_query=self.__filter_query,
             value=fields
         )
 
@@ -64,7 +78,7 @@ class Invoice:  # pylint: disable=too-few-public-methods
         :return:
         """
         logger.debug("Бот получил уведомление о завершении заполнении заявок.")
-        self.db_client.delete(self.__data.id)
+        self.__db_client.delete(self.__data.id)
 
     def prepare(self):
         """
@@ -73,16 +87,18 @@ class Invoice:  # pylint: disable=too-few-public-methods
         """
         logger.debug("обрабатывается статус ответа")
         try:
-            self.__api_client.try_send_invoice(invoice_data=self.__data.to_api())
+            self.__api_client.try_send_invoice(
+                invoice_data=self.__data.to_api()
+            )
             logger.debug("Заявка успешно отправлена.")
-            self.db_client.update(
+            self.__db_client.update(
                 filter_query={"id": self.__data.id},
                 value={"category": CategoriesEnum.IN_PROGRESS}
             )
         except ServerProblem:
             return
         except InvalidInvoice:
-            self.db_client.update(
+            self.__db_client.update(
                 filter_query={"id": self.__data.id},
                 value={"category": CategoriesEnum.INVALID}
             )

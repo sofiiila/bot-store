@@ -1,5 +1,5 @@
 """
-eternity cycke & timer
+Eternity cycke & timer
 """
 import logging
 import time
@@ -22,11 +22,13 @@ class Controller:
         self,
         db_client: DbClient,
         base_url: str,
+        is_overdue_time: int,
         queue_time_sleep: int | float = 1,
         overdue_time_sleep: int | float = 1
     ):
-        self.__db_client = db_client
-        self.__invoice_look_up = InvoiceLookUp(base_url, db_client)
+        self.__invoice_look_up = InvoiceLookUp(base_url=base_url,
+                                               db_client=db_client,
+                                               is_overdue_time=is_overdue_time)
         self.__queue_time_sleep = queue_time_sleep
         self.__overdue_time_sleep = overdue_time_sleep
 
@@ -46,12 +48,10 @@ class Controller:
         """
         Проверка всех просроченных недозаполненных заявок.
         """
-        logger.debug("Запущен таймаут.")
+        logger.info("Запущен Тред завершения недозаполненных заявок.")
         while True:
             invoices: list[Invoice] = self.__invoice_look_up.get_all_new_invoices()
-            for invoice in invoices:
-                if invoice.is_overdue:
-                    invoice.push_in_queue()
+            [invoice.push_in_queue() for invoice in invoices if invoice.is_overdue]
             time.sleep(self.__overdue_time_sleep)
 
     def finish_invoice(self, invoice_id: str) -> None:
@@ -70,7 +70,7 @@ class Controller:
 
     def update_document_for_user_id(self, user_id: str, update_fields: dict | None = None) -> Invoice:
         """
-        Вернет Invoive по user_id и проапдейдит поле.
+        Вернет Invoive по user_id и проапдейдит поле если передать.
 
         Args:
             user_id: Id пользователя
@@ -81,9 +81,14 @@ class Controller:
         """
         invoice: Invoice | None = self.__invoice_look_up.get_new_invoice_by_user_id(user_id)
         if not invoice:
-            invoice = Invoice.create(user_id=user_id, db_client=self.__db_client)
+            invoice: Invoice = self.__invoice_look_up.create(user_id=user_id)
         if update_fields:
             invoice.update_fields(update_fields)
         return invoice
 
-
+    def complete_old_or_create_new(self, user_id):
+        invoice = self.__invoice_look_up.get_new_invoice_by_user_id(user_id)
+        if invoice:
+            invoice.push_in_queue()
+        else:
+            self.__invoice_look_up.create(user_id=user_id)

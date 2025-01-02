@@ -16,7 +16,9 @@ class Settings(BaseSettings):
     db_container_name: str
     bot_port: int
     base_url: str
-    timeout: int
+    overdue_time_sleep: int | float
+    queue_time_sleep: int | float
+    is_overdue_time: int
 
 
 settings = Settings()  # type: ignore

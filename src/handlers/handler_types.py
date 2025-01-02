@@ -1,4 +1,0 @@
-"""
-handers types
-"""
-MENU, QUESTION, ORDER, TZ, FILES, DEADLINE, CONTACTS, ASK_MORE= range(8)
