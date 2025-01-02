@@ -1,7 +1,6 @@
 """
 settings
 """
-from typing import Union
 
 from pydantic_settings import BaseSettings
 
