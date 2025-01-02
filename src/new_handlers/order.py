@@ -8,8 +8,8 @@ from telegram.ext import ContextTypes
 
 from src.new_handlers.deadline import deadline
 from src.init_app import controller
-from src.new_handlers import ORDER, START, DEADLINE
-from src.new_handlers.handler_types import CANCEL_FILLING_BUTTON, NEXT_STEP_BUTTON
+from src.new_handlers.handler_types import CANCEL_FILLING_BUTTON, NEXT_STEP_BUTTON, \
+    ORDER, START, DEADLINE
 from src.new_handlers.utills import basic_handler_for_step_in_question_list
 
 logger = logging.getLogger(__name__)
