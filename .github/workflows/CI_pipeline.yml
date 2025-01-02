@@ -134,6 +134,9 @@ jobs:
           echo "TIMEOUT=${{ secrets.TIMEOUT }}" >> .env
           echo "TOKEN=${{ secrets.TOKEN }}" >> .env
           echo "VERSION=${{ env.VERSION }}" >> .env
+          echo "OVERDUE_TIME_SLEEP=${{ env.OVERDUE_TIME_SLEEP }} >> .env
+          echo "QUEUE_TIME_SLEEP=${{ env.QUEUE_TIME_SLEEP }} >> .env
+          echo "IS_OVERDUE_TIME=${{ env.IS_OVERDUE_TIME }} >> .env
           git pull
           docker-compose up --build -d
           EOF
