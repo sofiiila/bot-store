@@ -4,6 +4,7 @@ from datetime import datetime
 
 import requests
 from requests import Timeout
+from requests.exceptions import ConnectionError as RequestConnectionError
 
 from src.controller.exc import InvalidInvoice, ServerProblem
 
@@ -40,6 +41,6 @@ class CrmApiClient:  # pylint: disable=too-few-public-methods
                 raise ServerProblem
 
             return response.status_code
-        except (ConnectionError, Timeout) as e:
+        except (RequestConnectionError, Timeout) as e:
             logger.error("Неудачное подключение по причине: %s", str(e))
             raise ServerProblem from e

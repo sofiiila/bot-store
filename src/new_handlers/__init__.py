@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 
 
 async def handle_global_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.debug(f"Вот сообщение {update.message}")
     if update.message.text == "Написать нам":
         return await write(update, context)
     if update.message.text == "Заказать":

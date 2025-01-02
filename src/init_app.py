@@ -3,6 +3,7 @@ init
 """
 from telegram.ext import Application
 from src.settings import settings
+# pylint: disable=unused-import
 from .controller import Controller, Invoice
 from .db_client.core import DbClient
 

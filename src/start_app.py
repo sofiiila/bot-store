@@ -20,9 +20,9 @@ def start_app() -> None:
     timer_thread = threading.Thread(target=controller.check_timeout_iteration)
     timer_thread.name = "Тред завершения недозаполненных заявок"
     timer_thread.start()
-    # thread = threading.Thread(target=controller.eternity_cycle_iteration)
-    # thread.start()
-    # server_thread = threading.Thread(target=run_finish_invoice_server, args=(settings.bot_port,))
-    # server_thread.start()
+    thread = threading.Thread(target=controller.eternity_cycle_iteration)
+    thread.start()
+    server_thread = threading.Thread(target=run_finish_invoice_server, args=(settings.bot_port,))
+    server_thread.start()
     application.add_handler(conv_handler)
     application.run_polling()

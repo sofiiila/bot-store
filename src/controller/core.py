@@ -18,6 +18,8 @@ class Controller:
     с инфраструктурой приложения.
     """
 
+    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-positional-arguments
     def __init__(
         self,
         db_client: DbClient,
@@ -39,7 +41,7 @@ class Controller:
         """
         logger.debug("Запущена очередь.(беск цикл)")
         while True:
-            invoice: Invoice = self.__invoice_look_up.get_oldest_invoice()
+            invoice: Invoice | None = self.__invoice_look_up.get_oldest_invoice()
             if invoice is not None:
                 invoice.prepare()
             time.sleep(self.__queue_time_sleep)
@@ -51,7 +53,9 @@ class Controller:
         logger.info("Запущен Тред завершения недозаполненных заявок.")
         while True:
             invoices: list[Invoice] = self.__invoice_look_up.get_all_new_invoices()
-            [invoice.push_in_queue() for invoice in invoices if invoice.is_overdue]
+            for invoice in invoices:
+                if invoice.is_overdue:
+                    invoice.push_in_queue()
             time.sleep(self.__overdue_time_sleep)
 
     def finish_invoice(self, invoice_id: str) -> None:
@@ -68,7 +72,8 @@ class Controller:
         else:
             raise InvoiceNotExist
 
-    def update_document_for_user_id(self, user_id: str, update_fields: dict | None = None) -> Invoice:
+    def update_document_for_user_id(self, user_id: int,
+                                    update_fields: dict | None = None) -> Invoice:
         """
         Вернет Invoive по user_id и проапдейдит поле если передать.
 
@@ -79,9 +84,8 @@ class Controller:
         Returns: Объект Invoice.
 
         """
-        invoice: Invoice | None = self.__invoice_look_up.get_new_invoice_by_user_id(user_id)
-        if not invoice:
-            invoice: Invoice = self.__invoice_look_up.create(user_id=user_id)
+        invoice: Invoice = (self.__invoice_look_up.get_new_invoice_by_user_id(user_id) or
+                            self.__invoice_look_up.create(user_id=user_id))
         if update_fields:
             invoice.update_fields(update_fields)
         return invoice

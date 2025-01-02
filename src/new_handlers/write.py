@@ -3,7 +3,7 @@ module write.py
 """
 import logging
 
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardButton
 from telegram.ext import ContextTypes
 
 from src.init_app import controller
@@ -30,7 +30,7 @@ async def handle_user_message(update: Update, context: ContextTypes.DEFAULT_TYPE
     return await start(update, context)
 
 
-async def write(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def write(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик для получения вопроса пользователя.
     Эта функция сохраняет вопрос пользователя и запрашивает контактные данные.
@@ -40,5 +40,5 @@ async def write(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     ]
     await basic_handler_for_step_in_question_list(inline_buttons=inline_buttons, update=update,
                                                   log_message=LOG_MESSAGE, message=MESSAGE,
-                                                  context=context, is_invoice=False)
+                                                  is_invoice=False)
     return WRITE

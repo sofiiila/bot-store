@@ -37,7 +37,7 @@ class Invoice:  # pylint: disable=too-few-public-methods
         return datetime.now() - self.__data.start_date > timedelta(minutes=self.__is_overdue_time)
 
     @property
-    def __filter_query(self) -> dict[str: str, str: str]:
+    def __filter_query(self) -> dict:
         """
         Query фильтрации
         Returns:
@@ -64,7 +64,8 @@ class Invoice:  # pylint: disable=too-few-public-methods
         :return:
         """
         invoice_data = db_client.create(user_id=user_id)
-        return cls(data=invoice_data, base_url=base_url, db_client=db_client, is_overdue_time=is_overdue_time)
+        return cls(data=invoice_data, base_url=base_url, db_client=db_client,
+                   is_overdue_time=is_overdue_time)
 
     def update_fields(self, fields):
         self.__db_client.update(

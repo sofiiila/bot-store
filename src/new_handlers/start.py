@@ -3,7 +3,7 @@ module stsrt
 """
 import logging
 
-from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
+from telegram import Update, ReplyKeyboardMarkup, KeyboardButton, CallbackQuery, Message
 from telegram.ext import ContextTypes
 
 from src.init_app import controller
@@ -21,14 +21,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Отображает главное меню, независимо от того, идет ли вызов из команды или из кнопки.
     """
-
     if update.message:
-        query = update.message
+        query: Message = update.message  # type: ignore[no-redef]
         chat_id = update.message.chat.id
-
     else:
-        query = update.callback_query
-        await query.answer()
+        query: CallbackQuery = update.callback_query  # type: ignore[no-redef]
+        await query.answer()  # type: ignore[attr-defined]
         chat_id = update.callback_query.message.chat.id
     controller.complete_old_or_create_new(query.from_user.id)
     user = query.from_user

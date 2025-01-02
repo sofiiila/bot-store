@@ -23,6 +23,7 @@ def execute_my_function() -> tuple[str, int]:
         return "Request body is empty", 400
     try:
         controller.finish_invoice(invoice_id=data['id'])
+        return "Успешно", 200
     except KeyError as e:
         logger.error('KeyError: %s', e)
         return 'Missing required key "id"', 400

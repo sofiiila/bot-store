@@ -64,9 +64,10 @@ class InvoiceLookUp:
             filter_query={"_id": invoice_id},
         )
         if result:
-            return self._construct_invoice(result)
+            return self._construct_invoice(result[0])
+        return None
 
-    def get_new_invoice_by_user_id(self, user_id: str) -> Invoice | None:
+    def get_new_invoice_by_user_id(self, user_id: int) -> Invoice | None:
         logger.debug("получение заявки по id")
         result: list[UserDocument] = self.db_client.list(
             filter_query={
@@ -76,6 +77,7 @@ class InvoiceLookUp:
         )
         if result:
             return self._construct_invoice(result[0])
+        return None
 
     def get_all_new_invoices(self) -> list[Invoice]:
         """

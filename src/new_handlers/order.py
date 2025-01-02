@@ -30,7 +30,7 @@ async def handle_user_tz(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return await deadline(update, context)
 
 
-async def order(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def order(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик для заказа.
     """
@@ -40,5 +40,5 @@ async def order(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     ]
     await basic_handler_for_step_in_question_list(inline_buttons=inline_buttons, update=update,
                                                   log_message=LOG_MESSAGE, message=MESSAGE,
-                                                  step=STEP, context=context)
+                                                  step=STEP)
     return ORDER

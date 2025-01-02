@@ -9,8 +9,8 @@ from telegram.ext import ContextTypes
 from src.init_app import controller
 
 from src.new_handlers.start import start
-from src.new_handlers.handler_types import CONTACTS, START, CANCEL_FILLING_BUTTON, PREVIOUS_STEP_BUTTON, ORDER, \
-    NEXT_STEP_BUTTON
+from src.new_handlers.handler_types import CONTACTS, START, CANCEL_FILLING_BUTTON, \
+    PREVIOUS_STEP_BUTTON, ORDER, NEXT_STEP_BUTTON
 from src.new_handlers.utills import basic_handler_for_step_in_question_list
 
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ async def handle_user_contacts(update: Update, context: ContextTypes.DEFAULT_TYP
     return await start(update, context)
 
 
-async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def contacts(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     """
     Обработчик для получения контактных данных пользователя.
     Эта функция сохраняет контактные данные пользователя и записывает данные в базу данных.
@@ -53,5 +53,5 @@ async def contacts(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
     await basic_handler_for_step_in_question_list(inline_buttons=inline_buttons, update=update,
                                                   log_message=LOG_MESSAGE, message=MESSAGE,
-                                                  step=STEP, context=context)
+                                                  step=STEP)
     return CONTACTS
