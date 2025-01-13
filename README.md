@@ -1,13 +1,47 @@
+# BOT_STORE
+#### Бот-сборщик заявок. 
+#### - Сценарий опроса клиента.
+#### - Сохранение заявки.
+#### - Отправка заявок на CRM.
+#### - Резервирование заявок.
+#### - Удаление заявок только после ответа от CRM.
+
+# Требования
+#### Для запуска этого проекта необходимо установить Docker
+
+# Начало работы
+## Установка
+
+```bash
+#Клонировать репозиторий
+git clone git@github.com:sofiiila/bot-store.git
+
+# Перейдите в директрию проекта
+cd bot_store
+```
+## Запуск контейнера локально
+
+```bash
+docker-compose -f docker-compose-local.yml up
+```
+## Запуск тестов
+
+```bash
+python test.py
+```
+
+## Проверка линтерами
+
+```bash
+mypy src
+
+pylint src
+```
+
+## Схема бота
+
+![Схема бота](СХЕМАБОТА.png)
+
 ## Status Badges
 ![Mypy Check](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy&job=mypy-check)
 ![Pylint Check Status](https://github.com/sofiiila/bot-store/actions/workflows/CI_pipeline.yml/badge.svg?branch=dev_0.0/gl-autodeploy&job=pylint-check)
-тут будет описание проекта 
-4 компонента
-бот - отвечает за сбор данных с пользователя, назначает статус new в очереди
-mongo_db - база, хранит собранные данные 
-queue - очередь, отвечает за перевод документов в статусы: queue - в очереди;
-in_progress - заявка ждет ответа от crm; is_invalid - заявка будет вручную обработана человеком;
-механизм ловящий заявку на последнем этапе - если после отправления заявки crm прислала ответ , 
-    что получила заявку, но не отправила подтверждение нахождение док о внутренней базе , то заявка 
-    переводится в in_progress и ждет уведомления от crm о включении, после получения уведомления заявка переводится 
-    в статус queue
