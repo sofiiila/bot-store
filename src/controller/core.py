@@ -75,7 +75,7 @@ class Controller:
     def update_document_for_user_id(self, user_id: int,
                                     update_fields: dict | None = None) -> Invoice:
         """
-        Вернет Invoive по user_id и проапдейдит поле если передать.
+        Вернет Invoice по user_id и проапдейдит поле если передать.
 
         Args:
             user_id: Id пользователя
@@ -91,6 +91,12 @@ class Controller:
         return invoice
 
     def complete_old_or_create_new(self, user_id):
+        """
+        Ф-я которая либо завершает старую заявку, ставя ее в очередь,
+        либо создает новую заявку.
+        Args:
+            user_id: Id пользователя.
+        """
         invoice = self.__invoice_look_up.get_new_invoice_by_user_id(user_id)
         if invoice:
             invoice.push_in_queue()

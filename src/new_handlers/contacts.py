@@ -44,7 +44,6 @@ async def contacts(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     Обработчик для получения контактных данных пользователя.
     Эта функция сохраняет контактные данные пользователя и записывает данные в базу данных.
     """
-    # Создаем клавиатуру для инлайн-кнопок
     inline_buttons = [
         [InlineKeyboardButton(text=CANCEL_FILLING_BUTTON, callback_data=str(START))],
         [InlineKeyboardButton(text=NEXT_STEP_BUTTON, callback_data="LAST_STATE"),

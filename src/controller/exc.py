@@ -2,7 +2,11 @@
 exeption
 """
 
+
 class BaseAppException(Exception):
+    """
+    exeption
+    """
     pass
 
 
@@ -23,4 +27,7 @@ class ServerProblem(BaseAppException):
 
 
 class InvoiceNotExist(BaseAppException):
+    """
+    exeptions
+    """
     pass

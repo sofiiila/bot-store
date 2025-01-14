@@ -8,6 +8,14 @@ logger = logging.getLogger(__name__)
 
 def construct_message_in_invoice(message: str, invoice: Invoice | None = None,
                                  step: str | None = None):
+    """
+    Собирает сообщение для отправки пользователю, включая информацию о заявке и шаге.
+
+    :param message: Сообщение, которое будет отправлено пользователю.
+    :param invoice: Объект заявки (Invoice), если он существует.
+    :param step: Текущий шаг, если он существует.
+    :return: Собранное сообщение с информацией о заявке и шаге.
+    """
     step_text = f"\nШаг: {step}\n\n" if step is not None else ""
     invoice_text = f"Заявка № {invoice.invoice_id}\n" if invoice is not None else ""
     return f"{invoice_text}{step_text}{message}"
@@ -21,6 +29,14 @@ async def basic_handler_for_step_in_question_list(update, inline_buttons,
                                                   step: str | None = None,
                                                   is_invoice: bool = True
                                                   ):
+    """
+    Конструирует сообщение для отправки пользователю, включая информацию о заявке и шаге.
+
+    :param message: Основное сообщение, которое будет отправлено пользователю.
+    :param invoice: Объект заявки (Invoice), если он существует.
+    :param step: Текущий шаг, если он существует.
+    :return: Сконструированное сообщение с информацией о заявке и шаге.
+    """
     keyboard = InlineKeyboardMarkup(inline_buttons)
     if update.message:
         query = update.message
