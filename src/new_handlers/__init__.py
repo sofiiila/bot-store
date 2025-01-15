@@ -62,6 +62,7 @@ conv_handler = ConversationHandler(
             global_handler,
             MessageHandler(filters.TEXT & ~filters.COMMAND, handle_user_message),
             CallbackQueryHandler(start, pattern="^" + str(START) + "$"),
+            CallbackQueryHandler(contacts, pattern="^" + str(CONTACTS) + "$"),
         ],
         CONTACTS: [
             global_handler,
