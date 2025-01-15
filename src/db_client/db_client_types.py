@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 class CategoriesEnum(str, Enum):
     """
-    Categories
+    CAtegories
     """
     NEW = "new"
     QUEUE = "queue"

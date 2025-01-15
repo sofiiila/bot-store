@@ -26,9 +26,6 @@ class Invoice:  # pylint: disable=too-few-public-methods
 
     @property
     def invoice_id(self):
-        """
-        id заявки
-        """
         return self.__data.id
 
     @property
@@ -71,9 +68,6 @@ class Invoice:  # pylint: disable=too-few-public-methods
                    is_overdue_time=is_overdue_time)
 
     def update_fields(self, fields):
-        """
-        обновление данных заявки
-        """
         self.__db_client.update(
             filter_query=self.__filter_query,
             value=fields

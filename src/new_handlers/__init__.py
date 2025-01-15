@@ -17,16 +17,6 @@ logger = logging.getLogger(__name__)
 
 
 async def handle_global_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """
-    Обрабатывает сообщения от пользователя.
-
-    Если текст сообщения равен "Написать нам", вызывает функцию write.
-    Если текст сообщения равен "Заказать", вызывает функцию order.
-
-    :param update: Объект обновления, содержащий информацию о сообщении.
-    :param context: Контекст, содержащий информацию о текущем состоянии бота.
-    :return: Результат выполнения функции write или order.
-    """
     if update.message.text == "Написать нам":
         return await write(update, context)
     if update.message.text == "Заказать":
@@ -36,11 +26,6 @@ global_handler = MessageHandler(
     filters.TEXT & filters.Regex("^(Написать нам|Заказать)$"),
     handle_global_message
 )
-"""
-Обработчик глобальных сообщений, фильтрующий текстовые сообщения,
-соответствующие регулярному выражению "^(Написать нам|Заказать)$".
-Вызывает функцию handle_global_message для обработки этих сообщений.
-"""
 
 conv_handler = ConversationHandler(
     entry_points=[CommandHandler("start", start)],
@@ -62,7 +47,6 @@ conv_handler = ConversationHandler(
             global_handler,
             MessageHandler(filters.TEXT & ~filters.COMMAND, handle_user_message),
             CallbackQueryHandler(start, pattern="^" + str(START) + "$"),
-            CallbackQueryHandler(contacts, pattern="^" + str(CONTACTS) + "$"),
         ],
         CONTACTS: [
             global_handler,
@@ -81,11 +65,3 @@ conv_handler = ConversationHandler(
     },
     fallbacks=[CommandHandler("cancel", cancel)],
 )
-"""
-Основной обработчик диалога, управляющий состояниями и переходами между ними.
-Использует ConversationHandler для управления состояниями и переходами.
-
-:param entry_points: Точки входа в диалог.
-:param states: Словарь состояний и соответствующих обработчиков.
-:param fallbacks: Обработчики для завершения диалога.
-"""
