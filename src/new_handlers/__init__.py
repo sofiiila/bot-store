@@ -8,7 +8,7 @@ from src.new_handlers.deadline import handle_user_deadline, deadline
 from src.new_handlers.handler_types import START, ORDER, WRITE, CONTACTS, DEADLINE
 from src.new_handlers.cancel import cancel
 from src.new_handlers.start import start
-from src.new_handlers.order import order, handle_user_tz
+from src.new_handlers.order import order, handle_user_text_tz, handle_user_photo_tz, handle_user_document_tz
 from src.new_handlers.write import write, handle_user_message
 from src.new_handlers.contacts import contacts, handle_user_contacts
 
@@ -37,16 +37,19 @@ conv_handler = ConversationHandler(
             CallbackQueryHandler(write,
                                  pattern="^" + str(WRITE) + "$")
         ],
-        ORDER: [
-            global_handler,
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_user_tz),
-            CallbackQueryHandler(start, pattern="^" + str(START) + "$"),
-            CallbackQueryHandler(deadline, pattern="^" + str(DEADLINE) + "$")
-        ],
         WRITE: [
             global_handler,
             MessageHandler(filters.TEXT & ~filters.COMMAND, handle_user_message),
             CallbackQueryHandler(start, pattern="^" + str(START) + "$"),
+            CallbackQueryHandler(contacts, pattern="^" + str(CONTACTS) + "$"),
+        ],
+        ORDER: [
+            global_handler,
+            MessageHandler(filters.PHOTO & ~filters.COMMAND, handle_user_photo_tz),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_user_text_tz),
+            MessageHandler(filters.Document.ALL & ~filters.COMMAND, handle_user_document_tz),
+            CallbackQueryHandler(start, pattern="^" + str(START) + "$"),
+            CallbackQueryHandler(deadline, pattern="^" + str(DEADLINE) + "$")
         ],
         CONTACTS: [
             global_handler,
