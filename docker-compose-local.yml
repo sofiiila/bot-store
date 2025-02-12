@@ -19,6 +19,8 @@ services:
   bot:
     build: .
     container_name: bot_store_bot
+    volumes:
+      - ./downloads:/app/downloads
     env_file:
       - ".env"
     depends_on:

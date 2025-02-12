@@ -1,7 +1,7 @@
 """
 handers types
 """
-START, WRITE, ORDER, TZ, FILES, DEADLINE, CONTACTS, ASK_MORE = range(8)
+START, WRITE, ORDER, TZ, DEADLINE, CONTACTS, ASK_MORE = range(7)
 
 
 NEXT_STEP_BUTTON = "Пропустить"
