@@ -26,13 +26,16 @@ class Controller:
         base_url: str,
         is_overdue_time: int,
         queue_time_sleep: int | float = 1,
-        overdue_time_sleep: int | float = 1
+        overdue_time_sleep: int | float = 1,
+        tmp_dir: str | None = None
     ):
         self.__invoice_look_up = InvoiceLookUp(base_url=base_url,
                                                db_client=db_client,
-                                               is_overdue_time=is_overdue_time)
+                                               is_overdue_time=is_overdue_time,
+                                               tmp_dir=tmp_dir)
         self.__queue_time_sleep = queue_time_sleep
         self.__overdue_time_sleep = overdue_time_sleep
+        self.__tmp_dir = tmp_dir
 
     def eternity_cycle_iteration(self) -> None:
         """

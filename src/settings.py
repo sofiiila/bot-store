@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     overdue_time_sleep: int
     queue_time_sleep: int
     is_overdue_time: int = 10
+    tmp_dir: str
 
 
 settings = Settings()  # type: ignore

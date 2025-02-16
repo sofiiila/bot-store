@@ -20,35 +20,30 @@ LOG_MESSAGE = "Пользователь %s указывает ТЗ"
 MESSAGE = "Что требуется сделать(вы можете прикрепить файл):"
 
 
-async def handle_user_text_tz(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_user_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    Обработчик текстовых сообщений.
+    Обработчик сообщений, который может содержать текст, фото и документы.
     """
-    controller.update_document_for_user_id(user_id=update.message.from_user.id,
-                                           update_fields={"tz": update.message.text})
-    return await deadline(update, context)
+    user_id = update.message.from_user.id
 
+    if update.message.text:
+        invoice = controller.update_document_for_user_id(user_id=user_id, update_fields={"tz": update.message.text})
 
-async def handle_user_photo_tz(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """
-    Обработчик фото сообщений.
-    """
-    photo_file = await update.message.photo[-1].get_file()
-    file_path = os.path.join('downloads', f"user_photo_{update.message.from_user.id}.jpg")
-    await photo_file.download_to_drive(file_path)
-    logger.info(f"сохранено в: {file_path}")
-    return await deadline(update, context)
+    if update.message.photo:
+        invoice = controller.update_document_for_user_id(user_id=user_id, update_fields={"tz": update.message.text})
+        photo_file = await update.message.photo[-1].get_file()
+        file_path = os.path.join(invoice.files_path, f"photo_{photo_file.file_id}.jpg")
+        await photo_file.download_to_drive(file_path)
+        logger.info(f"Фото сохранено в: {file_path}")
 
+    if update.message.document:
+        invoice = controller.update_document_for_user_id(user_id=user_id, update_fields={"tz": update.message.text})
+        document = update.message.document
+        file = await document.get_file()
+        file_path = os.path.join(invoice.files_path, document.file_name)
+        await file.download_to_drive(file_path)
+        logger.info(f"Документ сохранен в: {file_path}")
 
-async def handle_user_document_tz(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """
-    Обработчик документов.
-    """
-    document = update.message.document
-    file = await document.get_file()
-    file_path = os.path.join('downloads', f"user_document_{update.message.from_user.id}.{document.file_name.split('.')[-1]}")
-    await file.download_to_drive(file_path)
-    logger.info(f"сохранено в: {file_path}")
     return await deadline(update, context)
 
 

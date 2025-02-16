@@ -18,5 +18,6 @@ controller = Controller(
     base_url=settings.base_url,
     overdue_time_sleep=settings.overdue_time_sleep,
     queue_time_sleep=settings.queue_time_sleep,
-    is_overdue_time=settings.is_overdue_time
+    is_overdue_time=settings.is_overdue_time,
+    tmp_dir=settings.tmp_dir
 )
