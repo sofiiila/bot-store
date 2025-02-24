@@ -25,7 +25,6 @@ class UserDocument(BaseModel):
     user_id: int
     question: str = "No question"
     tz: str = "No TZ"
-    files: str = "No files"
     deadline: str = "No deadline"
     contacts: str = "No contacts"
     category: CategoriesEnum = CategoriesEnum.NEW
