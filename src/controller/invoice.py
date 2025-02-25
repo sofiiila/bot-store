@@ -4,6 +4,7 @@ module invoice
 import logging
 
 from datetime import datetime, timedelta
+import os
 
 from src.controller.client import CrmApiClient
 from src.controller.exc import InvalidInvoice, ServerProblem
@@ -12,20 +13,27 @@ from src.db_client.db_client_types import UserDocument, CategoriesEnum
 
 logger = logging.getLogger(__name__)
 
+# pylint: disable=too-many-arguments,too-many-positional-arguments
+
 
 class Invoice:  # pylint: disable=too-few-public-methods
     """
     Класс для работы с заявками, определяет их статус и id
     """
 
-    def __init__(self, data: UserDocument, base_url: str, db_client: DbClient, is_overdue_time):
+    def __init__(self, data: UserDocument, base_url: str,
+                 db_client: DbClient, is_overdue_time, tmp_dir: str):
         self.__api_client = CrmApiClient(base_url)
         self.__data = data
         self.__db_client = db_client
         self.__is_overdue_time = is_overdue_time
+        self.__tmp_dir = tmp_dir
 
     @property
     def invoice_id(self):
+        """
+        Возвращает id заявки
+        """
         return self.__data.id
 
     @property
@@ -45,6 +53,13 @@ class Invoice:  # pylint: disable=too-few-public-methods
         return {"user_id": self.__data.user_id,
                 "id": self.__data.id}
 
+    @property
+    def files_path(self) -> str:
+        """
+        Возвращает путь по которому лежат файлы данного invoice
+        """
+        return os.path.join(self.__tmp_dir, str(self.invoice_id))
+
     def push_in_queue(self) -> None:
         """
         Cтавит в очередь.
@@ -58,16 +73,19 @@ class Invoice:  # pylint: disable=too-few-public-methods
                                 value={"category": CategoriesEnum.QUEUE})
 
     @classmethod
-    def create(cls, db_client, user_id, base_url, is_overdue_time) -> 'Invoice':
+    def create(cls, db_client, user_id, base_url, is_overdue_time, tmp_dir: str) -> 'Invoice':
         """
         Будет вызываться в момеент когда заполнено в боте.
         :return:
         """
         invoice_data = db_client.create(user_id=user_id)
         return cls(data=invoice_data, base_url=base_url, db_client=db_client,
-                   is_overdue_time=is_overdue_time)
+                   is_overdue_time=is_overdue_time, tmp_dir=tmp_dir)
 
     def update_fields(self, fields):
+        """
+        Обновление полей заявки
+        """
         self.__db_client.update(
             filter_query=self.__filter_query,
             value=fields

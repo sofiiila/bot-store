@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 
 
 async def handle_global_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Обработчик глобальных сообщений, который реагирует на текстовые команды.
+    """
     if update.message.text == "Написать нам":
         return await write(update, context)
     if update.message.text == "Заказать":
@@ -37,16 +40,18 @@ conv_handler = ConversationHandler(
             CallbackQueryHandler(write,
                                  pattern="^" + str(WRITE) + "$")
         ],
-        ORDER: [
-            global_handler,
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handle_user_tz),
-            CallbackQueryHandler(start, pattern="^" + str(START) + "$"),
-            CallbackQueryHandler(deadline, pattern="^" + str(DEADLINE) + "$")
-        ],
         WRITE: [
             global_handler,
             MessageHandler(filters.TEXT & ~filters.COMMAND, handle_user_message),
             CallbackQueryHandler(start, pattern="^" + str(START) + "$"),
+            CallbackQueryHandler(contacts, pattern="^" + str(CONTACTS) + "$"),
+        ],
+        ORDER: [
+            global_handler,
+            MessageHandler(filters.TEXT | filters.PHOTO | filters.Document.ALL
+                           | filters.VIDEO | filters.VOICE & ~filters.COMMAND, handle_user_tz),
+            CallbackQueryHandler(start, pattern="^" + str(START) + "$"),
+            CallbackQueryHandler(deadline, pattern="^" + str(DEADLINE) + "$")
         ],
         CONTACTS: [
             global_handler,

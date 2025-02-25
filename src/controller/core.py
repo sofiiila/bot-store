@@ -26,13 +26,16 @@ class Controller:
         base_url: str,
         is_overdue_time: int,
         queue_time_sleep: int | float = 1,
-        overdue_time_sleep: int | float = 1
+        overdue_time_sleep: int | float = 1,
+        tmp_dir: str | None = None
     ):
         self.__invoice_look_up = InvoiceLookUp(base_url=base_url,
                                                db_client=db_client,
-                                               is_overdue_time=is_overdue_time)
+                                               is_overdue_time=is_overdue_time,
+                                               tmp_dir=tmp_dir)
         self.__queue_time_sleep = queue_time_sleep
         self.__overdue_time_sleep = overdue_time_sleep
+        self.tmp_dir = tmp_dir
 
     def eternity_cycle_iteration(self) -> None:
         """
@@ -91,6 +94,19 @@ class Controller:
         return invoice
 
     def complete_old_or_create_new(self, user_id):
+        """
+        Завершает существующую заявку или создает новую для указанного пользователя.
+
+        Эта функция проверяет наличие незавершенной заявки для пользователя с указанным `user_id`.
+        Если такая заявка существует, она ставится в очередь на обработку. Если заявка отсутствует,
+        создается новая заявка для данного пользователя.
+
+        Args:
+            user_id (int): Идентификатор пользователя, для которого проверяется наличие заявки.
+
+        Returns:
+            None
+        """
         invoice = self.__invoice_look_up.get_new_invoice_by_user_id(user_id)
         if invoice:
             invoice.push_in_queue()

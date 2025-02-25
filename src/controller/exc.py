@@ -2,6 +2,7 @@
 exeption
 """
 
+
 class BaseAppException(Exception):
     pass
 

@@ -80,8 +80,19 @@ class DbClient:
 
     def list(self, filter_query: dict, sort_query: dict | None = None) -> list[UserDocument]:
         """
-        фильтрация  в очереди
-        :return:
+        Полученние списка документов из коллекции
+        :param filter_query:  Это словарь, который используется для фильтрации
+                                                        документов в коллекции.
+               Каждый ключ и значение в этом словаре представляют собой поле и
+                                    значение, которые должны быть в документе.
+               sort_query: Это словарь, который используется для сортировки
+               документов в коллекции. Каждый ключ и значение в этом словаре
+                            представляют собой поле и направление сортировки.
+               Если значение равно 1, то сортировка будет по возрастанию,
+                а если значение равно -1, то сортировка будет по убыванию.
+                Например, если sort_query равен {"user_id": 1}, то метод list
+                  отсортирует документы по полю user_id в порядке возрастания.
+        :return: results
         """
         cleaned_sort_query = {}
         if sort_query:
@@ -104,6 +115,7 @@ class DbClient:
             documents = self.__collection.find(cleaned_filter_query)
         results = []
         for doc in documents:
+            logger.debug("Документ %s", doc)
             results.append(UserDocument(**doc, id=str(doc["_id"])))
         return results
 

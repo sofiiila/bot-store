@@ -19,10 +19,11 @@ class InvoiceLookUp:
     """
     __invoice_class = Invoice
 
-    def __init__(self, base_url: str, db_client: DbClient, is_overdue_time):
+    def __init__(self, base_url: str, db_client: DbClient, is_overdue_time, tmp_dir):
         self.__base_url = base_url
         self.db_client = db_client
         self.__is_overdue_time = is_overdue_time
+        self.__tmp_dir = tmp_dir
 
     def _construct_invoice(self, data: UserDocument) -> Invoice:
         """
@@ -37,7 +38,8 @@ class InvoiceLookUp:
         return self.__invoice_class(data=data,
                                     base_url=self.__base_url,
                                     db_client=self.db_client,
-                                    is_overdue_time=self.__is_overdue_time)
+                                    is_overdue_time=self.__is_overdue_time,
+                                    tmp_dir=self.__tmp_dir)
 
     def get_oldest_invoice(self) -> Invoice | None:
         """
@@ -68,6 +70,15 @@ class InvoiceLookUp:
         return None
 
     def get_new_invoice_by_user_id(self, user_id: int) -> Invoice | None:
+        """
+        Возвращает новую заявку для указанного пользователя.
+
+        Args:
+            user_id (int): Идентификатор пользователя.
+
+        Returns:
+            Invoice | None
+        """
         logger.debug("получение заявки по id")
         result: list[UserDocument] = self.db_client.list(
             filter_query={
@@ -103,5 +114,5 @@ class InvoiceLookUp:
             user_id=user_id,
             db_client=self.db_client,
             base_url=self.__base_url,
-            is_overdue_time=self.__is_overdue_time
-        )
+            is_overdue_time=self.__is_overdue_time,
+            tmp_dir=self.__tmp_dir)

@@ -19,6 +19,10 @@ services:
   bot:
     build: .
     container_name: bot_store_bot
+    volumes:
+      - type: bind
+        source: ${TMP_DIR}
+        target: ${TMP_DIR}
     env_file:
       - ".env"
     depends_on:
