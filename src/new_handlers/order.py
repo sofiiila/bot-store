@@ -2,7 +2,6 @@
 module order
 """
 import logging
-from pathlib import Path
 from telegram import Update, InlineKeyboardButton
 from telegram.ext import ContextTypes
 
