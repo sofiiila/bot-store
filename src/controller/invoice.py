@@ -19,7 +19,7 @@ class Invoice:  # pylint: disable=too-few-public-methods
     Класс для работы с заявками, определяет их статус и id
     """
 
-    def __init__(self, data: UserDocument, base_url: str, db_client: DbClient, is_overdue_time, tmp_dir):
+    def __init__(self, data: UserDocument, base_url: str, db_client: DbClient, is_overdue_time, tmp_dir: str):
         self.__api_client = CrmApiClient(base_url)
         self.__data = data
         self.__db_client = db_client
@@ -67,14 +67,14 @@ class Invoice:  # pylint: disable=too-few-public-methods
                                 value={"category": CategoriesEnum.QUEUE})
 
     @classmethod
-    def create(cls, db_client, user_id, base_url, is_overdue_time) -> 'Invoice':
+    def create(cls, db_client, user_id, base_url, is_overdue_time, tmp_dir: str) -> 'Invoice':
         """
         Будет вызываться в момеент когда заполнено в боте.
         :return:
         """
         invoice_data = db_client.create(user_id=user_id)
         return cls(data=invoice_data, base_url=base_url, db_client=db_client,
-                   is_overdue_time=is_overdue_time, tmp_dir="tmp_dir")
+                   is_overdue_time=is_overdue_time, tmp_dir=tmp_dir)
 
     def update_fields(self, fields):
         self.__db_client.update(

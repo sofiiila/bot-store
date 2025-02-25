@@ -18,6 +18,10 @@ services:
     command: mongod --config /etc/mongo/mongod.conf
   bot:
     image: akchaau/bot-store:${VERSION}
+    volumes:
+      - type: bind
+        source: ${TMP_DIR}
+        target: ${TMP_DIR}
     environment:
       USERNAME: ${DOCKER_USERNAME}
       PASSWORD: ${DOCKER_PASSWORD}

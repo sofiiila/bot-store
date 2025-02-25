@@ -105,5 +105,6 @@ class InvoiceLookUp:
             user_id=user_id,
             db_client=self.db_client,
             base_url=self.__base_url,
-            is_overdue_time=self.__is_overdue_time
-        )
+            is_overdue_time=self.__is_overdue_time,
+            tmp_dir=self.__tmp_dir)
+    
