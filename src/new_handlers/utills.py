@@ -1,9 +1,23 @@
 import logging
+from pathlib import Path
 
 from telegram import InlineKeyboardMarkup
 from src.init_app import controller, Invoice
 
 logger = logging.getLogger(__name__)
+
+
+
+async def save_media(media, user_id, media_type, file_extension):
+    """
+    Сохранение медиафайлов в указанный путь.
+    """
+    invoice = controller.update_document_for_user_id(user_id=user_id)
+    file = await media.get_file()
+    file_path = Path(invoice.files_path) / f"{media_type}_{media.file_id}{file_extension}"
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    await file.download_to_drive(file_path)
+    logger.info("%s сохранено в: %s", media_type.capitalize(), file_path)
 
 
 def construct_message_in_invoice(message: str, invoice: Invoice | None = None,

@@ -10,7 +10,7 @@ from src.new_handlers.deadline import deadline
 from src.init_app import controller
 from src.new_handlers.handler_types import CANCEL_FILLING_BUTTON, DEADLINE, NEXT_STEP_BUTTON, \
     ORDER, START
-from src.new_handlers.utills import basic_handler_for_step_in_question_list
+from src.new_handlers.utills import basic_handler_for_step_in_question_list, save_media
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +24,6 @@ async def handle_user_tz(update: Update, context: ContextTypes.DEFAULT_TYPE):
     Обработчик сообщений, который может содержать текст, фото и документы.
     """
     user_id = update.message.from_user.id  # id пользователя из тг
-
-    logger.debug(update.message.caption)
-    logger.debug(update.message.photo)
 
     if update.message.caption or update.message.text:
         text = update.message.caption or update.message.text
@@ -44,19 +41,6 @@ async def handle_user_tz(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await save_media(audio, user_id, "audio", ".ogg")
 
     return await deadline(update, context)
-
-
-async def save_media(media, user_id, media_type, file_extension):
-    """
-    Сохранение медиафайлов в указанный путь.
-    """
-    invoice = controller.update_document_for_user_id(user_id=user_id)
-    file = await media.get_file()
-    file_path = Path(invoice.files_path) / f"{media_type}_{media.file_id}{file_extension}"
-    file_path.parent.mkdir(parents=True, exist_ok=True)
-    await file.download_to_drive(file_path)
-    logger.info("%s сохранено в: %s", media_type.capitalize(), file_path)
-
 
 async def order(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     """
