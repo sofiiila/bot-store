@@ -35,7 +35,7 @@ class Controller:
                                                tmp_dir=tmp_dir)
         self.__queue_time_sleep = queue_time_sleep
         self.__overdue_time_sleep = overdue_time_sleep
-        self.__tmp_dir = tmp_dir
+        self.tmp_dir = tmp_dir
 
     def eternity_cycle_iteration(self) -> None:
         """

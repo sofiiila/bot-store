@@ -107,4 +107,3 @@ class InvoiceLookUp:
             base_url=self.__base_url,
             is_overdue_time=self.__is_overdue_time,
             tmp_dir=self.__tmp_dir)
-    

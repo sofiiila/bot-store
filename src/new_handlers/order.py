@@ -2,7 +2,6 @@
 module order
 """
 import logging
-import os
 from pathlib import Path
 from telegram import Update, InlineKeyboardButton
 from telegram.ext import ContextTypes
@@ -36,7 +35,8 @@ async def handle_user_tz(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.photo:
         await save_media(update.message.photo[-1], user_id, "photo", ".jpg")
     if update.message.document:
-        await save_media(update.message.document, user_id, "document", update.message.document.file_name)
+        await save_media(update.message.document, user_id, "document",
+                         update.message.document.file_name)
     if update.message.video:
         await save_media(update.message.video, user_id, "video", ".mp4")
     if update.message.audio or update.message.voice:
@@ -55,7 +55,7 @@ async def save_media(media, user_id, media_type, file_extension):
     file_path = Path(invoice.files_path) / f"{media_type}_{media.file_id}{file_extension}"
     file_path.parent.mkdir(parents=True, exist_ok=True)
     await file.download_to_drive(file_path)
-    logger.info(f"{media_type.capitalize()} сохранено в: {file_path}")
+    logger.info("%s сохранено в: %s", media_type.capitalize(), file_path)
 
 
 async def order(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:

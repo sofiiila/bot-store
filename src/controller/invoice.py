@@ -13,13 +13,16 @@ from src.db_client.db_client_types import UserDocument, CategoriesEnum
 
 logger = logging.getLogger(__name__)
 
+# pylint: disable=too-many-arguments,too-many-positional-arguments
+
 
 class Invoice:  # pylint: disable=too-few-public-methods
     """
     Класс для работы с заявками, определяет их статус и id
     """
 
-    def __init__(self, data: UserDocument, base_url: str, db_client: DbClient, is_overdue_time, tmp_dir: str):
+    def __init__(self, data: UserDocument, base_url: str,
+                 db_client: DbClient, is_overdue_time, tmp_dir: str):
         self.__api_client = CrmApiClient(base_url)
         self.__data = data
         self.__db_client = db_client

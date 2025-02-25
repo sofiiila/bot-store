@@ -45,7 +45,8 @@ conv_handler = ConversationHandler(
         ],
         ORDER: [
             global_handler,
-            MessageHandler(filters.TEXT | filters.PHOTO | filters.Document.ALL | filters.VIDEO | filters.VOICE & ~filters.COMMAND, handle_user_tz),
+            MessageHandler(filters.TEXT | filters.PHOTO | filters.Document.ALL
+                           | filters.VIDEO | filters.VOICE & ~filters.COMMAND, handle_user_tz),
             CallbackQueryHandler(start, pattern="^" + str(START) + "$"),
             CallbackQueryHandler(deadline, pattern="^" + str(DEADLINE) + "$")
         ],
