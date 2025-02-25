@@ -140,6 +140,7 @@ jobs:
           echo "OVERDUE_TIME_SLEEP=${{ env.OVERDUE_TIME_SLEEP }} >> .env
           echo "QUEUE_TIME_SLEEP=${{ env.QUEUE_TIME_SLEEP }} >> .env
           echo "IS_OVERDUE_TIME=${{ env.IS_OVERDUE_TIME }} >> .env
+          echo "TMP_DIR=${{ env.TMP_DIR }} >> .env
           git pull
           docker-compose up --build -d
           EOF
