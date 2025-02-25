@@ -53,23 +53,23 @@ async def handle_user_tz(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await file.download_to_drive(file_path)
         logger.info(f"Документ сохранен в: {file_path}")
 
-    # if update.message.video:
-    #     invoice = controller.update_document_for_user_id(user_id=user_id)
-    #     video = update.message.video
-    #     file = await video.get_file()
-    #     file_path = Path(invoice.files_path) / f"video_{video.file_id}.mp4"
-    #     file_path.parent.mkdir(parents=True, exist_ok=True)
-    #     await file.download_to_drive(file_path)
-    #     logger.info(f"Видео сохранено в: {file_path}")
+    if update.message.video:
+        invoice = controller.update_document_for_user_id(user_id=user_id)
+        video = update.message.video
+        file = await video.get_file()
+        file_path = Path(invoice.files_path) / f"video_{video.file_id}.mp4"
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        await file.download_to_drive(file_path)
+        logger.info(f"Видео сохранено в: {file_path}")
 
-    # if update.message.audio or update.message.voice:
-    #     invoice = controller.update_document_for_user_id(user_id=user_id)
-    #     audio = update.message.audio if update.message.audio else update.message.voice
-    #     file = await audio.get_file()
-    #     file_path = Path(invoice.files_path) / f"audio_{audio.file_id}.ogg"
-    #     file_path.parent.mkdir(parents=True, exist_ok=True)
-    #     await file.download_to_drive(file_path)
-    #     logger.info(f"Аудио сохранено в: {file_path}")
+    if update.message.audio or update.message.voice:
+        invoice = controller.update_document_for_user_id(user_id=user_id)
+        audio = update.message.audio if update.message.audio else update.message.voice
+        file = await audio.get_file()
+        file_path = Path(invoice.files_path) / f"audio_{audio.file_id}.ogg"
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        await file.download_to_drive(file_path)
+        logger.info(f"Аудио сохранено в: {file_path}")
   
     return await deadline(update, context)
 
