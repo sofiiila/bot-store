@@ -2,7 +2,9 @@ import logging
 from pathlib import Path
 
 from telegram import InlineKeyboardMarkup
-from src.init_app import controller, Invoice
+from src.controller.invoice import Invoice
+from src.init_app import controller
+
 
 logger = logging.getLogger(__name__)
 
