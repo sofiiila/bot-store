@@ -94,6 +94,19 @@ class Controller:
         return invoice
 
     def complete_old_or_create_new(self, user_id):
+        """
+        Завершает существующую заявку или создает новую для указанного пользователя.
+
+        Эта функция проверяет наличие незавершенной заявки для пользователя с указанным `user_id`.
+        Если такая заявка существует, она ставится в очередь на обработку. Если заявка отсутствует,
+        создается новая заявка для данного пользователя.
+
+        Args:
+            user_id (int): Идентификатор пользователя, для которого проверяется наличие заявки.
+
+        Returns:
+            None
+        """
         invoice = self.__invoice_look_up.get_new_invoice_by_user_id(user_id)
         if invoice:
             invoice.push_in_queue()

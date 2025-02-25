@@ -70,6 +70,15 @@ class InvoiceLookUp:
         return None
 
     def get_new_invoice_by_user_id(self, user_id: int) -> Invoice | None:
+        """
+        Возвращает новую заявку для указанного пользователя.
+
+        Args:
+            user_id (int): Идентификатор пользователя.
+
+        Returns:
+            Invoice | None
+        """
         logger.debug("получение заявки по id")
         result: list[UserDocument] = self.db_client.list(
             filter_query={

@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 
 
 async def handle_global_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Обработчик глобальных сообщений, который реагирует на текстовые команды.
+    """
     if update.message.text == "Написать нам":
         return await write(update, context)
     if update.message.text == "Заказать":

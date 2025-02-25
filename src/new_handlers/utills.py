@@ -8,6 +8,9 @@ logger = logging.getLogger(__name__)
 
 def construct_message_in_invoice(message: str, invoice: Invoice | None = None,
                                  step: str | None = None):
+    """
+    Формирует сообщение с информацией о заявке и текущем шаге.
+    """
     step_text = f"\nШаг: {step}\n\n" if step is not None else ""
     invoice_text = f"Заявка № {invoice.invoice_id}\n" if invoice is not None else ""
     return f"{invoice_text}{step_text}{message}"
@@ -21,6 +24,9 @@ async def basic_handler_for_step_in_question_list(update, inline_buttons,
                                                   step: str | None = None,
                                                   is_invoice: bool = True
                                                   ):
+    """
+    Базовый обработчик для шагов, в которых пользователь выбирает один из вариантов.
+    """
     keyboard = InlineKeyboardMarkup(inline_buttons)
     if update.message:
         query = update.message
