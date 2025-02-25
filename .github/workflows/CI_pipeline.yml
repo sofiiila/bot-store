@@ -136,11 +136,11 @@ jobs:
           echo "EXTERNAL_DB_PORT=${{ secrets.EXTERNAL_DB_PORT }}" >> .env
           echo "TIMEOUT=${{ secrets.TIMEOUT }}" >> .env
           echo "TOKEN=${{ secrets.TOKEN }}" >> .env
-          echo "VERSION=${{ env.VERSION }}" >> .env
-          echo "OVERDUE_TIME_SLEEP=${{ env.OVERDUE_TIME_SLEEP }} >> .env
-          echo "QUEUE_TIME_SLEEP=${{ env.QUEUE_TIME_SLEEP }} >> .env
-          echo "IS_OVERDUE_TIME=${{ env.IS_OVERDUE_TIME }} >> .env
-          echo "TMP_DIR=${{ env.TMP_DIR }} >> .env
+          echo "VERSION=${{ secrets.VERSION }}" >> .env
+          echo "OVERDUE_TIME_SLEEP=${{ secrets.OVERDUE_TIME_SLEEP }} >> .env
+          echo "QUEUE_TIME_SLEEP=${{ secrets.QUEUE_TIME_SLEEP }} >> .env
+          echo "IS_OVERDUE_TIME=${{ secrets.IS_OVERDUE_TIME }} >> .env
+          echo "TMP_DIR=${{ secrets.TMP_DIR }} >> .env
           git pull
           docker-compose up --build -d
           EOF
