@@ -72,6 +72,7 @@ jobs:
         OVERDUE_TIME_SLEEP: ${{ secrets.OVERDUE_TIME_SLEEP }}
         QUEUE_TIME_SLEEP: ${{ secrets.QUEUE_TIME_SLEEP }}
         IS_OVERDUE_TIME: ${{ secrets.IS_OVERDUE_TIME }}
+        TMP_DIR: ${{ secrets.TMP_DIR }}
       run: python -m unittest discover -s src/
 
   build-and-push:
