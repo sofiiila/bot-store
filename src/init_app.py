@@ -9,6 +9,7 @@ from .db_client.core import DbClient
 
 application = Application.builder().token(settings.token).build()
 controller = Controller(
+    # TODO порт БД не проброшен.
     db_client=DbClient(
         db_user=settings.db_user,
         db_password=settings.db_password,

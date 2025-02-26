@@ -20,6 +20,7 @@ class DbClient:
     def __init__(self, db_user, db_password, host='localhost', port=27017):
         connection_string = f'mongodb://{db_user}:{db_password}@{host}:{port}/'
         db_client = MongoClient(connection_string)
+        # TODO задать более адекватные названия БД и название коллекции
         db = db_client["your_database"]
         self.__collection = db["mycollection"]
 
@@ -78,6 +79,7 @@ class DbClient:
         if result.modified_count == 0:
             raise AttributeError("Ничего не обновилось")
 
+    #TODO переименуй методы, чтобы не пришлось тут комментировать pylint 
     def list(self, filter_query: dict, sort_query: dict | None = None) -> list[UserDocument]:
         """
         Полученние списка документов из коллекции
@@ -119,6 +121,7 @@ class DbClient:
             results.append(UserDocument(**doc, id=str(doc["_id"])))
         return results
 
+    #TODO переименуй методы, чтобы не пришлось тут комментировать pylint 
     # pylint: disable=redefined-builtin
     def delete(self, id):
         """

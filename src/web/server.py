@@ -18,6 +18,7 @@ def execute_my_function() -> tuple[str, int]:
     Обработка инвойсов
     :return:
     """
+    # TODO надо обработать внутренюю ошибку сервиса.
     data = request.json
     if data is None:
         return "Request body is empty", 400

@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     token: str
     db_user: str
     db_password: str
+    # TODO данная переменная не нужна
     external_db_port: str
     db_port: str
     db_container_name: str
