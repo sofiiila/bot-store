@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class Controller:
     """
-    Высокоуровневый класс, который взаимодействует
+    Высокоуровниевый класс, который взаимодействует
     с инфраструктурой приложения.
     """
 
@@ -112,3 +112,4 @@ class Controller:
             invoice.push_in_queue()
         else:
             self.__invoice_look_up.create(user_id=user_id)
+

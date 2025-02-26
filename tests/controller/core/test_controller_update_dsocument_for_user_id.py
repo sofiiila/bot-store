@@ -1,7 +1,9 @@
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 from src.controller.core import Controller
 from src.controller.invoice import Invoice
+
+# Здесь должно быть 6 кейсов тестов как вечером обсуждали
 
 
 class TestController(unittest.TestCase):
