@@ -45,7 +45,7 @@ class UserDocument(BaseModel):
         :return:
         """
         api_data = {}
-        for key, value in self.dict().items():
+        for key, value in self.model_dump().items():
             if isinstance(value, datetime):
                 api_data[key] = value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
             else:
