@@ -39,7 +39,7 @@ class TestCrmApiClient(unittest.TestCase):
         self.assertEqual(result, 200)
 
     @patch('requests.post')
-    def test_bad_case_try_send_invoice_4xx(self, mock_post):
+    def test_good_case_try_send_invoice_4xx(self, mock_post):
         """
         Проверяет случай, когда ответ имеет статус 4xx
         """
@@ -63,7 +63,7 @@ class TestCrmApiClient(unittest.TestCase):
         )
 
     @patch('requests.post')
-    def test_bad_case_try_send_invoice_5xx(self, mock_post):
+    def test_good_case_try_send_invoice_5xx(self, mock_post):
         """
         Проверяет случай, когда ответ имеет статус 5xx
         """
