@@ -2,54 +2,89 @@ import unittest
 from unittest.mock import MagicMock
 from src.controller.core import Controller
 from src.controller.invoice import Invoice
-
-# Здесь должно быть 6 кейсов тестов как вечером обсуждали
+from src.controller.invoice_look_up import InvoiceLookUp
 
 
 class TestController(unittest.TestCase):
+
     def setUp(self):
         self.db_client = MagicMock()
         self.base_url = "http://example.com"
-        self.is_overdue_time = 0
-        self.queue_time_sleep = 1
-        self.overdue_time_sleep = 1
-        self.tmp_dir = "/tmp"
+        self.is_overdue_time = 10
+        self.mock_invoice_look_up = MagicMock(spec=InvoiceLookUp)
         self.controller = Controller(
             db_client=self.db_client,
             base_url=self.base_url,
-            is_overdue_time=self.is_overdue_time,
-            queue_time_sleep=self.queue_time_sleep,
-            overdue_time_sleep=self.overdue_time_sleep,
-            tmp_dir=self.tmp_dir
+            is_overdue_time=self.is_overdue_time
         )
+        self.controller._Controller__invoice_look_up = self.mock_invoice_look_up
 
-        self.mock_invoice_lookup = MagicMock()
-        self.controller._Controller__invoice_look_up = self.mock_invoice_lookup
-
-    def test_good_case_update_document_for_user_id(self):
+    def test_good_case_update_document_for_user_id_existing_invoice(self):
         """
-        успешноe обновлениe документа для пользователя.
+        Проверяю, что если инвойс найден, то он обновляется.
         """
-        user_id = 123
-        update_fields = {"status": "updated"}
+        user_id = 1
+        update_fields = {"field": "value"}
         mock_invoice = MagicMock(spec=Invoice)
-        self.mock_invoice_lookup.get_new_invoice_by_user_id.return_value = mock_invoice
+        self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = mock_invoice
 
         result = self.controller.update_document_for_user_id(user_id, update_fields)
 
         mock_invoice.update_fields.assert_called_once_with(update_fields)
         self.assertEqual(result, mock_invoice)
 
-    def test_bad_case_update_document_for_user_id(self):
+    def test_good_case_update_document_for_user_id_create_invoice(self):
         """
-        неудачноe обновлениe документа для пользователя.
+        Проверяю, что если инвойс не найден, то создается новый и обновляется.
         """
-        user_id = 123
-        self.mock_invoice_lookup.get_new_invoice_by_user_id.return_value = None
-        self.mock_invoice_lookup.create.side_effect = Exception("Failed to create invoice")
+        user_id = 1
+        update_fields = {"field": "value"}
+        mock_invoice = MagicMock(spec=Invoice)
+        self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = None
+        self.mock_invoice_look_up.create.return_value = mock_invoice
+
+        result = self.controller.update_document_for_user_id(user_id, update_fields)
+
+        mock_invoice.update_fields.assert_called_once_with(update_fields)
+        self.assertEqual(result, mock_invoice)
+
+    def test_bad_case_update_document_for_user_id_existing_invoice(self):
+        """
+        Проверяю, что если инвойс найден, но обновление не выполняется.
+        """
+        user_id = 1
+        update_fields = {"field": "value"}
+        mock_invoice = MagicMock(spec=Invoice)
+        mock_invoice.update_fields.side_effect = Exception("Обновление не выполнено")
+        self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = mock_invoice
 
         with self.assertRaises(Exception):
-            self.controller.update_document_for_user_id(user_id)
+            self.controller.update_document_for_user_id(user_id, update_fields)
+
+    def test_bad_case_update_document_for_user_id_create_invoice(self):
+        """
+        Проверяю, что если инвойс создается, но обновление не выполняется.
+        """
+        user_id = 1
+        update_fields = {"field": "value"}
+        mock_invoice = MagicMock(spec=Invoice)
+        mock_invoice.update_fields.side_effect = Exception("Обновление не выполнено")
+        self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = None
+        self.mock_invoice_look_up.create.return_value = mock_invoice
+
+        with self.assertRaises(Exception):
+            self.controller.update_document_for_user_id(user_id, update_fields)
+
+    def test_bad_case_update_document_for_user_id_both_is_none(self):
+        """
+        Проверяю, что если оба метода возвращают None, то update_fields не вызывается.
+        """
+        self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = None
+        self.mock_invoice_look_up.create.return_value = None
+        
+        mock_invoice = MagicMock(spec=Invoice)
+
+        mock_invoice.update_fields.assert_not_called()
 
 
 if __name__ == '__main__':
