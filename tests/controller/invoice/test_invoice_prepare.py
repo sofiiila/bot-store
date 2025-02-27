@@ -16,8 +16,9 @@ class TestInvoice(unittest.TestCase):
     @patch('src.controller.invoice.CrmApiClient')
     def test_good_case_prepare(self, MockCrmApiClient):
         """
-        Тестирует успешное выполнение метода prepare
+        Успешная отправка и обновление
         """
+        mock_api_client = MockCrmApiClient.return_value
         invoice = Invoice(
             data=self.data,
             base_url=self.base_url,
@@ -25,21 +26,22 @@ class TestInvoice(unittest.TestCase):
             is_overdue_time=self.is_overdue_time,
             tmp_dir=self.tmp_dir
         )
-        invoice._Invoice__api_client = MockCrmApiClient.return_value
 
         invoice.prepare()
 
-        invoice._Invoice__api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
+        mock_api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
         self.db_client.update.assert_called_once_with(
             filter_query={"id": self.data.id},
             value={"category": CategoriesEnum.IN_PROGRESS}
         )
 
     @patch('src.controller.invoice.CrmApiClient')
-    def test_bad_case_prepare_server_problem(self, MockCrmApiClient):
+    def test_good_case_prepare_server_problem(self, MockCrmApiClient):
         """
-        Тестирует случай, когда возникает ошибка ServerProblem
+        Исключение ServerProblem
         """
+        mock_api_client = MockCrmApiClient.return_value
+        mock_api_client.try_send_invoice.side_effect = ServerProblem
         invoice = Invoice(
             data=self.data,
             base_url=self.base_url,
@@ -47,37 +49,80 @@ class TestInvoice(unittest.TestCase):
             is_overdue_time=self.is_overdue_time,
             tmp_dir=self.tmp_dir
         )
-        invoice._Invoice__api_client = MockCrmApiClient.return_value
-        invoice._Invoice__api_client.try_send_invoice.side_effect = ServerProblem
-
-        result = invoice.prepare()
-
-        invoice._Invoice__api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
-        self.assertIsNone(result)
-        self.db_client.update.assert_not_called()
-
-    @patch('src.controller.invoice.CrmApiClient')
-    def test_bad_case_prepare_invalid_invoice(self, MockCrmApiClient):
-        """
-        Тестирует случай, когда возникает ошибка InvalidInvoice
-        """
-        invoice = Invoice(
-            data=self.data,
-            base_url=self.base_url,
-            db_client=self.db_client,
-            is_overdue_time=self.is_overdue_time,
-            tmp_dir=self.tmp_dir
-        )
-        invoice._Invoice__api_client = MockCrmApiClient.return_value
-        invoice._Invoice__api_client.try_send_invoice.side_effect = InvalidInvoice
 
         invoice.prepare()
 
-        invoice._Invoice__api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
+        mock_api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
+        self.db_client.update.assert_not_called()
+
+    @patch('src.controller.invoice.CrmApiClient')
+    def test_good_case_prepare_invalid_invoice(self, MockCrmApiClient):
+        """
+        Исключение InvalidInvoice и успешное обновление категории на инвалид
+        """
+        mock_api_client = MockCrmApiClient.return_value
+        mock_api_client.try_send_invoice.side_effect = InvalidInvoice
+        invoice = Invoice(
+            data=self.data,
+            base_url=self.base_url,
+            db_client=self.db_client,
+            is_overdue_time=self.is_overdue_time,
+            tmp_dir=self.tmp_dir
+        )
+
+        invoice.prepare()
+
+        mock_api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
         self.db_client.update.assert_called_once_with(
             filter_query={"id": self.data.id},
             value={"category": CategoriesEnum.INVALID}
         )
+
+    @patch('src.controller.invoice.CrmApiClient')
+    def test_bad_case_prepare_invalid_invoice(self, MockCrmApiClient):
+        """
+        Исключение InvalidInvoice и неудачное обновление
+        """
+        mock_api_client = MockCrmApiClient.return_value
+        mock_api_client.try_send_invoice.side_effect = InvalidInvoice
+        self.db_client.update.side_effect = Exception("Обновление не удалось")
+        invoice = Invoice(
+            data=self.data,
+            base_url=self.base_url,
+            db_client=self.db_client,
+            is_overdue_time=self.is_overdue_time,
+            tmp_dir=self.tmp_dir
+        )
+
+        with self.assertRaises(Exception):
+            invoice.prepare()
+
+        mock_api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
+        self.db_client.update.assert_called_once_with(
+            filter_query={"id": self.data.id},
+            value={"category": CategoriesEnum.INVALID}
+        )
+
+    @patch('src.controller.invoice.CrmApiClient')
+    def test_bad_case_prepare_other_exception(self, MockCrmApiClient):
+        """
+        Другое исключение
+        """
+        mock_api_client = MockCrmApiClient.return_value
+        mock_api_client.try_send_invoice.side_effect = Exception("Неизвестная ошибка")
+        invoice = Invoice(
+            data=self.data,
+            base_url=self.base_url,
+            db_client=self.db_client,
+            is_overdue_time=self.is_overdue_time,
+            tmp_dir=self.tmp_dir
+        )
+
+        with self.assertRaises(Exception):
+            invoice.prepare()
+
+        mock_api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
+        self.db_client.update.assert_not_called()
 
 
 if __name__ == '__main__':
