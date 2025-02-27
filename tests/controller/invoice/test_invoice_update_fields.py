@@ -26,7 +26,7 @@ class TestInvoice(unittest.TestCase):
             tmp_dir=self.tmp_dir
         )
 
-        fields_to_update = {"status": "обновлено"}
+        fields_to_update = {"field": "value"}
 
         invoice.update_fields(fields_to_update)
 
@@ -48,7 +48,7 @@ class TestInvoice(unittest.TestCase):
             tmp_dir=self.tmp_dir
         )
 
-        fields_to_update = {"status": "approved"}
+        fields_to_update = {"field": "value"}
 
         self.db_client.update.side_effect = Exception("Не обновилось")
 

@@ -31,6 +31,22 @@ class TestInvoice(unittest.TestCase):
 
         self.assertIsInstance(invoice, Invoice)
 
+    @patch('src.controller.invoice.CrmApiClient')
+    def test_bad_case_invoice_create_fails(self, MockCrmApiClient):
+        """
+        Тестирует метод create класса Invoice, когда создание не удается
+        """
+        self.db_client.create.side_effect = Exception("Не удалось создать Invoice")
+
+        with self.assertRaises(Exception):
+            Invoice.create(
+                db_client=self.db_client,
+                user_id=self.user_id,
+                base_url=self.base_url,
+                is_overdue_time=self.is_overdue_time,
+                tmp_dir=self.tmp_dir
+            )
+
 
 if __name__ == '__main__':
     unittest.main()
