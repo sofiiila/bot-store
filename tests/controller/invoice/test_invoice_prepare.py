@@ -124,6 +124,30 @@ class TestInvoice(unittest.TestCase):
         mock_api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
         self.db_client.update.assert_not_called()
 
+    @patch('src.controller.invoice.CrmApiClient')
+    def test_bad_case_prepare_send_success_update_fails(self, MockCrmApiClient):
+        """
+        Успешная отправка, но обновление не удается
+        """
+        mock_api_client = MockCrmApiClient.return_value
+        self.db_client.update.side_effect = Exception("Обновление не удалось")
+        invoice = Invoice(
+            data=self.data,
+            base_url=self.base_url,
+            db_client=self.db_client,
+            is_overdue_time=self.is_overdue_time,
+            tmp_dir=self.tmp_dir
+        )
+
+        with self.assertRaises(Exception):
+            invoice.prepare()
+
+        mock_api_client.try_send_invoice.assert_called_once_with(invoice_data=self.data.to_api())
+        self.db_client.update.assert_called_once_with(
+            filter_query={"id": self.data.id},
+            value={"category": CategoriesEnum.IN_PROGRESS}
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
