@@ -10,12 +10,12 @@ class TestInvoiceLookUp(unittest.TestCase):
         self.tmp_dir = "/tmp"
         self.db_client = MagicMock()
         self.invoice_look_up = InvoiceLookUp(self.base_url, self.db_client,
-                                            self.is_overdue_time, self.tmp_dir)
+                                             self.is_overdue_time, self.tmp_dir)
         
     @patch('src.controller.invoice.Invoice.create')
-    def test_create_invoice(self, MockCreate):
+    def test_good_case_create(self, MockCreate):
         """
-        Test that create method correctly calls Invoice.create.
+        Заявка успешно создается
         """
         user_id = "12345"
         mock_invoice_instance = MockCreate.return_value
@@ -29,6 +29,22 @@ class TestInvoiceLookUp(unittest.TestCase):
 
         self.assertEqual(result, mock_invoice_instance)
 
+    @patch('src.controller.invoice.Invoice.create')
+    def test_bad_case_create(self, MockCreate):
+        """
+        Заявка не создается из-за ошибки
+        """
+        user_id = "12345"
+        MockCreate.side_effect = Exception("Не удалось создать Invoice")
+
+        with self.assertRaises(Exception):
+            self.invoice_look_up.create(user_id)
+
+        MockCreate.assert_called_once_with(user_id=user_id, db_client=self.db_client,
+                                           base_url=self.base_url,
+                                           is_overdue_time=self.is_overdue_time,
+                                           tmp_dir=self.tmp_dir)
+        
 
 if __name__ == '__main__':
     unittest.main()
