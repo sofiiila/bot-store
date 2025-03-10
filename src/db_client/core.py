@@ -43,7 +43,7 @@ class DbClient:
         :param user_id:
         :return:
         """
-        document = UserDocument.create_model(user_id).dict()
+        document = UserDocument.create_model(user_id).model_dump()
         document.pop('id')
         result: InsertOneResult = self.__collection.insert_one(document)
         return UserDocument(user_id=int(user_id), id=str(result.inserted_id))
