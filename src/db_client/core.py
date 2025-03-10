@@ -79,7 +79,7 @@ class DbClient:
         if result.modified_count == 0:
             raise AttributeError("Ничего не обновилось")
 
-    #TODO переименуй методы, чтобы не пришлось тут комментировать pylint 
+    #TODO переименуй методы, чтобы не пришлось тут комментировать pylint
     def list(self, filter_query: dict, sort_query: dict | None = None) -> list[UserDocument]:
         """
         Полученние списка документов из коллекции
@@ -121,7 +121,7 @@ class DbClient:
             results.append(UserDocument(**doc, id=str(doc["_id"])))
         return results
 
-    #TODO переименуй методы, чтобы не пришлось тут комментировать pylint 
+    #TODO переименуй методы, чтобы не пришлось тут комментировать pylint
     # pylint: disable=redefined-builtin
     def delete(self, id):
         """
