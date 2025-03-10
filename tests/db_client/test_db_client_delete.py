@@ -7,12 +7,18 @@ from src.db_client.core import DbClient
 
 class TestDbClient(unittest.TestCase):
 
-    @patch('src.db_client.core.MongoClient')
-    def setUp(self, MockMongoClient):
-        self.mock_client = MockMongoClient.return_value
-        self.mock_db = self.mock_client["your_database"]
-        self.mock_collection = self.mock_db["mycollection"]
-        self.db_client = DbClient(db_user='test_user', db_password='test_password')
+    @classmethod
+    def setUpClass(cls):
+        cls.patcher = patch('src.db_client.core.MongoClient')
+        cls.MockMongoClient = cls.patcher.start()
+        cls.mock_client = cls.MockMongoClient.return_value
+        cls.mock_db = cls.mock_client["your_database"]
+        cls.mock_collection = cls.mock_db["mycollection"]
+        cls.db_client = DbClient(db_user='test_user', db_password='test_password')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.patcher.stop()
 
     def test_good_case_delete(self):
         """
@@ -43,8 +49,5 @@ class TestDbClient(unittest.TestCase):
             with self.assertRaises(ValueError) as context:
                 self.db_client.delete(doc_id)
 
-            self.assertEqual(str(context.exception), f"Документ с id не найден для удаления. {doc_id}")
-
-
-if __name__ == '__main__':
-    unittest.main()
+            self.assertEqual(str(context.exception),
+                             f"Документ с id не найден для удаления. {doc_id}")

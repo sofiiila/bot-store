@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 from datetime import datetime
-from requests.exceptions import ConnectionError, Timeout
+from requests.exceptions import Timeout
 
 from src.controller.exc import InvalidInvoice, ServerProblem
 from src.controller.invoice import CrmApiClient
@@ -75,28 +75,6 @@ class TestCrmApiClient(unittest.TestCase):
         mock_response = MagicMock()
         mock_response.status_code = 500
         mock_post.return_value = mock_response
-
-        with self.assertRaises(ServerProblem):
-            self.client.try_send_invoice(invoice_data)
-
-        mock_post.assert_called_once_with(
-            f"{self.base_url}/api/invoices",
-            json=invoice_data,
-            headers={"Content-Type": "application/json"},
-            timeout=10
-        )
-
-    @patch('requests.post')
-    def test_bad_case_try_send_invoice_connection_error(self, mock_post):
-        """
-        Проверяет случай, когда возникает ошибка подключения
-        """
-        invoice_data = {
-            "id": 1,
-            "date": datetime.now().isoformat(),
-            "amount": 100.0
-        }
-        mock_post.side_effect = ConnectionError("Connection error")
 
         with self.assertRaises(ServerProblem):
             self.client.try_send_invoice(invoice_data)

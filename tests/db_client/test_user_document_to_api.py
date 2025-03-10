@@ -35,8 +35,9 @@ class TestUserDocument(unittest.TestCase):
         }
 
         self.assertEqual(api_data, expected_api_data)
-        
-# test_bad_case_to_api.py не будет потому что Pydantic не дает создать модель с некорректными данными
+
+# test_bad_case_to_api.py не будет потому что Pydantic
+# не дает создать модель с некорректными данными
 
 
 if __name__ == '__main__':

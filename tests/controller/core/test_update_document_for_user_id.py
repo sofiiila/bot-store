@@ -81,7 +81,7 @@ class TestController(unittest.TestCase):
         """
         self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = None
         self.mock_invoice_look_up.create.return_value = None
-        
+
         mock_invoice = MagicMock(spec=Invoice)
 
         mock_invoice.update_fields.assert_not_called()

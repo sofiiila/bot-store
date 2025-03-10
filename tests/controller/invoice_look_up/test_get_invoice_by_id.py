@@ -10,7 +10,8 @@ class TestInvoiceLookUp(unittest.TestCase):
         self.is_overdue_time = False
         self.tmp_dir = "/tmp"
         self.db_client = MagicMock()
-        self.invoice_lookup = InvoiceLookUp(self.base_url, self.db_client, self.is_overdue_time, self.tmp_dir)
+        self.invoice_lookup = InvoiceLookUp(self.base_url, self.db_client,
+                                            self.is_overdue_time, self.tmp_dir)
 
     @patch('src.controller.invoice_look_up.logger')
     @patch.object(InvoiceLookUp, '_construct_invoice')

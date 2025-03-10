@@ -9,14 +9,14 @@ class TestInvoice(unittest.TestCase):
         self.data = MagicMock(spec=UserDocument)
         self.data.id = 123
         self.data.user_id = 1
-        self.data.category = CategoriesEnum.NEW 
+        self.data.category = CategoriesEnum.NEW
         self.base_url = "http://example.com"
         self.is_overdue_time = False
         self.tmp_dir = "/tmp"
         self.db_client = MagicMock(spec=DbClient)
 
     @patch('src.controller.invoice.CrmApiClient')
-    def test_good_case_push_in_queue(self, MockCrmApiClient):
+    def test_good_case_push_in_queue(self, _):
         """
         Метод in_queue добавляет в очередь как ожидалось
         """
@@ -36,7 +36,7 @@ class TestInvoice(unittest.TestCase):
         )
 
     @patch('src.controller.invoice.CrmApiClient')
-    def test_bad_case_push_in_queue_category_not_changed(self, MockCrmApiClient):
+    def test_bad_case_push_in_queue_category_not_changed(self, _):
         """
         Метод in_queue не меняет категорию как ожидалось
         """
@@ -56,7 +56,7 @@ class TestInvoice(unittest.TestCase):
             filter_query={"user_id": self.data.user_id, "id": self.data.id},
             value={"category": CategoriesEnum.QUEUE}
         )
-        self.assertNotEqual(self.data.category, CategoriesEnum.QUEUE)        
+        self.assertNotEqual(self.data.category, CategoriesEnum.QUEUE)
 
 
 if __name__ == '__main__':
