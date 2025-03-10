@@ -9,6 +9,7 @@ from src.new_handlers import conv_handler
 from src.web.server import run_finish_invoice_server
 
 
+# TODO Всем тредам задай имя.
 def start_app() -> None:
     """
     Запуск тредов:

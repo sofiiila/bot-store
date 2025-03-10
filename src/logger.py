@@ -12,6 +12,9 @@ def init_logger():
     logging.basicConfig(
         format='%(asctime)s - [%(threadName)s] - %(name)s - %(levelname)s - %(message)s',
         level=logging.DEBUG)
+    # TODO настроить логгирование в в файл и консоль. Сделать логи красивыми с помощью coloredlogs
+
+    # TODO вынести в отдельную функцию disable_bad_loggers()
     logging.getLogger("httpx").setLevel(logging.WARNING)
     logging.getLogger("telegram._bot").setLevel(logging.WARNING)
     logging.getLogger("pymongo.topology").setLevel(logging.WARNING)
