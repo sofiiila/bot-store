@@ -2,11 +2,21 @@
 init
 """
 from telegram.ext import Application
-
 from src.settings import settings
-from .invoices.invoice_look_up import InvoiceLookUp
-from .services.core import DbClient
+# pylint: disable=unused-import
+from .controller import Controller, Invoice
+from .db_client.core import DbClient
+
 
 application = Application.builder().token(settings.token).build()
-db_client = DbClient(settings.db_user, settings.db_password, host=settings.db_container_name)
-invoice_look_up = InvoiceLookUp(settings.base_url, db_client)
+controller = Controller(
+    db_client=DbClient(
+        db_user=settings.db_user,
+        db_password=settings.db_password,
+        host=settings.db_container_name
+    ),
+    base_url=settings.base_url,
+    overdue_time_sleep=settings.overdue_time_sleep,
+    queue_time_sleep=settings.queue_time_sleep,
+    is_overdue_time=settings.is_overdue_time
+)

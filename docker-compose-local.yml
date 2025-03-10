@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mongo:
+    container_name: ${DB_CONTAINER_NAME}
+    image: mongo
+    volumes:
+      - /var/lib/mongodb/bot_store:/data/db
+      - ./mongod.conf:/etc/mongo/mongod.conf
+    expose:
+      - ${DB_PORT}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${EXTERNAL_DB_PORT}:${DB_PORT}"
+    env_file:
+      - ".env"
+    command: mongod --config /etc/mongo/mongod.conf
+  bot:
+    build: .
+    container_name: bot_store_bot
+    env_file:
+      - ".env"
+    depends_on:
+      - mongo
+    ports:
+      - "${EXTERNAL_BOT_PORT}:${BOT_PORT}"

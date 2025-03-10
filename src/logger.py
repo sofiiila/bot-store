@@ -10,7 +10,7 @@ def init_logger():
     :return:
     """
     logging.basicConfig(
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        format='%(asctime)s - [%(threadName)s] - %(name)s - %(levelname)s - %(message)s',
         level=logging.DEBUG)
     logging.getLogger("httpx").setLevel(logging.WARNING)
     logging.getLogger("telegram._bot").setLevel(logging.WARNING)

@@ -1,6 +1,7 @@
 """
 settings
 """
+
 from pydantic_settings import BaseSettings
 
 
@@ -16,7 +17,9 @@ class Settings(BaseSettings):
     db_container_name: str
     bot_port: int
     base_url: str
-    timeout: int
+    overdue_time_sleep: int
+    queue_time_sleep: int
+    is_overdue_time: int = 10
 
 
 settings = Settings()  # type: ignore

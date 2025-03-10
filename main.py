@@ -1,7 +1,7 @@
 """
 main
 """
-from src.core import start_app
+from src.start_app import start_app
 from src.logger import init_logger
 
 init_logger()
