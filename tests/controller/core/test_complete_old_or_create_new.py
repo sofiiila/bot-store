@@ -45,6 +45,17 @@ class TestController(unittest.TestCase):
 
         self.mock_invoice_look_up.create.assert_called_once_with(user_id=user_id)
 
+    def test_bad_case_not_complete_old_and_not_create_new_(self):
+        """
+        Случай когда нет существующего инвойса и не создается новый
+        """
+        user_id = 1
+        self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = None
+        self.mock_invoice_look_up.create.side_effect = Exception("Не создана заявка")
+
+        with self.assertRaises(Exception):
+            self.controller.complete_old_or_create_new(user_id)
+
     def test_bad_case_complete_old_not_push_in_queue(self):
         """
         Случай когда есть существующая заявка, но проблема с очередью
