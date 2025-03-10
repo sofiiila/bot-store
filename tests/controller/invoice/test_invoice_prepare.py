@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from src.controller.invoice import Invoice, UserDocument, DbClient, ServerProblem, InvalidInvoice, CategoriesEnum
+from src.controller.invoice import Invoice, UserDocument, DbClient, \
+      ServerProblem, InvalidInvoice, CategoriesEnum
 
 
 class TestInvoice(unittest.TestCase):

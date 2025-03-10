@@ -112,4 +112,3 @@ class Controller:
             invoice.push_in_queue()
         else:
             self.__invoice_look_up.create(user_id=user_id)
-

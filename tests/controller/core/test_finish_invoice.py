@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from src.controller.core import Controller
 from src.controller.exc import InvoiceNotExist
 from src.controller.invoice import Invoice
@@ -18,7 +18,6 @@ class TestController(unittest.TestCase):
             base_url=self.base_url,
             is_overdue_time=self.is_overdue_time
         )
-        self.controller._Controller__invoice_look_up = self.mock_invoice_look_up
 
     def test_good_case_finish_invoice(self):
         """
@@ -28,7 +27,10 @@ class TestController(unittest.TestCase):
         mock_invoice = MagicMock(spec=Invoice)
         self.mock_invoice_look_up.get_invoice_by_id.return_value = mock_invoice
 
-        self.controller.finish_invoice(invoice_id)
+        with patch.object(self.controller,
+                          '_Controller__invoice_look_up',
+                          self.mock_invoice_look_up):
+            self.controller.finish_invoice(invoice_id)
 
         mock_invoice.finish_invoice.assert_called_once()
 
@@ -39,8 +41,11 @@ class TestController(unittest.TestCase):
         invoice_id = "123"
         self.mock_invoice_look_up.get_invoice_by_id.return_value = None
 
-        with self.assertRaises(InvoiceNotExist):
-            self.controller.finish_invoice(invoice_id)
+        with patch.object(self.controller,
+                          '_Controller__invoice_look_up',
+                          self.mock_invoice_look_up):
+            with self.assertRaises(InvoiceNotExist):
+                self.controller.finish_invoice(invoice_id)
 
     def test_bad_case_finish_invoice_no_finish(self):
         """
@@ -51,8 +56,11 @@ class TestController(unittest.TestCase):
         mock_invoice.finish_invoice.side_effect = Exception("Не удалось завершить инвойс")
         self.mock_invoice_look_up.get_invoice_by_id.return_value = mock_invoice
 
-        with self.assertRaises(Exception):
-            self.controller.finish_invoice(invoice_id)
+        with patch.object(self.controller,
+                          '_Controller__invoice_look_up',
+                          self.mock_invoice_look_up):
+            with self.assertRaises(Exception):
+                self.controller.finish_invoice(invoice_id)
 
         mock_invoice.finish_invoice.assert_called_once()
 

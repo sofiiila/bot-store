@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from src.controller.core import Controller
 from src.controller.invoice import Invoice
 from src.controller.invoice_look_up import InvoiceLookUp
@@ -17,7 +17,6 @@ class TestController(unittest.TestCase):
             base_url=self.base_url,
             is_overdue_time=self.is_overdue_time
         )
-        self.controller._Controller__invoice_look_up = self.mock_invoice_look_up
 
     def test_good_case_update_document_for_user_id_existing_invoice(self):
         """
@@ -28,7 +27,10 @@ class TestController(unittest.TestCase):
         mock_invoice = MagicMock(spec=Invoice)
         self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = mock_invoice
 
-        result = self.controller.update_document_for_user_id(user_id, update_fields)
+        with patch.object(self.controller,
+                          '_Controller__invoice_look_up',
+                          self.mock_invoice_look_up):
+            result = self.controller.update_document_for_user_id(user_id, update_fields)
 
         mock_invoice.update_fields.assert_called_once_with(update_fields)
         self.assertEqual(result, mock_invoice)
@@ -43,7 +45,10 @@ class TestController(unittest.TestCase):
         self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = None
         self.mock_invoice_look_up.create.return_value = mock_invoice
 
-        result = self.controller.update_document_for_user_id(user_id, update_fields)
+        with patch.object(self.controller,
+                          '_Controller__invoice_look_up',
+                          self.mock_invoice_look_up):
+            result = self.controller.update_document_for_user_id(user_id, update_fields)
 
         mock_invoice.update_fields.assert_called_once_with(update_fields)
         self.assertEqual(result, mock_invoice)
@@ -58,8 +63,11 @@ class TestController(unittest.TestCase):
         mock_invoice.update_fields.side_effect = Exception("Обновление не выполнено")
         self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = mock_invoice
 
-        with self.assertRaises(Exception):
-            self.controller.update_document_for_user_id(user_id, update_fields)
+        with patch.object(self.controller,
+                          '_Controller__invoice_look_up',
+                          self.mock_invoice_look_up):
+            with self.assertRaises(Exception):
+                self.controller.update_document_for_user_id(user_id, update_fields)
 
     def test_bad_case_update_document_for_user_id_create_invoice(self):
         """
@@ -72,8 +80,11 @@ class TestController(unittest.TestCase):
         self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = None
         self.mock_invoice_look_up.create.return_value = mock_invoice
 
-        with self.assertRaises(Exception):
-            self.controller.update_document_for_user_id(user_id, update_fields)
+        with patch.object(self.controller,
+                          '_Controller__invoice_look_up',
+                          self.mock_invoice_look_up):
+            with self.assertRaises(Exception):
+                self.controller.update_document_for_user_id(user_id, update_fields)
 
     def test_bad_case_update_document_for_user_id_both_is_none(self):
         """
@@ -84,7 +95,10 @@ class TestController(unittest.TestCase):
 
         mock_invoice = MagicMock(spec=Invoice)
 
-        mock_invoice.update_fields.assert_not_called()
+        with patch.object(self.controller,
+                          '_Controller__invoice_look_up',
+                          self.mock_invoice_look_up):
+            mock_invoice.update_fields.assert_not_called()
 
 
 if __name__ == '__main__':
