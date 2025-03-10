@@ -94,7 +94,6 @@ class Invoice:  # pylint: disable=too-few-public-methods
     def finish_invoice(self):
         """
         метод удаляющий заявку из очереди, когда она уже попала в CRM
-        :return:
         """
         logger.debug("Бот получил уведомление о завершении заполнении заявок.")
         self.__db_client.delete(self.__data.id)
@@ -102,7 +101,6 @@ class Invoice:  # pylint: disable=too-few-public-methods
     def prepare(self):
         """
         метод решающий куда оптравится заявка после ответа от сервера
-        :return:
         """
         logger.debug("обрабатывается статус ответа")
         try:
