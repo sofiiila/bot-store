@@ -7,18 +7,19 @@ from src.db_client.core import DbClient
 
 class TestDbClient(unittest.TestCase):
 
-    @patch('src.db_client.core.MongoClient')
-    def setUp(self, MockMongoClient):
-        self.mock_client = MockMongoClient.return_value
+    def setUp(self):
+        self.mock_client = MagicMock()
         self.mock_db = self.mock_client["your_database"]
         self.mock_collection = self.mock_db["mycollection"]
         self.db_client = DbClient(db_user='test_user', db_password='test_password')
 
-    def test_good_case_delete(self):
+    @patch('src.db_client.core.MongoClient')
+    def test_good_case_delete(self, mock_mongo_client):
         """
         Проверяет успешное удаление документа из БД
         """
         doc_id = "a1b2c3d4e5f6a1b2c3d4e5f6"
+        self.mock_client = mock_mongo_client.return_value
         mock_delete_result = MagicMock()
         mock_delete_result.deleted_count = 1
 
@@ -29,11 +30,13 @@ class TestDbClient(unittest.TestCase):
 
             self.mock_collection.delete_one.assert_called_once_with({'_id': ObjectId(doc_id)})
 
-    def test_bad_case_delete(self):
+    @patch('src.db_client.core.MongoClient')
+    def test_bad_case_delete(self, mock_mongo_client):
         """
         Проверяет случай, когда документ не найден для удаления
         """
         doc_id = "60d5b524b8d6c9b34a7d2c7d"
+        self.mock_client = mock_mongo_client.return_value
         mock_delete_result = MagicMock()
         mock_delete_result.deleted_count = 0
 
@@ -43,7 +46,8 @@ class TestDbClient(unittest.TestCase):
             with self.assertRaises(ValueError) as context:
                 self.db_client.delete(doc_id)
 
-            self.assertEqual(str(context.exception), f"Документ с id не найден для удаления. {doc_id}")
+            self.assertEqual(str(context.exception),
+                             f"Документ с id не найден для удаления. {doc_id}")
 
 
 if __name__ == '__main__':

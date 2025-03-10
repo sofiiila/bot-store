@@ -6,14 +6,19 @@ from src.db_client.core import DbClient
 
 class TestDbClient(unittest.TestCase):
 
-    @patch('src.db_client.core.MongoClient')
-    def setUp(self, MockMongoClient):
-        self.mock_client = MockMongoClient.return_value
+    def setUp(self):
+        self.patcher = patch('src.db_client.core.MongoClient')
+        self.mock_mongo_client = self.patcher.start()
+        self.mock_client = self.mock_mongo_client.return_value
         self.mock_db = self.mock_client["your_database"]
         self.mock_collection = self.mock_db["mycollection"]
         self.db_client = DbClient(db_user='test_user', db_password='test_password')
 
-    def test_good_case_update_user_data(self):
+    def tearDown(self):
+        self.patcher.stop()
+
+    @patch('src.db_client.core.MongoClient')
+    def test_good_case_update_user_data(self, _):
         """Проверяем корректность работы метода update_user_data"""
         user_id = 1
         field = 'name'
@@ -28,8 +33,10 @@ class TestDbClient(unittest.TestCase):
             {"$set": {field: value}}
         )
 
-    def test_bad_case_update_user_data(self):
-        """Проверяем, что метод update_user_data вызывает исключение, если метод update_one вызывает исключение"""
+    @patch('src.db_client.core.MongoClient')
+    def test_bad_case_update_user_data(self, _):
+        """Проверяем, что метод update_user_data вызывает исключение,
+        если метод update_one вызывает исключение"""
         user_id = 1
         field = 'name'
         value = 'John Doe'

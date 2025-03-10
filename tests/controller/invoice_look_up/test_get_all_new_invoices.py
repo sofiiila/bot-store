@@ -13,7 +13,7 @@ class TestInvoiceLookUp(unittest.TestCase):
         self.db_client = MagicMock()
         self.invoice_lookup = InvoiceLookUp(self.base_url, self.db_client,
                                             self.is_overdue_time, self.tmp_dir)
-        
+
     def test_good_case_get_all_new_invoices(self):
         """
         Вызывает метод get_all_new_invoices и проверяет, что он возвращает список Invoice объектов.
@@ -30,7 +30,7 @@ class TestInvoiceLookUp(unittest.TestCase):
 
         self.db_client.list.assert_called_once_with(
             filter_query={"category": CategoriesEnum.NEW}
-        )    
+        )
 
     def test_bad_case_get_all_new_invoices(self):
         """
