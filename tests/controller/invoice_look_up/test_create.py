@@ -11,40 +11,42 @@ class TestInvoiceLookUp(unittest.TestCase):
         self.db_client = MagicMock()
         self.invoice_look_up = InvoiceLookUp(self.base_url, self.db_client,
                                              self.is_overdue_time, self.tmp_dir)
-        
+
     @patch('src.controller.invoice.Invoice.create')
-    def test_good_case_create(self, MockCreate):
+    def test_good_case_create(self, mock_create):
         """
         Заявка успешно создается
         """
         user_id = "12345"
-        mock_invoice_instance = MockCreate.return_value
+        mock_invoice_instance = mock_create.return_value
 
         result = self.invoice_look_up.create(user_id)
 
-        MockCreate.assert_called_once_with(user_id=user_id, db_client=self.db_client,
-                                           base_url=self.base_url,
-                                           is_overdue_time=self.is_overdue_time,
-                                           tmp_dir=self.tmp_dir)
+        mock_create.assert_called_once_with(user_id=user_id,
+                                            db_client=self.db_client,
+                                            base_url=self.base_url,
+                                            is_overdue_time=self.is_overdue_time,
+                                            tmp_dir=self.tmp_dir)
 
         self.assertEqual(result, mock_invoice_instance)
 
     @patch('src.controller.invoice.Invoice.create')
-    def test_bad_case_create(self, MockCreate):
+    def test_bad_case_create(self, mock_create):
         """
         Заявка не создается из-за ошибки
         """
         user_id = "12345"
-        MockCreate.side_effect = Exception("Не удалось создать Invoice")
+        mock_create.side_effect = Exception("Не удалось создать Invoice")
 
         with self.assertRaises(Exception):
             self.invoice_look_up.create(user_id)
 
-        MockCreate.assert_called_once_with(user_id=user_id, db_client=self.db_client,
-                                           base_url=self.base_url,
-                                           is_overdue_time=self.is_overdue_time,
-                                           tmp_dir=self.tmp_dir)
-        
+        mock_create.assert_called_once_with(user_id=user_id,
+                                            db_client=self.db_client,
+                                            base_url=self.base_url,
+                                            is_overdue_time=self.is_overdue_time,
+                                            tmp_dir=self.tmp_dir)
+
 
 if __name__ == '__main__':
     unittest.main()

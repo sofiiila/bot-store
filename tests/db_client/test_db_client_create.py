@@ -8,14 +8,19 @@ from src.db_client.db_client_types import UserDocument
 
 class TestDbClient(unittest.TestCase):
 
-    @patch('src.db_client.core.MongoClient')
-    def setUp(self, MockMongoClient):
-        self.mock_client = MockMongoClient.return_value
+    def setUp(self):
+        self.patcher = patch('src.db_client.core.MongoClient')
+        self.mock_mongo_client = self.patcher.start()
+        self.mock_client = self.mock_mongo_client.return_value
         self.mock_db = self.mock_client["your_database"]
         self.mock_collection = self.mock_db["mycollection"]
         self.db_client = DbClient(db_user='test_user', db_password='test_password')
 
-    def test_good_case_create(self):
+    def tearDown(self):
+        self.patcher.stop()
+
+    @patch('src.db_client.core.MongoClient')
+    def test_good_case_create(self, _):
         """
         Проверяю, что метод create создает документ в БД
         """
@@ -35,7 +40,8 @@ class TestDbClient(unittest.TestCase):
             self.assertEqual(result.user_id, user_id)
             self.assertEqual(result.id, 'mock_id')
 
-    def test_bad_case_create(self):
+    @patch('src.db_client.core.MongoClient')
+    def test_bad_case_create(self, _):
         """
         Проверяю, что метод create вызывает исключение, если в БД уже есть пользователь с таким id
         или если при подключении к БД произошла ошибка

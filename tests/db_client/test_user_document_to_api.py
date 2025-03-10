@@ -1,42 +1,48 @@
 import unittest
-from datetime import datetime
-from src.db_client.db_client_types import UserDocument, CategoriesEnum
+from unittest.mock import MagicMock, patch
+
+from src.db_client.core import DbClient
 
 
-class TestUserDocument(unittest.TestCase):
+class TestDbClient(unittest.TestCase):
 
-    def test_good_case_to_api(self):
-        """
-        Проверяет успешное преобразование данных в формат API
-        """
+    def setUp(self):
+        self.patcher = patch('src.db_client.core.MongoClient')
+        self.mock_mongo_client = self.patcher.start()
+        self.mock_client = self.mock_mongo_client.return_value
+        self.mock_db = self.mock_client["your_database"]
+        self.mock_collection = self.mock_db["mycollection"]
+        self.db_client = DbClient(db_user='test_user', db_password='test_password')
+
+    def tearDown(self):
+        self.patcher.stop()
+
+    def test_good_case_update_user_data(self):
+        """Проверяем корректность работы метода update_user_data"""
         user_id = 1
-        user_document = UserDocument(
-            id="12345",
-            user_id=user_id,
-            question="What is the meaning of life?",
-            tz="UTC",
-            deadline="2023-12-31",
-            contacts="contact@example.com",
-            category=CategoriesEnum.IN_PROGRESS,
-            start_date=datetime(2023, 10, 1, 12, 0, 0)
+        field = 'name'
+        value = 'John Doe'
+
+        self.mock_collection.update_one = MagicMock(return_value=None)
+
+        self.db_client.update_user_data(user_id, field, value)
+
+        self.mock_collection.update_one.assert_called_once_with(
+            {"user_id": user_id},
+            {"$set": {field: value}}
         )
 
-        api_data = user_document.to_api()
+    def test_bad_case_update_user_data(self):
+        """Проверяем, что метод update_user_data вызывает исключение,
+        если метод update_one вызывает исключение"""
+        user_id = 1
+        field = 'name'
+        value = 'John Doe'
 
-        expected_api_data = {
-            "id": "12345",
-            "user_id": 1,
-            "question": "What is the meaning of life?",
-            "tz": "UTC",
-            "deadline": "2023-12-31",
-            "contacts": "contact@example.com",
-            "category": CategoriesEnum.IN_PROGRESS,
-            "start_date": "2023-10-01T12:00:00.000000Z"
-        }
+        self.mock_collection.update_one = MagicMock(side_effect=Exception('Вызывается исключение'))
 
-        self.assertEqual(api_data, expected_api_data)
-        
-# test_bad_case_to_api.py не будет потому что Pydantic не дает создать модель с некорректными данными
+        with self.assertRaises(Exception):
+            self.db_client.update_user_data(user_id, field, value)
 
 
 if __name__ == '__main__':

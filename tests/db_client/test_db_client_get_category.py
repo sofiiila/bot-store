@@ -6,12 +6,16 @@ from src.db_client.core import DbClient
 
 class TestDbClient(unittest.TestCase):
 
-    @patch('src.db_client.core.MongoClient')
-    def setUp(self, MockMongoClient):
-        self.mock_client = MockMongoClient.return_value
+    def setUp(self):
+        self.patcher = patch('src.db_client.core.MongoClient')
+        self.mock_mongo_client = self.patcher.start()
+        self.mock_client = self.mock_mongo_client.return_value
         self.mock_db = self.mock_client["your_database"]
         self.mock_collection = self.mock_db["mycollection"]
         self.db_client = DbClient(db_user='test_user', db_password='test_password')
+
+    def tearDown(self):
+        self.patcher.stop()
 
     def test_good_case_get_category(self):
         """

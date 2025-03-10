@@ -13,7 +13,7 @@ class TestInvoice(unittest.TestCase):
         self.db_client = MagicMock(spec=DbClient)
 
     @patch('src.controller.invoice.CrmApiClient')
-    def test_good_case_finish_invoice(self, MockCrmApiClient):
+    def test_good_case_finish_invoice(self, _):
         """
         успешное удаление заявки из очереди
         """
@@ -30,7 +30,7 @@ class TestInvoice(unittest.TestCase):
         self.db_client.delete.assert_called_once_with(self.data.id)
 
     @patch('src.controller.invoice.CrmApiClient')
-    def test_bad_case_finish_invoice_fails(self, MockCrmApiClient):
+    def test_bad_case_finish_invoice(self, _):
         """
         Удаление заявки из очереди не удается
         """

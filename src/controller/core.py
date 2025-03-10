@@ -37,6 +37,12 @@ class Controller:
         self.__overdue_time_sleep = overdue_time_sleep
         self.tmp_dir = tmp_dir
 
+    def get_invoice_look_up(self):
+        """
+        Возвращает InvoiceLookUp.
+        """
+        return self.__invoice_look_up
+
     def eternity_cycle_iteration(self) -> None:
         """
         Цикл обрабатывающий заявки из очереди
@@ -107,7 +113,8 @@ class Controller:
         Returns:
             None
         """
-        invoice = self.__invoice_look_up.get_new_invoice_by_user_id(user_id)
+        invoice_look_up = self.get_invoice_look_up()
+        invoice = invoice_look_up.get_new_invoice_by_user_id(user_id)
         if invoice:
             invoice.push_in_queue()
         else:

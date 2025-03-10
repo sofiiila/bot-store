@@ -18,7 +18,7 @@ class TestController(unittest.TestCase):
             base_url=self.base_url,
             is_overdue_time=self.is_overdue_time
         )
-        self.controller._Controller__invoice_look_up = self.mock_invoice_look_up
+        self.controller.get_invoice_look_up = MagicMock(return_value=self.mock_invoice_look_up)
 
     def test_good_case_finish_invoice(self):
         """

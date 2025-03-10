@@ -14,7 +14,7 @@ class TestInvoice(unittest.TestCase):
         self.db_client = MagicMock(spec=DbClient)
 
     @patch('src.controller.invoice.CrmApiClient')
-    def test_good_case_update_fields(self, MockCrmApiClient):
+    def test_good_case_update_fields(self, _):
         """
         Тестирует успешное обновление полей заявки
         """
@@ -36,7 +36,7 @@ class TestInvoice(unittest.TestCase):
         )
 
     @patch('src.controller.invoice.CrmApiClient')
-    def test_bad_case_update_fields(self, MockCrmApiClient):
+    def test_bad_case_update_fields(self, _):
         """
         Тестирует случай, когда обновление полей заявки не удается
         """

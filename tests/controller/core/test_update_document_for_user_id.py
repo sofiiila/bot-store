@@ -17,7 +17,7 @@ class TestController(unittest.TestCase):
             base_url=self.base_url,
             is_overdue_time=self.is_overdue_time
         )
-        self.controller._Controller__invoice_look_up = self.mock_invoice_look_up
+        self.controller.get_invoice_look_up = MagicMock(return_value=self.mock_invoice_look_up)
 
     def test_good_case_update_document_for_user_id_existing_invoice(self):
         """
@@ -81,7 +81,7 @@ class TestController(unittest.TestCase):
         """
         self.mock_invoice_look_up.get_new_invoice_by_user_id.return_value = None
         self.mock_invoice_look_up.create.return_value = None
-        
+
         mock_invoice = MagicMock(spec=Invoice)
 
         mock_invoice.update_fields.assert_not_called()
