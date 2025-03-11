@@ -1,3 +1,5 @@
+[My public Repositories ------------------->](https://github.com/sofiiila/sofiiila/blob/main/content_table.md)
+
 # BOT_STORE
 #### Бот-сборщик заявок. 
 #### - Сценарий опроса клиента.
