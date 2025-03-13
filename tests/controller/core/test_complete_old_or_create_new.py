@@ -78,6 +78,7 @@ class TestController(unittest.TestCase):
             with self.assertRaises(Exception):
                 self.controller.complete_old_or_create_new(user_id)
 
+# TODO Проверить что при get_new_invoice_by_user_id исключение будет выброшено без обработки
 
 if __name__ == '__main__':
     unittest.main()

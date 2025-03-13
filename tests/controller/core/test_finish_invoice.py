@@ -34,6 +34,7 @@ class TestController(unittest.TestCase):
 
         mock_invoice.finish_invoice.assert_called_once()
 
+    #TODO тут bad_case
     def test_good_case_finish_invoice_is_none(self):
         """
         Проверяю, что если инвойс не найден, выбрасывается исключение.

@@ -69,6 +69,7 @@ class TestController(unittest.TestCase):
             with self.assertRaises(Exception):
                 self.controller.update_document_for_user_id(user_id, update_fields)
 
+    # TODO тут по сути проверка одного и того-же, один убери на выбор. А вместо этого проверь два кейса когда выбрасываются в эксепшены в методах лукапа.
     def test_bad_case_update_document_for_user_id_create_invoice(self):
         """
         Проверяю, что если инвойс создается, но обновление не выполняется.
@@ -86,6 +87,9 @@ class TestController(unittest.TestCase):
             with self.assertRaises(Exception):
                 self.controller.update_document_for_user_id(user_id, update_fields)
 
+    #TODO А это кстати бага, надо в функции будет добавить выброс исключения если не один не вернул. 
+    # И тут протестировать что будет выбран этот exception.
+    
     def test_bad_case_update_document_for_user_id_both_is_none(self):
         """
         Проверяю, что если оба метода возвращают None, то update_fields не вызывается.

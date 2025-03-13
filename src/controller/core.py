@@ -1,5 +1,5 @@
 """
-Eternity cycke & timer
+Eternity cycke & timer #TODO Суске!
 """
 import logging
 import time
@@ -37,6 +37,7 @@ class Controller:
         self.__overdue_time_sleep = overdue_time_sleep
         self.tmp_dir = tmp_dir
 
+    #TODO а где тесты этих методов.
     def eternity_cycle_iteration(self) -> None:
         """
         Цикл обрабатывающий заявки из очереди
@@ -49,6 +50,7 @@ class Controller:
                 invoice.prepare()
             time.sleep(self.__queue_time_sleep)
 
+    #TODO а где тесты этих методов.
     def check_timeout_iteration(self) -> None:
         """
         Проверка всех просроченных недозаполненных заявок.
